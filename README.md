@@ -5,7 +5,7 @@ Utility for turning controller input into mouse movement and click events. Gophe
 
 Newbie Instructions
 ======
-Click 'Download ZIP' in the bottom-right corner. Inside, you'll find Windows/Gopher/Release/Gopher.exe. I recommend you copy it somewhere outside of the ZIP and make a shortcut to it.
+Until a release is made available, you'll have to download the entire ZIP and get it from the Release folder. Click 'Download ZIP' in the bottom-right corner. Inside, you'll find Windows/Gopher/Release/Gopher.exe. I recommend you copy it somewhere outside of the ZIP and make a shortcut to it. Adding it to your startup folder in your HTPC can make bootups a lot more convenient!
 
 Controls
 ======
