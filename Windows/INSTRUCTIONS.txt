@@ -1,0 +1,4 @@
+1. Open solution file with Visual C++ 2010 (Express is fine)
+2. Make sure Xinput is properly configured with the project
+3. Select "Release"
+4. Press F7
