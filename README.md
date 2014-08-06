@@ -10,12 +10,19 @@ Click 'Download ZIP' in the bottom-right corner. Inside, you'll find Windows/Gop
 Controls
 ======
 Start: Windows Start.
+
 A: Click.
+
 X: Right-click.
+
 B: Enter.
+
 D-pad: Arrow keys.
+
 Left Analog: Mouse.
+
 Left Analog Click: Middle mouse click (for scrolling web pages).
+
 Back: Toggle. Useful for when you launch emulators or open Steam Big Picture mode. Press again to re-enable.
 
 Progress
