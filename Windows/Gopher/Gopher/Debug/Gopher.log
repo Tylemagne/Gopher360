@@ -1,0 +1,17 @@
+﻿Build started 8/6/2014 4:28:03 PM.
+     1>Project "G:\Dropbox New\Dropbox\Gopher pre-git\Gopher\Gopher\Gopher.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Touching "Debug\Gopher.unsuccessfulbuild".
+       ClCompile:
+         All outputs are up-to-date.
+       ManifestResourceCompile:
+         All outputs are up-to-date.
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"G:\Dropbox New\Dropbox\Gopher pre-git\Gopher\Debug\Gopher.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Gopher.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"G:\Dropbox New\Dropbox\Gopher pre-git\Gopher\Debug\Gopher.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"G:\Dropbox New\Dropbox\Gopher pre-git\Gopher\Debug\Gopher.lib" /MACHINE:X86 Debug\Gopher.exe.embed.manifest.res
+         Debug\main.obj
+     1>LINK : fatal error LNK1123: failure during conversion to COFF: file invalid or corrupt
+     1>Done Building Project "G:\Dropbox New\Dropbox\Gopher pre-git\Gopher\Gopher\Gopher.vcxproj" (build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.21

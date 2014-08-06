@@ -1,0 +1,17 @@
+﻿Build started 8/6/2014 4:28:09 PM.
+     1>Project "G:\Dropbox New\Dropbox\Gopher pre-git\Gopher\Gopher\Gopher.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Release\Gopher.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         All outputs are up-to-date.
+       Link:
+         All outputs are up-to-date.
+         Gopher.vcxproj -> G:\Dropbox New\Dropbox\Gopher pre-git\Gopher\Release\Gopher.exe
+       FinalizeBuildStatus:
+         Deleting file "Release\Gopher.unsuccessfulbuild".
+         Touching "Release\Gopher.lastbuildstate".
+     1>Done Building Project "G:\Dropbox New\Dropbox\Gopher pre-git\Gopher\Gopher\Gopher.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.07
