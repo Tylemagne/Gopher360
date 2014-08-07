@@ -83,7 +83,7 @@ CXBOXController* Controller;
 
 int main()
 {
-	SetConsoleTitle( TEXT( "Gopher v0.95" ) );
+	SetConsoleTitle( TEXT( "Gopher v0.96" ) );
 	Controller = new CXBOXController(1);
 
 	system("Color 1D");
@@ -101,7 +101,7 @@ int main()
 
 	if(!IsElevated())
 	{
-		printf("Tip - Gopher isn't being ran as an administrator.\nWindows won't let you use the on-screen keyboard without it.\nLaunching in 3 seconds...\n\n");
+		printf("Tip - Gopher isn't being ran as an administrator.\nWindows won't let you use the on-screen keyboard or games without it.\nLaunching in 3 seconds...\n\n");
 		Beep(1400,100);
 		Sleep(3000);
 	}
