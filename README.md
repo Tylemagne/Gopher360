@@ -29,7 +29,18 @@ Left Analog Click: Middle mouse click (for scrolling web pages).
 
 Back: Toggle. Useful for when you launch emulators or open Steam Big Picture mode. Press again to re-enable.
 
-Progress
+
+TODO
+======
+Call GetState once per frame - thanks for catching that!
+
+Allow adjustment of sensitivilty & volume via top L / R buttons. Text/beep feedback.
+
+Easter egg that plays Ice Caves when you hold down LTrigger :D:D:D
+
+
+
+Port Progress
 ======
 Linux: Not started.
 
