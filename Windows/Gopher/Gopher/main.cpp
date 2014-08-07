@@ -48,6 +48,12 @@ CXBOXController* Controller;
 
 	bool holdRight;
 	bool holdingRight;
+	
+	bool holdScrollUp;
+	bool holdingScrollUp = false;
+
+	bool holdScrollDown;
+	bool holdingScrollDown = false;
 
 	bool holdEnter;
 	bool holdingEnter;
@@ -119,12 +125,18 @@ void gopherLoop(){
 
 	//initialize variables ------------------------------------------------------------------------------------------------------------------
 
-	int x;
-	int y;
-	float addX;
-	float addY;
+	int leftX;
+	int leftY;
+	int rightx;
+	int righty;
+	float addXLeft;
+	float addYLeft;
+	float addXRight;
+	float addYRight;
 	int deadZone = 3000; //X and Y minimum, below this is ignored since all controllers have some stick to them
+	int scrollDeadZone = 7000; // Right thumbstick should be less sensitive.
 	float speed = 0.000125f; //multiplied by integer value of analog X and Y (32,000).
+	int scrollSpeed = 20; // Speed at which you scroll page.
 	float range = 4.0f; //4 gives a decent range. Raising this requires a lowering of speed as well.
 	int truncZone = 3; //anything below this is ignored and the mouse sits still, similar to a deadzone
 	int sleepAmount = 16; //ideally 16, refreshes 60 times per second (1000/16 = ~60)
@@ -185,13 +197,13 @@ void gopherLoop(){
 	//get LX info
 	if(abs(Controller->GetState().Gamepad.sThumbLX) > deadZone)
 	{
-		addX = (speed * (Controller->GetState().Gamepad.sThumbLX*range));
+		addXLeft = (speed * (Controller->GetState().Gamepad.sThumbLX*range));
 	}
 
 	//zero check
 	else
 	{
-		addX = 0.0f;
+		addXLeft = 0.0f;
 	}
 
 
@@ -199,14 +211,18 @@ void gopherLoop(){
 	//get LY info
 	if(abs(Controller->GetState().Gamepad.sThumbLY) > deadZone)
 	{
-		addY = -(speed * (Controller->GetState().Gamepad.sThumbLY*range));
+		addYLeft = -(speed * (Controller->GetState().Gamepad.sThumbLY*range));
 	}
 
 	//zero check
 	else
 	{
-		addY = 0.0f;
+		addYLeft = 0.0f;
 	}
+
+	//Get RY info
+	holdScrollUp = (Controller->GetState().Gamepad.sThumbRY > scrollDeadZone);
+	holdScrollDown = (Controller->GetState().Gamepad.sThumbRY < -scrollDeadZone);
 
 
 
@@ -277,21 +293,21 @@ void gopherLoop(){
 
 	GetCursorPos(&cursor);
 	
-		x = cursor.x;
-		y = cursor.y;
+		leftX = cursor.x;
+		leftY = cursor.y;
 
-		if (abs(addY) > truncZone)
+		if (abs(addYLeft) > truncZone)
 		{
-			y += (int)addY;
+			leftY += (int)addYLeft;
 		}
 		else // truncate extremely low values
 		{
 			//printf("Truncated Y\n");
 		}
 
-		if (abs(addX) > truncZone)
+		if (abs(addXLeft) > truncZone)
 		{
-			x += (int)addX;
+			leftX += (int)addXLeft;
 		}
 		else // truncate extremely low values
 		{
@@ -300,10 +316,10 @@ void gopherLoop(){
 
 
 		//filter non-32768 and 32767, wireless ones can glitch sometimes and send it to the edge of the screen
-		if(addY > 32767) addY = 0;
-		if(addY < -32768) addY = 0;
-		if(addX > 32767) addX = 0;
-		if(addX < -32768) addX = 0;
+		if(addYLeft > 32767) addYLeft = 0;
+		if(addYLeft < -32768) addYLeft = 0;
+		if(addXLeft > 32767) addXLeft = 0;
+		if(addXLeft < -32768) addXLeft = 0;
 
 
 		//lmouse
@@ -370,6 +386,30 @@ void gopherLoop(){
 			SendInput(1, &input, sizeof(INPUT));
 			holdingLThumb = false;
 			printf("---------------MM-UP\n");
+		}
+		
+		//scrollwheel up
+		if (holdScrollUp)
+		{
+			INPUT input;
+			input.type = INPUT_MOUSE;
+			input.mi.mouseData = scrollSpeed;
+			input.mi.dwFlags = MOUSEEVENTF_WHEEL;
+			input.mi.time = 0;
+			SendInput(1, &input, sizeof(INPUT));
+			printf("---------------WHEEL-UP\n");
+		}
+
+		//scrollwheel down
+		if (holdScrollDown)
+		{
+			INPUT input;
+			input.type = INPUT_MOUSE;
+			input.mi.mouseData = -scrollSpeed;
+			input.mi.dwFlags = MOUSEEVENTF_WHEEL;
+			input.mi.time = 0;
+			SendInput(1, &input, sizeof(INPUT));
+			printf("---------------WHEEL-DOWN\n");
 		}
 
 		//arrow up
@@ -548,10 +588,10 @@ void gopherLoop(){
 
 
 		
-		SetCursorPos(x,y); //after all click input processing
+		SetCursorPos(leftX,leftY); //after all click input processing
 		
 
-		printf("Move X:%d, Y:%d\n", (int)addX, -(int)addY);
+		printf("Move X:%d, Y:%d\n", (int)addXLeft, -(int)addYLeft);
 
 		}
 		Sleep(sleepAmount);
