@@ -1,5 +1,5 @@
-/*-------------------------------------------------------------------------------    
-	Gopher free software: you can redistribute it and/or modify
+/*-------------------------------------------------------------------------------   
+    Gopher free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
@@ -14,11 +14,13 @@
 ---------------------------------------------------------------------------------*/
 
 #include <Windows.h>
-#include <Xinput.h>
+#include <Xinput.h> //controller
 #include <stdio.h>
+#include <cmath> //for abs()
 #pragma comment(lib, "XInput.lib")
 
 void gopherLoop();
+BOOL IsElevated();
 
 /*To do:
 * Enable/disable button
@@ -75,19 +77,36 @@ CXBOXController* Controller;
 
 int main()
 {
-	SetConsoleTitle( TEXT( "Gopher v0.8" ) );
+	SetConsoleTitle( TEXT( "Gopher v0.95" ) );
 	Controller = new CXBOXController(1);
 
 	system("Color 1D");
-	printf("Welcome to Gopher - a tremendously lightweight controller-to-Mouse tool.\nSee the GitHub repository for Gopher for more information. Copyleft 2014.\n\n-------------------------\n\n");
+
+
+	//MessageBox(NULL,L"You'll need to run Gopher as an administrator if you intend use the on-screen keyboard. Otherwise, Windows will ignore attempted keystrokes. If not, carry on!",L"Gopher", MB_OK | MB_ICONINFORMATION);
+	//Add admin rights checker. If none, display this?
+
+	printf("Welcome to Gopher/Gopher360 - a lightweight controller->keyboard & mouse tool.\nSee the GitHub repository at bit.ly/1syAhMT for more info. Copyleft 2014.\n\n-------------------------\n\n");
 	printf("Gopher is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n");
 	printf("\nYou should have received a copy of the GNU General Public License\nalong with this program. If not, see http://www.gnu.org/licenses/.\n\n-------------------------\n\n");
-	printf("Verify controller and press ENTER to begin reading and displaying input...\n\n\n");
+	printf("Verify controller and press ENTER to begin...\n\n\n");
 
 	getchar(); //press enter
 
+	if(!IsElevated())
+	{
+		printf("Tip - Gopher isn't being ran as an administrator.\nWindows won't let you use the on-screen keyboard without it.\nLaunching in 3 seconds...\n\n");
+		Beep(1400,100);
+		Sleep(3000);
+	}
+
+
 	printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBeginning read sequence at ~62.5 loops per second. Prepare for main loop!\n");
-	Sleep(1500);
+	Sleep(1000);
+
+	Beep(1400,100);
+	Beep(1400,100);
+	Beep(1400,100);
 
 	while(true){
 		gopherLoop();
@@ -164,18 +183,13 @@ void gopherLoop(){
 
 
 	//get LX info
-	if(Controller->GetState().Gamepad.sThumbLX > deadZone)
-	{
-
-		addX = (speed * (Controller->GetState().Gamepad.sThumbLX*range));
-	}
-	else if(Controller->GetState().Gamepad.sThumbLX < -deadZone)
+	if(abs(Controller->GetState().Gamepad.sThumbLX) > deadZone)
 	{
 		addX = (speed * (Controller->GetState().Gamepad.sThumbLX*range));
 	}
 
 	//zero check
-	if(Controller->GetState().Gamepad.sThumbLX < deadZone && Controller->GetState().Gamepad.sThumbLX > -deadZone)
+	else
 	{
 		addX = 0.0f;
 	}
@@ -183,18 +197,13 @@ void gopherLoop(){
 
 
 	//get LY info
-	if(Controller->GetState().Gamepad.sThumbLY > deadZone)
-	{
-
-		addY = -(speed * (Controller->GetState().Gamepad.sThumbLY*range));
-	}
-	else if(Controller->GetState().Gamepad.sThumbLY < -deadZone)
+	if(abs(Controller->GetState().Gamepad.sThumbLY) > deadZone)
 	{
 		addY = -(speed * (Controller->GetState().Gamepad.sThumbLY*range));
 	}
 
 	//zero check
-	if(Controller->GetState().Gamepad.sThumbLY < deadZone && Controller->GetState().Gamepad.sThumbLY > -deadZone)
+	else
 	{
 		addY = 0.0f;
 	}
@@ -202,107 +211,64 @@ void gopherLoop(){
 
 
 	//XINPUT_GAMEPAD_A
-	if(Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_A)
+	holdLeft = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_A);
+
+	if (holdLeft)
 	{
 		//printf("HOLDING MOUSE1..........................\n");
-		holdLeft = true;
 	}
-	else if (Controller->GetState().Gamepad.wButtons != XINPUT_GAMEPAD_A)
+	else
 	{
 		//printf("NOT HOLDING..........................\n");
-		holdLeft = false;
 	}
 
 
 
 	//XINPUT_GAMEPAD_X
-	if(Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_X)
+	holdRight = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_X);
+
+	if (holdRight)
 	{
 		//printf("HOLDING X..........................\n");
-		holdRight = true;
 	}
-	else if (Controller->GetState().Gamepad.wButtons != XINPUT_GAMEPAD_X)
+	else
 	{
 		//printf("NOT HOLDING X..........................\n");
-		holdRight = false;
 	}
 
 
 	//XINPUT_GAMEPAD_B
-	if(Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_B)
+	holdEnter = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_B);
+	
+	if (holdEnter)
 	{
 		//printf("HOLDING B..........................\n");
-		holdEnter = true;
 	}
-	else if (Controller->GetState().Gamepad.wButtons != XINPUT_GAMEPAD_B)
+	else
 	{
 		//printf("NOT HOLDING B..........................\n");
-		holdEnter = false;
 	}
 
 
 
 
-		//XINPUT_GAMEPAD_START
-	if(Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_START)
-	{
-		holdStart = true;
-	}
-	else if (Controller->GetState().Gamepad.wButtons != XINPUT_GAMEPAD_START)
-	{
-		holdStart = false;
-	}
+	//XINPUT_GAMEPAD_START
+	holdStart = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_START);
 
 	//XINPUT_GAMEPAD_LEFT_THUMB
-	if(Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_LEFT_THUMB)
-	{
-		holdLThumb = true;
-	}
-	else if (Controller->GetState().Gamepad.wButtons != XINPUT_GAMEPAD_LEFT_THUMB)
-	{
-		holdLThumb = false;
-	}
-
+	holdLThumb = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_LEFT_THUMB);
 
 	//XINPUT_GAMEPAD_DPAD_UP
-	if(Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_UP)
-	{
-		holdDUp = true;
-	}
-	else if (Controller->GetState().Gamepad.wButtons != XINPUT_GAMEPAD_DPAD_UP)
-	{
-		holdDUp = false;
-	}
+	holdDUp = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_UP);
 
-		//XINPUT_GAMEPAD_DPAD_DOWN
-	if(Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_DOWN)
-	{
-		holdDDown = true;
-	}
-	else if (Controller->GetState().Gamepad.wButtons != XINPUT_GAMEPAD_DPAD_DOWN)
-	{
-		holdDDown = false;
-	}
+	//XINPUT_GAMEPAD_DPAD_DOWN
+	holdDDown = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_DOWN);
 
-		//XINPUT_GAMEPAD_DPAD_LEFT
-	if(Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_LEFT)
-	{
-		holdDLeft = true;
-	}
-	else if (Controller->GetState().Gamepad.wButtons != XINPUT_GAMEPAD_DPAD_LEFT)
-	{
-		holdDLeft = false;
-	}
+	//XINPUT_GAMEPAD_DPAD_LEFT
+	holdDLeft = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_LEFT);
 
-		//XINPUT_GAMEPAD_DPAD_RIGHT
-	if(Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_RIGHT)
-	{
-		holdDRight = true;
-	}
-	else if (Controller->GetState().Gamepad.wButtons != XINPUT_GAMEPAD_DPAD_RIGHT)
-	{
-		holdDRight = false;
-	}
+	//XINPUT_GAMEPAD_DPAD_RIGHT
+	holdDRight = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_RIGHT);
 
 
 //process input ---------------------------------------------------------------------------------------------------------------------------------
@@ -314,19 +280,22 @@ void gopherLoop(){
 		x = cursor.x;
 		y = cursor.y;
 
-		x += (int)addX;
-		y += (int)addY;
-
-		if (addY > -truncZone && addY < truncZone && addY != 0)
+		if (abs(addY) > truncZone)
 		{
-					y = cursor.y; // truncate extremely low values
-					//printf("Truncated Y\n");
+			y += (int)addY;
+		}
+		else // truncate extremely low values
+		{
+			//printf("Truncated Y\n");
 		}
 
-		if (addX > -truncZone && addX < truncZone && addX != 0)
+		if (abs(addX) > truncZone)
 		{
-					x = cursor.x; // truncate extremely low values
-					//printf("Truncated X\n");
+			x += (int)addX;
+		}
+		else // truncate extremely low values
+		{
+			//printf("Truncated X\n");
 		}
 
 
@@ -338,67 +307,73 @@ void gopherLoop(){
 
 
 		//lmouse
-		if(holdLeft == true && holdingLeft == false){ // && holdingLeftMouseButton == false
+		if(holdLeft && !holdingLeft){ // && holdingLeftMouseButton == false
 			INPUT input;
 			input.type = INPUT_MOUSE;
 			input.mi.mouseData=0;
 			input.mi.dwFlags =  MOUSEEVENTF_LEFTDOWN;
-			SendInput(1,&input,sizeof(input));
+			input.mi.time = 0;
+			SendInput(1, &input, sizeof(INPUT));
 			holdingLeft = true;
 			printf("---------------L-DOWN\n");
 		}
-		else if(holdLeft == false && holdingLeft == true){
+		else if(!holdLeft && holdingLeft){
 			INPUT input;
 			input.type = INPUT_MOUSE;
 			input.mi.mouseData=0;
 			input.mi.dwFlags =  MOUSEEVENTF_LEFTUP;
-			SendInput(1,&input,sizeof(input));
+			input.mi.time = 0;
+			SendInput(1, &input, sizeof(INPUT));
 			holdingLeft = false;
 			printf("---------------L-UP\n");
 		}
 
 		//rmouse
-		if(holdRight == true && holdingRight == false){ // && holdingLeftMouseButton == false
+		if(holdRight && !holdingRight){ // && holdingLeftMouseButton == false
 			INPUT input;
 			input.type = INPUT_MOUSE;
 			input.mi.mouseData=0;
 			input.mi.dwFlags =  MOUSEEVENTF_RIGHTDOWN;
-			SendInput(1,&input,sizeof(input));
+			input.mi.time = 0;
+			SendInput(1, &input, sizeof(INPUT));
 			holdingRight = true;
 			printf("---------------R-DOWN\n");
 		}
-		else if(holdRight == false && holdingRight == true){
+		else if(!holdRight && holdingRight){
 			INPUT input;
 			input.type = INPUT_MOUSE;
 			input.mi.mouseData=0;
 			input.mi.dwFlags =  MOUSEEVENTF_RIGHTUP;
-			SendInput(1,&input,sizeof(input));
+			input.mi.time = 0;
+			SendInput(1, &input, sizeof(INPUT));
 			holdingRight = false;
 			printf("---------------R-UP\n");
 		}
 
 		//middlemouse
-		if(holdLThumb == true && holdingLThumb == false){
+		if(holdLThumb && !holdingLThumb){
 			INPUT input;
 			input.type = INPUT_MOUSE;
 			input.mi.mouseData=0;
 			input.mi.dwFlags =  MOUSEEVENTF_MIDDLEDOWN;
-			SendInput(1,&input,sizeof(input));
+			input.mi.time = 0;
+			SendInput(1, &input, sizeof(INPUT));
 			holdingLThumb = true;
 			printf("---------------MM-DOWN\n");
 		}
-		else if(holdLThumb == false && holdingLThumb == true){
+		else if(!holdLThumb && holdingLThumb){
 			INPUT input;
 			input.type = INPUT_MOUSE;
 			input.mi.mouseData=0;
 			input.mi.dwFlags =  MOUSEEVENTF_MIDDLEUP;
-			SendInput(1,&input,sizeof(input));
+			input.mi.time = 0;
+			SendInput(1, &input, sizeof(INPUT));
 			holdingLThumb = false;
 			printf("---------------MM-UP\n");
 		}
 
 		//arrow up
-		if(holdDUp == true && holdingDUp == false){
+		if(holdDUp && !holdingDUp){
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -411,7 +386,7 @@ void gopherLoop(){
 			holdingDUp = true;
 			printf("---------------DPU-DOWN\n");
 		}
-		else if(holdDUp == false && holdingDUp == true){
+		else if(!holdDUp && holdingDUp){
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -426,7 +401,7 @@ void gopherLoop(){
 		}
 
 		//arrow down
-		if(holdDDown == true && holdingDDown == false){
+		if(holdDDown && !holdingDDown){
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -439,7 +414,7 @@ void gopherLoop(){
 			holdingDDown = true;
 			printf("---------------DPD-DOWN\n");
 		}
-		else if(holdDDown == false && holdingDDown == true){
+		else if(!holdDDown && holdingDDown){
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -454,11 +429,68 @@ void gopherLoop(){
 		}
 
 
+		//arrow left
+		if(holdDLeft && !holdingDLeft){
+			INPUT input;
+			input.type = INPUT_KEYBOARD;
+			input.ki.wScan = 0;
+			input.ki.time = 0;
+			input.ki.dwExtraInfo = 0;
+			input.ki.wVk = VK_LEFT;
+			input.ki.dwFlags = 0;
+			SendInput(1, &input, sizeof(INPUT));
+
+			holdingDLeft = true;
+			printf("---------------DPL-DOWN\n");
+		}
+		else if(!holdDLeft && holdingDLeft){
+			INPUT input;
+			input.type = INPUT_KEYBOARD;
+			input.ki.wScan = 0;
+			input.ki.time = 0;
+			input.ki.dwExtraInfo = 0;
+			input.ki.wVk = VK_LEFT;
+			input.ki.dwFlags = KEYEVENTF_KEYUP;
+			SendInput(1, &input, sizeof(INPUT));
+
+			holdingDLeft = false;
+			printf("---------------DPL-UP\n");
+		}
+
+
+		//arrow right
+		if(holdDRight && !holdingDRight){
+			INPUT input;
+			input.type = INPUT_KEYBOARD;
+			input.ki.wScan = 0;
+			input.ki.time = 0;
+			input.ki.dwExtraInfo = 0;
+			input.ki.wVk = VK_RIGHT;
+			input.ki.dwFlags = 0;
+			SendInput(1, &input, sizeof(INPUT));
+
+			holdingDRight = true;
+			printf("---------------DPR-DOWN\n");
+		}
+		else if(!holdDRight && holdingDRight){
+			INPUT input;
+			input.type = INPUT_KEYBOARD;
+			input.ki.wScan = 0;
+			input.ki.time = 0;
+			input.ki.dwExtraInfo = 0;
+			input.ki.wVk = VK_RIGHT;
+			input.ki.dwFlags = KEYEVENTF_KEYUP;
+			SendInput(1, &input, sizeof(INPUT));
+
+			holdingDRight = false;
+			printf("---------------DPR-UP\n");
+		}
+
 
 
 
 		//start
-		if(holdStart == true && holdingStart == false){
+		if(holdStart && !holdingStart){
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -471,7 +503,7 @@ void gopherLoop(){
 			holdingStart = true;
 			printf("---------------START-DOWN\n");
 		}
-		else if(holdStart == false && holdingStart == true){
+		else if(!holdStart && holdingStart){
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -487,7 +519,7 @@ void gopherLoop(){
 
 
 		//enter
-		if(holdEnter == true && holdingEnter == false){
+		if(holdEnter && !holdingEnter){
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -500,7 +532,7 @@ void gopherLoop(){
 			holdingEnter = true;
 			printf("---------------B-DOWN\n");
 		}
-		else if(holdEnter == false && holdingEnter == true){
+		else if(!holdEnter && holdingEnter){
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -527,6 +559,31 @@ void gopherLoop(){
 } //..........................................................................................End GopherLoop
 
 
+BOOL IsElevated()
+{
+    BOOL   fRet = FALSE;
+    HANDLE hToken = NULL;
+
+    if(OpenProcessToken(GetCurrentProcess(),TOKEN_QUERY,&hToken))
+	{
+        TOKEN_ELEVATION Elevation;
+        DWORD cbSize = sizeof( TOKEN_ELEVATION );
+
+        if(GetTokenInformation(hToken, TokenElevation, &Elevation, sizeof( Elevation), &cbSize))
+		{
+            fRet = Elevation.TokenIsElevated;
+        }
+    }
+
+    if(hToken)
+	{
+        CloseHandle(hToken);
+    }
+
+    return fRet;
+}
+
+
 CXBOXController::CXBOXController(int playerNumber)
 {
 	_controllerNum = playerNumber - 1; //set number
@@ -544,10 +601,5 @@ bool CXBOXController::IsConnected()
 	ZeroMemory(&_controllerState, sizeof(XINPUT_STATE));
 	DWORD Result = XInputGetState(_controllerNum, &_controllerState);
 
-	if(Result == ERROR_SUCCESS){
-		return true;
-	}
-	else{
-		return false;
-	}
+	return (Result == ERROR_SUCCESS);
 }
