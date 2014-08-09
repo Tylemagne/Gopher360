@@ -15,19 +15,21 @@ Once you've plugged in your XBox 360 controller and pressed enter, a feed of inp
 
 Start: Windows Start.
 
-A: Click.
+**A**: Click.
 
-X: Right-click.
+**X**: Right-click.
 
-B: Enter.
+**B**: Enter.
 
-D-pad: Arrow keys.
+**D-pad**: Arrow keys.
 
-Left Analog: Mouse.
+**Right Analog**: Scroll up/down
 
-Left Analog Click: Middle mouse click (for scrolling web pages).
+**Left Analog**: Mouse.
 
-Back: Toggle. Useful for when you launch emulators or open Steam Big Picture mode. Press again to re-enable.
+**Left Analog Click**: Middle mouse click (for scrolling web pages).
+
+**Back**: Toggle. Useful for when you launch emulators or open Steam Big Picture mode. Press again to re-enable.
 
 
 TODO
