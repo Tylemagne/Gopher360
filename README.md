@@ -11,9 +11,8 @@ If you don't want to grab it from the 'releases' section at the top, you'll have
 
 Controls
 ======
-Once you've plugged in your XBox 360 controller and pressed enter, a feed of input logging will pour in. The controls are as follows:
 
-Start: Windows Start.
+**Start**: Windows Start.
 
 **A**: Click.
 
