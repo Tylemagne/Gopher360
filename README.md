@@ -14,7 +14,7 @@ None. Please create some and submit an issue to notify me!
 
 Download Instructions
 ======
-If you don't want to grab it from the 'releases' section at the top, you'll have to download the entire ZIP and get it from the Release folder. Click 'Download ZIP' in the bottom-right corner. Inside, you'll find Windows/Gopher/Release/Gopher.exe. I recommend you copy it somewhere outside of the ZIP and make a shortcut to it. Adding it to your startup folder in your HTPC can make bootups a lot more convenient!
+Check out the 'releases' link at the top. I recommend you copy it somewhere outside of the ZIP and make a shortcut to it. Adding it to your startup folder in your HTPC can make bootups a lot more convenient!
 
 Controls
 ======
