@@ -14,7 +14,7 @@
 ---------------------------------------------------------------------------------*/
 
 //changes 0.96 -> 0.97: speed variable is global, detects bumpers, all timed (no enter), lbumper speed toggler
-//changes 0.97 -> 0.98: 
+//changes 0.97 -> 0.98: ...
 
 #include <Windows.h> //for Beep()
 #include <Xinput.h> //controller
