@@ -97,7 +97,7 @@ CXBOXController* Controller;
 
 int main()
 {
-	SetConsoleTitle( TEXT( "Gopher v0.96" ) );
+	SetConsoleTitle( TEXT( "Gopher v0.97" ) );
 	Controller = new CXBOXController(1);
 
 	system("Color 1D");
