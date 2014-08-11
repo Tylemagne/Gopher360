@@ -37,7 +37,7 @@ Controls
 
 **Back**: Toggle. Useful for when you launch emulators or open Steam Big Picture mode. Press again to re-enable.
 
-(planned)**LBumper**: Cycle speed (x4)
+**LBumper**: Cycle speed (x3)
 
 (planned)**RBumper**: Cycle master volume (x8)
 
