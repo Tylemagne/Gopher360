@@ -13,9 +13,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ---------------------------------------------------------------------------------*/
 
-#include <Windows.h>
+//changes 0.96 -> 0.97: speed variable is global, detects bumpers, all timed (no enter), lbumper speed toggler
+//changes 0.97 -> 0.98: 
+
+#include <Windows.h> //for Beep()
 #include <Xinput.h> //controller
-#include <stdio.h>
+#include <stdio.h> //for printf
 #include <cmath> //for abs()
 #pragma comment(lib, "XInput.lib")
 
@@ -43,6 +46,11 @@ public:
 
 CXBOXController* Controller;
 
+	float speed = 0.000125f; //multiplied by integer value of analog X and Y (32,000).
+	float speed_low  = 0.000075f;
+	float speed_med  = 0.000125f;
+	float speed_high = 0.000175f;
+
 	bool holdLeft; //instructed to hold
 	bool holdingLeft; //is actually holding
 
@@ -67,7 +75,7 @@ CXBOXController* Controller;
 	bool holdLThumb;
 	bool holdingLThumb;
 
-	bool holdDUp;
+	bool holdDUp; //dpad
 	bool holdingDUp;
 
 	bool holdDDown;
@@ -78,6 +86,12 @@ CXBOXController* Controller;
 
 	bool holdDRight;
 	bool holdingDRight;
+
+	bool holdBLeft; //bumpers
+	bool holdingBLeft;
+
+	bool holdBRight;
+	bool holdingBRight;
 
 	bool disabled = false; //use for Select sleep mode
 
@@ -95,9 +109,11 @@ int main()
 	printf("Welcome to Gopher/Gopher360 - a lightweight controller->keyboard & mouse tool.\nSee the GitHub repository at bit.ly/1syAhMT for more info. Copyleft 2014.\n\n-------------------------\n\n");
 	printf("Gopher is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n");
 	printf("\nYou should have received a copy of the GNU General Public License\nalong with this program. If not, see http://www.gnu.org/licenses/.\n\n-------------------------\n\n");
-	printf("Verify controller and press ENTER to begin...\n\n\n");
+	printf("Verify controller and wait 8 seconds to begin...\n\n\n");
 
-	getchar(); //press enter
+	Sleep(8000);
+
+	//getchar(); //press enter
 
 	if(!IsElevated())
 	{
@@ -127,15 +143,14 @@ void gopherLoop(){
 
 	int leftX;
 	int leftY;
-	int rightx;
-	int righty;
+	//int rightx; //disabled to avoid 'unused' compiler warning
+	//int righty;
 	float addXLeft;
 	float addYLeft;
-	float addXRight;
-	float addYRight;
+	//float addXRight;
+	//float addYRight;
 	int deadZone = 3000; //X and Y minimum, below this is ignored since all controllers have some stick to them
 	int scrollDeadZone = 7000; // Right thumbstick should be less sensitive.
-	float speed = 0.000125f; //multiplied by integer value of analog X and Y (32,000).
 	int scrollSpeed = 20; // Speed at which you scroll page.
 	float range = 4.0f; //4 gives a decent range. Raising this requires a lowering of speed as well.
 	int truncZone = 3; //anything below this is ignored and the mouse sits still, similar to a deadzone
@@ -159,15 +174,15 @@ void gopherLoop(){
 	}
 
 
-			//XINPUT_GAMEPAD_BACK - disable/enable
-		if(holdBack == true && holdingBack == false){ // && holdingLeftMouseButton == false
+	//XINPUT_GAMEPAD_BACK - disable/enable
+	if(holdBack == true && holdingBack == false){ // && holdingLeftMouseButton == false
 
-			holdingBack = true;
-			printf("---------------BACK-DOWN\n");
-		}
-		else if(holdBack == false && holdingBack == true){
-			holdingBack = false;
-			if(disabled == false){
+		holdingBack = true;
+		printf("---------------BACK-DOWN\n");
+	}
+	else if(holdBack == false && holdingBack == true){
+		holdingBack = false;
+		if(disabled == false){
 				printf("---------------BACK-UP - Toggled off, ignoring all input but 'Back'.\n");
 				disabled = true;
 				Beep(1800,200);
@@ -176,8 +191,8 @@ void gopherLoop(){
 				Beep(1200,200);
 				Beep(1000,200);
 				//Sleep(1000);
-			}
-			else if(disabled == true){
+		}
+		else if(disabled == true){
 				printf("---------------BACK-UP - Toggled on, taking all input.\n");
 				disabled = false;
 				Beep(1000,200);
@@ -186,8 +201,8 @@ void gopherLoop(){
 				Beep(1600,200);
 				Beep(1800,200);
 				//Sleep(1000);
-			}
 		}
+	}
 
 
 	if(disabled == false){
@@ -265,6 +280,9 @@ void gopherLoop(){
 		//printf("NOT HOLDING B..........................\n");
 	}
 
+	//bumpers/shoulders
+	holdBLeft = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_LEFT_SHOULDER);
+	holdBRight = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_RIGHT_SHOULDER);
 
 
 
@@ -322,7 +340,7 @@ void gopherLoop(){
 		if(addXLeft < -32768) addXLeft = 0;
 
 
-		//lmouse
+		//lmouse click
 		if(holdLeft && !holdingLeft){ // && holdingLeftMouseButton == false
 			INPUT input;
 			input.type = INPUT_MOUSE;
@@ -344,7 +362,7 @@ void gopherLoop(){
 			printf("---------------L-UP\n");
 		}
 
-		//rmouse
+		//rmouse click
 		if(holdRight && !holdingRight){ // && holdingLeftMouseButton == false
 			INPUT input;
 			input.type = INPUT_MOUSE;
@@ -366,7 +384,7 @@ void gopherLoop(){
 			printf("---------------R-UP\n");
 		}
 
-		//middlemouse
+		//middlemouse click
 		if(holdLThumb && !holdingLThumb){
 			INPUT input;
 			input.type = INPUT_MOUSE;
@@ -584,6 +602,35 @@ void gopherLoop(){
 
 			holdingEnter = false;
 			printf("---------------B-UP\n");
+		}
+
+		//left bumper/shoulder (speed cycler)
+		if(holdBLeft && !holdingBLeft){
+			holdingBLeft = true;
+			printf("---------------BLEFT-DOWN\n");
+		}
+		else if(!holdBLeft && holdingBLeft){
+
+			holdingBLeft = false;
+			printf("---------------BLEFT-UP\n");
+			if(speed == speed_low) {Beep(240,250); speed = speed_med;}
+			else if(speed == speed_med) {Beep(260,250); speed = speed_high;}
+			else if(speed == speed_high){Beep(200,250); speed = speed_low;}
+			
+		}
+
+
+		//left bumper/shoulder
+		if(holdBRight && !holdingBRight){
+	
+
+			holdingBRight = true;
+			printf("---------------BRIGHT-DOWN\n");
+		}
+		else if(!holdBRight && holdingBRight){
+
+			holdingBRight = false;
+			printf("---------------BRIGHT-UP\n");
 		}
 
 
