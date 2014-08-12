@@ -13,10 +13,36 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\inih">
+      <UniqueIdentifier>{4b1ead10-5f84-4feb-a565-6aa24dfb372f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\inih">
+      <UniqueIdentifier>{8c5c68a2-6ec7-4315-8f62-0bbfce80dce9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\inih\cpp\INIReader.cpp">
+      <Filter>Source Files\inih</Filter>
+    </ClCompile>
+    <ClCompile Include="..\inih\ini.c">
+      <Filter>Source Files\inih</Filter>
+    </ClCompile>
+    <ClCompile Include="Configuration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\inih\ini.h">
+      <Filter>Header Files\inih</Filter>
+    </ClInclude>
+    <ClInclude Include="Configuration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inih\cpp\INIReader.h">
+      <Filter>Header Files\inih</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
