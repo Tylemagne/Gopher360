@@ -20,10 +20,12 @@
 #include <Xinput.h> //controller
 #include <stdio.h> //for printf
 #include <cmath> //for abs()
+#include <fstream> // for config file
 #pragma comment(lib, "XInput.lib")
 
 void gopherLoop();
 BOOL IsElevated();
+void setKeyBind(LPCWSTR key, int &keyBind);
 
 /*To do:
 * Enable/disable button
@@ -51,11 +53,11 @@ CXBOXController* Controller;
 	float speed_med  = 0.000125f;
 	float speed_high = 0.000175f;
 
-	bool holdLeft; //instructed to hold
-	bool holdingLeft; //is actually holding
+	bool holdLeftMouse; //instructed to hold
+	bool holdingLeftMouse; //is actually holding
 
-	bool holdRight;
-	bool holdingRight;
+	bool holdRightMouse;
+	bool holdingRightMouse;
 	
 	bool holdScrollUp;
 	bool holdingScrollUp = false;
@@ -66,37 +68,84 @@ CXBOXController* Controller;
 	bool holdEnter;
 	bool holdingEnter;
 
-	bool holdBack;
-	bool holdingBack;
+	bool holdDisable;
+	bool holdingDisable;
 
-	bool holdStart;
-	bool holdingStart;
+	bool holdWindows;
+	bool holdingWindows;
 
 	bool holdLThumb;
 	bool holdingLThumb;
 
-	bool holdDUp; //dpad
-	bool holdingDUp;
+	bool holdUp; //dpad
+	bool holdingUp;
 
-	bool holdDDown;
-	bool holdingDDown;
+	bool holdDown;
+	bool holdingDown;
 
-	bool holdDLeft;
-	bool holdingDLeft;
+	bool holdLeft;
+	bool holdingLeft;
 
-	bool holdDRight;
-	bool holdingDRight;
+	bool holdRight;
+	bool holdingRight;
 
-	bool holdBLeft; //bumpers
-	bool holdingBLeft;
+	bool holdSpeed; //bumpers
+	bool holdingSpeed;
 
-	bool holdBRight;
-	bool holdingBRight;
+	bool holdVolume;
+	bool holdingVolume;
 
 	bool disabled = false; //use for Select sleep mode
 
+	// Ints used to store proper key binds
+	int leftMouseBind,
+	rightMouseBind,
+	disableBind,
+	windowsBind,
+	enterBind,
+	leftBind,
+	rightBind,
+	upBind,
+	downBind,
+	speedBind,
+	volumeBind;
+
 int main()
 {
+	if (!std::ifstream("keyBinds.ini"))
+	{
+		LPCWSTR keyBinds = L"leftMouse=a\0rightMouse=x\0disable=back\0windows=start\0enter=b\0left=dLeft\0right=dRight\0up=dUp\0down=dDown\0speed=lBumper\0volume=rBumper\0";
+		WritePrivateProfileSection(L"keybinds", keyBinds, L".\\keyBinds.ini");
+
+		// Initialize Default Values
+		leftMouseBind = XINPUT_GAMEPAD_A;
+		rightMouseBind = XINPUT_GAMEPAD_X;
+		disableBind = XINPUT_GAMEPAD_BACK;
+		windowsBind = XINPUT_GAMEPAD_START;
+		enterBind = XINPUT_GAMEPAD_B;
+		leftBind = XINPUT_GAMEPAD_DPAD_LEFT;
+		rightBind = XINPUT_GAMEPAD_DPAD_RIGHT;
+		upBind = XINPUT_GAMEPAD_DPAD_UP;
+		downBind = XINPUT_GAMEPAD_DPAD_DOWN;
+		speedBind = XINPUT_GAMEPAD_LEFT_SHOULDER;
+		volumeBind = XINPUT_GAMEPAD_RIGHT_SHOULDER;
+	}
+	else
+	{
+		// Set Proper Key Binds based on ini file
+		setKeyBind(L"leftMouse", leftMouseBind);
+		setKeyBind(L"rightMouse", rightMouseBind);
+		setKeyBind(L"disable", disableBind);
+		setKeyBind(L"windows", windowsBind);
+		setKeyBind(L"enter", enterBind);
+		setKeyBind(L"left", leftBind);
+		setKeyBind(L"right", rightBind);
+		setKeyBind(L"up", upBind);
+		setKeyBind(L"down", downBind);
+		setKeyBind(L"speed", speedBind);
+		setKeyBind(L"volume", volumeBind);
+	}
+
 	SetConsoleTitle( TEXT( "Gopher v0.97" ) );
 	Controller = new CXBOXController(1);
 
@@ -156,6 +205,7 @@ void gopherLoop(){
 	int truncZone = 3; //anything below this is ignored and the mouse sits still, similar to a deadzone
 	int sleepAmount = 16; //ideally 16, refreshes 60 times per second (1000/16 = ~60)
 	POINT cursor; //ehh
+	XINPUT_STATE controllerState = Controller->GetState();
 
 
 //read input ---------------------------------------------------------------------------------------------------------------------------------
@@ -163,27 +213,18 @@ void gopherLoop(){
 //read input ---------------------------------------------------------------------------------------------------------------------------------
 
 
-		//XINPUT_GAMEPAD_BACK
-	if(Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_BACK)
-	{
-		holdBack = true;
-	}
-	else if (Controller->GetState().Gamepad.wButtons != XINPUT_GAMEPAD_BACK)
-	{
-		holdBack = false;
-	}
-
+	//XINPUT_GAMEPAD_BACK
+	holdDisable = (controllerState.Gamepad.wButtons == disableBind);
 
 	//XINPUT_GAMEPAD_BACK - disable/enable
-	if(holdBack == true && holdingBack == false){ // && holdingLeftMouseButton == false
-
-		holdingBack = true;
-		printf("---------------BACK-DOWN\n");
+	if(holdDisable == true && holdingDisable == false){ // && holdingLeftMouseButton == false
+		holdingDisable = true;
+		printf("---------------DISABLE-DOWN\n");
 	}
-	else if(holdBack == false && holdingBack == true){
-		holdingBack = false;
+	else if(holdDisable == false && holdingDisable == true){
+		holdingDisable = false;
 		if(disabled == false){
-				printf("---------------BACK-UP - Toggled off, ignoring all input but 'Back'.\n");
+				printf("---------------DISABLE-UP - Toggled off, ignoring all input but 'Back'.\n");
 				disabled = true;
 				Beep(1800,200);
 				Beep(1600,200);
@@ -193,7 +234,7 @@ void gopherLoop(){
 				//Sleep(1000);
 		}
 		else if(disabled == true){
-				printf("---------------BACK-UP - Toggled on, taking all input.\n");
+				printf("---------------DISABLE-UP - Toggled on, taking all input.\n");
 				disabled = false;
 				Beep(1000,200);
 				Beep(1200,200);
@@ -210,9 +251,9 @@ void gopherLoop(){
 
 
 	//get LX info
-	if(abs(Controller->GetState().Gamepad.sThumbLX) > deadZone)
+	if(abs(controllerState.Gamepad.sThumbLX) > deadZone)
 	{
-		addXLeft = (speed * (Controller->GetState().Gamepad.sThumbLX*range));
+		addXLeft = (speed * (controllerState.Gamepad.sThumbLX*range));
 	}
 
 	//zero check
@@ -221,12 +262,10 @@ void gopherLoop(){
 		addXLeft = 0.0f;
 	}
 
-
-
 	//get LY info
-	if(abs(Controller->GetState().Gamepad.sThumbLY) > deadZone)
+	if(abs(controllerState.Gamepad.sThumbLY) > deadZone)
 	{
-		addYLeft = -(speed * (Controller->GetState().Gamepad.sThumbLY*range));
+		addYLeft = -(speed * (controllerState.Gamepad.sThumbLY*range));
 	}
 
 	//zero check
@@ -236,73 +275,39 @@ void gopherLoop(){
 	}
 
 	//Get RY info
-	holdScrollUp = (Controller->GetState().Gamepad.sThumbRY > scrollDeadZone);
-	holdScrollDown = (Controller->GetState().Gamepad.sThumbRY < -scrollDeadZone);
-
-
+	holdScrollUp = (controllerState.Gamepad.sThumbRY > scrollDeadZone);
+	holdScrollDown = (controllerState.Gamepad.sThumbRY < -scrollDeadZone);
 
 	//XINPUT_GAMEPAD_A
-	holdLeft = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_A);
-
-	if (holdLeft)
-	{
-		//printf("HOLDING MOUSE1..........................\n");
-	}
-	else
-	{
-		//printf("NOT HOLDING..........................\n");
-	}
-
-
+	holdLeftMouse = (controllerState.Gamepad.wButtons == leftMouseBind);
 
 	//XINPUT_GAMEPAD_X
-	holdRight = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_X);
-
-	if (holdRight)
-	{
-		//printf("HOLDING X..........................\n");
-	}
-	else
-	{
-		//printf("NOT HOLDING X..........................\n");
-	}
-
+	holdRightMouse = (controllerState.Gamepad.wButtons == rightMouseBind);
 
 	//XINPUT_GAMEPAD_B
-	holdEnter = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_B);
+	holdEnter = (controllerState.Gamepad.wButtons == enterBind);
 	
-	if (holdEnter)
-	{
-		//printf("HOLDING B..........................\n");
-	}
-	else
-	{
-		//printf("NOT HOLDING B..........................\n");
-	}
-
 	//bumpers/shoulders
-	holdBLeft = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_LEFT_SHOULDER);
-	holdBRight = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_RIGHT_SHOULDER);
-
-
+	holdSpeed = (controllerState.Gamepad.wButtons == speedBind);
+	holdVolume = (controllerState.Gamepad.wButtons == XINPUT_GAMEPAD_RIGHT_SHOULDER);
 
 	//XINPUT_GAMEPAD_START
-	holdStart = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_START);
+	holdWindows = (controllerState.Gamepad.wButtons == windowsBind);
 
 	//XINPUT_GAMEPAD_LEFT_THUMB
-	holdLThumb = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_LEFT_THUMB);
+	holdLThumb = (controllerState.Gamepad.wButtons == XINPUT_GAMEPAD_LEFT_THUMB);
 
 	//XINPUT_GAMEPAD_DPAD_UP
-	holdDUp = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_UP);
+	holdUp = (controllerState.Gamepad.wButtons == upBind);
 
 	//XINPUT_GAMEPAD_DPAD_DOWN
-	holdDDown = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_DOWN);
+	holdDown = (controllerState.Gamepad.wButtons == downBind);
 
 	//XINPUT_GAMEPAD_DPAD_LEFT
-	holdDLeft = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_LEFT);
+	holdLeft = (controllerState.Gamepad.wButtons == leftBind);
 
 	//XINPUT_GAMEPAD_DPAD_RIGHT
-	holdDRight = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_RIGHT);
+	holdRight = (controllerState.Gamepad.wButtons == rightBind);
 
 
 //process input ---------------------------------------------------------------------------------------------------------------------------------
@@ -314,74 +319,64 @@ void gopherLoop(){
 		leftX = cursor.x;
 		leftY = cursor.y;
 
+		//filter non-32768 and 32767, wireless ones can glitch sometimes and send it to the edge of the screen
+		if (addYLeft > 32767) addYLeft = 0;
+		if (addYLeft < -32768) addYLeft = 0;
+		if (addXLeft > 32767) addXLeft = 0;
+		if (addXLeft < -32768) addXLeft = 0;
+
 		if (abs(addYLeft) > truncZone)
 		{
 			leftY += (int)addYLeft;
-		}
-		else // truncate extremely low values
-		{
-			//printf("Truncated Y\n");
 		}
 
 		if (abs(addXLeft) > truncZone)
 		{
 			leftX += (int)addXLeft;
 		}
-		else // truncate extremely low values
-		{
-			//printf("Truncated X\n");
-		}
-
-
-		//filter non-32768 and 32767, wireless ones can glitch sometimes and send it to the edge of the screen
-		if(addYLeft > 32767) addYLeft = 0;
-		if(addYLeft < -32768) addYLeft = 0;
-		if(addXLeft > 32767) addXLeft = 0;
-		if(addXLeft < -32768) addXLeft = 0;
-
 
 		//lmouse click
-		if(holdLeft && !holdingLeft){ // && holdingLeftMouseButton == false
+		if(holdLeftMouse && !holdingLeftMouse){ // && holdingLeftMouseButton == false
 			INPUT input;
 			input.type = INPUT_MOUSE;
 			input.mi.mouseData=0;
 			input.mi.dwFlags =  MOUSEEVENTF_LEFTDOWN;
 			input.mi.time = 0;
 			SendInput(1, &input, sizeof(INPUT));
-			holdingLeft = true;
-			printf("---------------L-DOWN\n");
+			holdingLeftMouse = true;
+			printf("---------------LM-DOWN\n");
 		}
-		else if(!holdLeft && holdingLeft){
+		else if(!holdLeftMouse && holdingLeftMouse){
 			INPUT input;
 			input.type = INPUT_MOUSE;
 			input.mi.mouseData=0;
 			input.mi.dwFlags =  MOUSEEVENTF_LEFTUP;
 			input.mi.time = 0;
 			SendInput(1, &input, sizeof(INPUT));
-			holdingLeft = false;
-			printf("---------------L-UP\n");
+			holdingLeftMouse = false;
+			printf("---------------LM-UP\n");
 		}
 
 		//rmouse click
-		if(holdRight && !holdingRight){ // && holdingLeftMouseButton == false
+		if(holdRightMouse && !holdingRightMouse){ // && holdingLeftMouseButton == false
 			INPUT input;
 			input.type = INPUT_MOUSE;
 			input.mi.mouseData=0;
 			input.mi.dwFlags =  MOUSEEVENTF_RIGHTDOWN;
 			input.mi.time = 0;
 			SendInput(1, &input, sizeof(INPUT));
-			holdingRight = true;
-			printf("---------------R-DOWN\n");
+			holdingRightMouse = true;
+			printf("---------------RM-DOWN\n");
 		}
-		else if(!holdRight && holdingRight){
+		else if(!holdRightMouse && holdingRightMouse){
 			INPUT input;
 			input.type = INPUT_MOUSE;
 			input.mi.mouseData=0;
 			input.mi.dwFlags =  MOUSEEVENTF_RIGHTUP;
 			input.mi.time = 0;
 			SendInput(1, &input, sizeof(INPUT));
-			holdingRight = false;
-			printf("---------------R-UP\n");
+			holdingRightMouse = false;
+			printf("---------------RM-UP\n");
 		}
 
 		//middlemouse click
@@ -431,7 +426,7 @@ void gopherLoop(){
 		}
 
 		//arrow up
-		if(holdDUp && !holdingDUp){
+		if(holdUp && !holdingUp){
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -441,10 +436,10 @@ void gopherLoop(){
 			input.ki.dwFlags = 0;
 			SendInput(1, &input, sizeof(INPUT));
 
-			holdingDUp = true;
-			printf("---------------DPU-DOWN\n");
+			holdingUp = true;
+			printf("---------------U-ARROW-DOWN\n");
 		}
-		else if(!holdDUp && holdingDUp){
+		else if(!holdUp && holdingUp){
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -454,12 +449,12 @@ void gopherLoop(){
 			input.ki.dwFlags = KEYEVENTF_KEYUP;
 			SendInput(1, &input, sizeof(INPUT));
 
-			holdingDUp = false;
-			printf("---------------DPU-UP\n");
+			holdingUp = false;
+			printf("---------------U-ARROW-UP\n");
 		}
 
 		//arrow down
-		if(holdDDown && !holdingDDown){
+		if(holdDown && !holdingDown){
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -469,10 +464,10 @@ void gopherLoop(){
 			input.ki.dwFlags = 0;
 			SendInput(1, &input, sizeof(INPUT));
 
-			holdingDDown = true;
-			printf("---------------DPD-DOWN\n");
+			holdingDown = true;
+			printf("---------------D-ARROW-DOWN\n");
 		}
-		else if(!holdDDown && holdingDDown){
+		else if(!holdDown && holdingDown){
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -482,13 +477,13 @@ void gopherLoop(){
 			input.ki.dwFlags = KEYEVENTF_KEYUP;
 			SendInput(1, &input, sizeof(INPUT));
 
-			holdingDDown = false;
-			printf("---------------DPD-UP\n");
+			holdingDown = false;
+			printf("---------------D-ARROW-UP\n");
 		}
 
 
 		//arrow left
-		if(holdDLeft && !holdingDLeft){
+		if(holdLeft && !holdingLeft){
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -498,10 +493,10 @@ void gopherLoop(){
 			input.ki.dwFlags = 0;
 			SendInput(1, &input, sizeof(INPUT));
 
-			holdingDLeft = true;
-			printf("---------------DPL-DOWN\n");
+			holdingLeft = true;
+			printf("---------------L-ARROW-DOWN\n");
 		}
-		else if(!holdDLeft && holdingDLeft){
+		else if(!holdLeft && holdingLeft){
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -511,13 +506,13 @@ void gopherLoop(){
 			input.ki.dwFlags = KEYEVENTF_KEYUP;
 			SendInput(1, &input, sizeof(INPUT));
 
-			holdingDLeft = false;
-			printf("---------------DPL-UP\n");
+			holdingLeft = false;
+			printf("---------------L-ARROW-UP\n");
 		}
 
 
 		//arrow right
-		if(holdDRight && !holdingDRight){
+		if(holdRight && !holdingRight){
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -527,10 +522,10 @@ void gopherLoop(){
 			input.ki.dwFlags = 0;
 			SendInput(1, &input, sizeof(INPUT));
 
-			holdingDRight = true;
-			printf("---------------DPR-DOWN\n");
+			holdingRight = true;
+			printf("---------------R-ARROW-DOWN\n");
 		}
-		else if(!holdDRight && holdingDRight){
+		else if(!holdRight && holdingRight){
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -540,15 +535,15 @@ void gopherLoop(){
 			input.ki.dwFlags = KEYEVENTF_KEYUP;
 			SendInput(1, &input, sizeof(INPUT));
 
-			holdingDRight = false;
-			printf("---------------DPR-UP\n");
+			holdingRight = false;
+			printf("---------------R-ARROW-UP\n");
 		}
 
 
 
 
-		//start
-		if(holdStart && !holdingStart){
+		//Windows
+		if(holdWindows && !holdingWindows){
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -558,10 +553,10 @@ void gopherLoop(){
 			input.ki.dwFlags = 0;
 			SendInput(1, &input, sizeof(INPUT));
 
-			holdingStart = true;
-			printf("---------------START-DOWN\n");
+			holdingWindows = true;
+			printf("---------------WINDOWS-DOWN\n");
 		}
-		else if(!holdStart && holdingStart){
+		else if(!holdWindows && holdingWindows){
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -571,12 +566,12 @@ void gopherLoop(){
 			input.ki.dwFlags = KEYEVENTF_KEYUP;
 			SendInput(1, &input, sizeof(INPUT));
 
-			holdingStart = false;
-			printf("---------------START-UP\n");
+			holdingWindows = false;
+			printf("---------------WINDOWS-UP\n");
 		}
 
 
-		//enter
+		//Enter
 		if(holdEnter && !holdingEnter){
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
@@ -588,7 +583,7 @@ void gopherLoop(){
 			SendInput(1, &input, sizeof(INPUT));
 
 			holdingEnter = true;
-			printf("---------------B-DOWN\n");
+			printf("---------------ENTER-DOWN\n");
 		}
 		else if(!holdEnter && holdingEnter){
 			INPUT input;
@@ -601,18 +596,18 @@ void gopherLoop(){
 			SendInput(1, &input, sizeof(INPUT));
 
 			holdingEnter = false;
-			printf("---------------B-UP\n");
+			printf("---------------ENTER-UP\n");
 		}
 
-		//left bumper/shoulder (speed cycler)
-		if(holdBLeft && !holdingBLeft){
-			holdingBLeft = true;
-			printf("---------------BLEFT-DOWN\n");
+		//Speed Cycler
+		if(holdSpeed && !holdingSpeed){
+			holdingSpeed = true;
+			printf("---------------SPEED-DOWN\n");
 		}
-		else if(!holdBLeft && holdingBLeft){
+		else if(!holdSpeed && holdingSpeed){
 
-			holdingBLeft = false;
-			printf("---------------BLEFT-UP\n");
+			holdingSpeed = false;
+			printf("---------------SPEED-UP\n");
 			if(speed == speed_low) {Beep(240,250); speed = speed_med;}
 			else if(speed == speed_med) {Beep(260,250); speed = speed_high;}
 			else if(speed == speed_high){Beep(200,250); speed = speed_low;}
@@ -620,17 +615,17 @@ void gopherLoop(){
 		}
 
 
-		//left bumper/shoulder
-		if(holdBRight && !holdingBRight){
+		//Volume Cycler
+		if(holdVolume && !holdingVolume){
 	
 
-			holdingBRight = true;
-			printf("---------------BRIGHT-DOWN\n");
+			holdVolume = true;
+			printf("---------------VOLUME-DOWN\n");
 		}
-		else if(!holdBRight && holdingBRight){
+		else if (!holdVolume && holdingVolume){
 
-			holdingBRight = false;
-			printf("---------------BRIGHT-UP\n");
+			holdingVolume = false;
+			printf("---------------VOLUME-UP\n");
 		}
 
 
@@ -689,4 +684,57 @@ bool CXBOXController::IsConnected()
 	DWORD Result = XInputGetState(_controllerNum, &_controllerState);
 
 	return (Result == ERROR_SUCCESS);
+}
+
+void setKeyBind(LPCWSTR key, int &keyBind)
+{
+	TCHAR fileValue[15];
+	GetPrivateProfileString(L"keybinds", key, NULL, fileValue, 15, L".\\keyBinds.ini");
+
+	std::wstring keyValue = fileValue;
+
+	if (keyValue == L"a")
+	{
+		keyBind = XINPUT_GAMEPAD_A;
+	}
+	else if (keyValue == L"x")
+	{
+		keyBind = XINPUT_GAMEPAD_X;
+	}
+	else if (keyValue == L"back")
+	{
+		keyBind = XINPUT_GAMEPAD_BACK;
+	}
+	else if (keyValue == L"start")
+	{
+		keyBind = XINPUT_GAMEPAD_START;
+	}
+	else if (keyValue == L"b")
+	{
+		keyBind = XINPUT_GAMEPAD_B;
+	}
+	else if (keyValue == L"dLeft")
+	{
+		keyBind = XINPUT_GAMEPAD_DPAD_LEFT;
+	}
+	else if (keyValue == L"dRight")
+	{
+		keyBind = XINPUT_GAMEPAD_DPAD_RIGHT;
+	}
+	else if (keyValue == L"dUp")
+	{
+		keyBind = XINPUT_GAMEPAD_DPAD_UP;
+	}
+	else if (keyValue == L"dDown")
+	{
+		keyBind = XINPUT_GAMEPAD_DPAD_DOWN;
+	}
+	else if (keyValue == L"lBumper")
+	{
+		keyBind = XINPUT_GAMEPAD_LEFT_SHOULDER;
+	}
+	else if (keyValue == L"rBumper")
+	{
+		keyBind = XINPUT_GAMEPAD_RIGHT_SHOULDER;
+	}
 }
