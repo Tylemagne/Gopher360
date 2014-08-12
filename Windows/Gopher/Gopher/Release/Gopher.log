@@ -1,17 +1,20 @@
-﻿Build started 8/6/2014 4:28:09 PM.
-     1>Project "G:\Dropbox New\Dropbox\Gopher pre-git\Gopher\Gopher\Gopher.vcxproj" on node 2 (build target(s)).
-     1>InitializeBuildStatus:
-         Creating "Release\Gopher.unsuccessfulbuild" because "AlwaysCreate" was specified.
-       ClCompile:
-         All outputs are up-to-date.
+﻿Build started 12-08-2014 18:10:20.
+     1>Project "C:\Users\Miguel\Documents\GitHub\Gopher\Windows\Gopher\Gopher\Gopher.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Configuration.cpp
+         Configuration.cpp
+     1>Configuration.cpp(14): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211) : see declaration of 'fopen'
        Link:
-         All outputs are up-to-date.
-         Gopher.vcxproj -> G:\Dropbox New\Dropbox\Gopher pre-git\Gopher\Release\Gopher.exe
-       FinalizeBuildStatus:
-         Deleting file "Release\Gopher.unsuccessfulbuild".
-         Touching "Release\Gopher.lastbuildstate".
-     1>Done Building Project "G:\Dropbox New\Dropbox\Gopher pre-git\Gopher\Gopher\Gopher.vcxproj" (build target(s)).
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Miguel\Documents\GitHub\Gopher\Windows\Gopher\Release\Gopher.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Miguel\Documents\GitHub\Gopher\Windows\Gopher\Release\Gopher.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Miguel\Documents\GitHub\Gopher\Windows\Gopher\Release\Gopher.lib" /MACHINE:X86 /SAFESEH Release\INIReader.obj
+         Release\ini.obj
+         Release\Configuration.obj
+         Release\main.obj
+         Generating code
+         Finished generating code
+         Gopher.vcxproj -> C:\Users\Miguel\Documents\GitHub\Gopher\Windows\Gopher\Release\Gopher.exe
+     1>Done Building Project "C:\Users\Miguel\Documents\GitHub\Gopher\Windows\Gopher\Gopher\Gopher.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.07
+Time Elapsed 00:00:00.82

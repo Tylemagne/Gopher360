@@ -1,17 +1,36 @@
-﻿Build started 8/6/2014 4:28:03 PM.
-     1>Project "G:\Dropbox New\Dropbox\Gopher pre-git\Gopher\Gopher\Gopher.vcxproj" on node 2 (build target(s)).
-     1>InitializeBuildStatus:
-         Touching "Debug\Gopher.unsuccessfulbuild".
-       ClCompile:
-         All outputs are up-to-date.
-       ManifestResourceCompile:
-         All outputs are up-to-date.
+﻿Build started 12-08-2014 13:01:50.
+     1>Project "C:\Users\Miguel\Documents\GitHub\Gopher\Windows\Gopher\Gopher\Gopher.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /Od /Oy- /GL /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\inih\cpp\INIReader.cpp Configuration.cpp main.cpp
+         main.cpp
+     1>c:\program files (x86)\microsoft visual studio 12.0\vc\include\sal_supp.h(57): warning C4005: '__useHeader' : macro redefinition
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\sal.h(2886) : see previous definition of '__useHeader'
+     1>c:\program files (x86)\microsoft visual studio 12.0\vc\include\specstrings_supp.h(77): warning C4005: '__on_failure' : macro redefinition
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\sal.h(2896) : see previous definition of '__on_failure'
+         Configuration.cpp
+     1>Configuration.cpp(12): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>Configuration.cpp(13): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>Configuration.cpp(14): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>Configuration.cpp(22): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211) : see declaration of 'fopen'
+     1>Configuration.cpp(34): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
+         INIReader.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /Od /Oy- /GL /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt ..\inih\ini.c
+         ini.c
+     1>..\inih\ini.c(56): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(195) : see declaration of 'strncpy'
+     1>..\inih\ini.c(175): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211) : see declaration of 'fopen'
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"G:\Dropbox New\Dropbox\Gopher pre-git\Gopher\Debug\Gopher.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Gopher.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"G:\Dropbox New\Dropbox\Gopher pre-git\Gopher\Debug\Gopher.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"G:\Dropbox New\Dropbox\Gopher pre-git\Gopher\Debug\Gopher.lib" /MACHINE:X86 Debug\Gopher.exe.embed.manifest.res
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Miguel\Documents\GitHub\Gopher\Windows\Gopher\Debug\Gopher.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Miguel\Documents\GitHub\Gopher\Windows\Gopher\Debug\Gopher.pdb" /SUBSYSTEM:WINDOWS /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Miguel\Documents\GitHub\Gopher\Windows\Gopher\Debug\Gopher.lib" /MACHINE:X86 Debug\INIReader.obj
+         Debug\ini.obj
+         Debug\Configuration.obj
          Debug\main.obj
-     1>LINK : fatal error LNK1123: failure during conversion to COFF: file invalid or corrupt
-     1>Done Building Project "G:\Dropbox New\Dropbox\Gopher pre-git\Gopher\Gopher\Gopher.vcxproj" (build target(s)) -- FAILED.
+     1>MSVCRTD.lib(crtexew.obj) : error LNK2001: unresolved external symbol _WinMain@16
+     1>C:\Users\Miguel\Documents\GitHub\Gopher\Windows\Gopher\Debug\Gopher.exe : fatal error LNK1120: 1 unresolved externals
+     1>Done Building Project "C:\Users\Miguel\Documents\GitHub\Gopher\Windows\Gopher\Gopher\Gopher.vcxproj" (Build target(s)) -- FAILED.
 
 Build FAILED.
 
-Time Elapsed 00:00:00.21
+Time Elapsed 00:00:01.44

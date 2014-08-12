@@ -20,6 +20,7 @@
 #include <Xinput.h> //controller
 #include <stdio.h> //for printf
 #include <cmath> //for abs()
+#include "Configuration.h" // for loading the configuration settings from the .ini file
 #pragma comment(lib, "XInput.lib")
 
 void gopherLoop();
@@ -42,6 +43,13 @@ public:
 	CXBOXController(int playerNumber);
 	XINPUT_STATE GetState();
 	bool IsConnected();
+};
+
+enum ESpeedStages
+{
+	SPEED_LOW,
+	SPEED_MED,
+	SPEED_HIGH
 };
 
 CXBOXController* Controller;
@@ -95,8 +103,18 @@ CXBOXController* Controller;
 
 	bool disabled = false; //use for Select sleep mode
 
+	Configuration* config; // Object that will handle any option that is stored inside the .ini file
+
 int main()
 {
+	config = new Configuration("test.ini"); // Create the object and parsing the .ini file
+
+	// Settings the options according to the ones in the Config File
+	speed_low = config->GetSpeedStage(SPEED_LOW);
+	speed_med = config->GetSpeedStage(SPEED_MED);
+	speed_high = config->GetSpeedStage(SPEED_HIGH);
+	printf("\t\tSpeed Stages\n\nSpeed Low\tSpeed Medium\tSpeed High\n%f\t%f\t%f\n\n", speed_low, speed_med, speed_high);
+	
 	SetConsoleTitle( TEXT( "Gopher v0.97" ) );
 	Controller = new CXBOXController(1);
 
