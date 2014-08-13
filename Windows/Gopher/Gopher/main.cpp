@@ -355,7 +355,7 @@ void gopherLoop(){
 			}
 
 			// B Button
-			else if (Controller->holdB && !Controller->holdingB)
+			if (Controller->holdB && !Controller->holdingB)
 			{
 				Controller->buttonPressed(Controller->bButton);
 				Controller->holdingB = true;
@@ -367,7 +367,7 @@ void gopherLoop(){
 			}
 
 			// X Button
-			else if (Controller->holdX && !Controller->holdingX)
+			if (Controller->holdX && !Controller->holdingX)
 			{
 				Controller->buttonPressed(Controller->xButton);
 				Controller->holdingX = true;
@@ -379,17 +379,19 @@ void gopherLoop(){
 			}
 
 			// Y Button
-			else if (Controller->holdY && !Controller->holdingY)
+			if (Controller->holdY && !Controller->holdingY)
 			{
 				Controller->buttonPressed(Controller->yButton);
+				Controller->holdingY = true;
 			}
 			else if (Controller->holdingY && !Controller->holdY)
 			{
 				Controller->buttonReleased(Controller->yButton);
+				Controller->holdingY = false;
 			}
 
 			// Start Button
-			else if (Controller->holdStart && !Controller->holdingStart)
+			if (Controller->holdStart && !Controller->holdingStart)
 			{
 				Controller->buttonPressed(Controller->startButton);
 				Controller->holdingStart = true;
@@ -401,7 +403,7 @@ void gopherLoop(){
 			}
 
 			// Up DPad
-			else if (Controller->holdDUp && !Controller->holdingDUp)
+			if (Controller->holdDUp && !Controller->holdingDUp)
 			{
 				Controller->buttonPressed(Controller->upDButton);
 				Controller->holdingDUp = true;
@@ -413,7 +415,7 @@ void gopherLoop(){
 			}
 
 			// Down DPad
-			else if (Controller->holdDDown && !Controller->holdingDDown)
+			if (Controller->holdDDown && !Controller->holdingDDown)
 			{
 				Controller->buttonPressed(Controller->downDButton);
 				Controller->holdingDDown = true;
@@ -425,7 +427,7 @@ void gopherLoop(){
 			}
 
 			// Left DPad
-			else if (Controller->holdDLeft && !Controller->holdingDLeft)
+			if (Controller->holdDLeft && !Controller->holdingDLeft)
 			{
 				Controller->buttonPressed(Controller->leftDButton);
 				Controller->holdingDLeft = true;
@@ -437,7 +439,7 @@ void gopherLoop(){
 			}
 
 			// Right DPad
-			else if (Controller->holdDRight && !Controller->holdingDRight)
+			if (Controller->holdDRight && !Controller->holdingDRight)
 			{
 				Controller->buttonPressed(Controller->rightDButton);
 				Controller->holdingDRight = true;
@@ -449,7 +451,7 @@ void gopherLoop(){
 			}
 
 			// Left Bumper
-			else if (Controller->holdLeftBumper && !Controller->holdingLeftBumper)
+			if (Controller->holdLeftBumper && !Controller->holdingLeftBumper)
 			{
 				Controller->buttonPressed(Controller->leftBumper);
 				Controller->holdingLeftBumper = true;
@@ -461,7 +463,7 @@ void gopherLoop(){
 			}
 
 			// Right Bumper
-			else if (Controller->holdRightBumper && !Controller->holdingRightBumper)
+			if (Controller->holdRightBumper && !Controller->holdingRightBumper)
 			{
 				Controller->buttonPressed(Controller->rightBumper);
 				Controller->holdingRightBumper = true;
@@ -473,7 +475,7 @@ void gopherLoop(){
 			}
 
 			// Left Stick
-			else if (Controller->holdLStick && !Controller->holdingLStick)
+			if (Controller->holdLStick && !Controller->holdingLStick)
 			{
 				Controller->buttonPressed(Controller->leftStick);
 				Controller->holdingLStick = true;
@@ -485,7 +487,7 @@ void gopherLoop(){
 			}
 
 			// Right Stick
-			else if (Controller->holdRStick && !Controller->holdingRStick)
+			if (Controller->holdRStick && !Controller->holdingRStick)
 			{
 				Controller->buttonPressed(Controller->rightStick);
 				Controller->holdingRStick = true;
@@ -497,7 +499,7 @@ void gopherLoop(){
 			}
 
 			// Right Trigger Half
-			else if (Controller->holdRightTriggerHalf && !Controller->holdingRightTriggerHalf)
+			if (Controller->holdRightTriggerHalf && !Controller->holdingRightTriggerHalf)
 			{
 				Controller->buttonPressed(Controller->rightTriggerHalf);
 				Controller->holdingRightTriggerHalf = true;
@@ -509,7 +511,7 @@ void gopherLoop(){
 			}
 
 			// Right Trigger Full
-			else if (Controller->holdRightTriggerFull && !Controller->holdingRightTriggerFull)
+			if (Controller->holdRightTriggerFull && !Controller->holdingRightTriggerFull)
 			{
 				Controller->buttonPressed(Controller->rightTriggerFull);
 				Controller->holdingRightTriggerFull = true;
@@ -521,7 +523,7 @@ void gopherLoop(){
 			}
 
 			// Left Trigger Half
-			else if (Controller->holdLeftTriggerHalf && !Controller->holdingLeftTriggerHalf)
+			if (Controller->holdLeftTriggerHalf && !Controller->holdingLeftTriggerHalf)
 			{
 				Controller->buttonPressed(Controller->leftTriggerHalf);
 				Controller->holdingLeftTriggerHalf = true;
@@ -533,7 +535,7 @@ void gopherLoop(){
 			}
 
 			// Left Trigger Full
-			else if (Controller->holdLeftTriggerFull && !Controller->holdingLeftTriggerFull)
+			if (Controller->holdLeftTriggerFull && !Controller->holdingLeftTriggerFull)
 			{
 				Controller->buttonPressed(Controller->leftTriggerFull);
 				Controller->holdingLeftTriggerFull = true;
