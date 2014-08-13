@@ -222,9 +222,6 @@ void gopherLoop(){
 	POINT cursor; //ehh
 	XINPUT_STATE controllerState = Controller->GetState();
 
-	bool holdScrollUp;
-	bool holdScrollDown;
-
 //read input ---------------------------------------------------------------------------------------------------------------------------------
 //read input ---------------------------------------------------------------------------------------------------------------------------------
 //read input ---------------------------------------------------------------------------------------------------------------------------------
@@ -301,10 +298,6 @@ void gopherLoop(){
 				addYLeft = 0.0f;
 			}
 
-			//get RY info
-			holdScrollUp = (controllerState.Gamepad.sThumbRY > scrollDeadZone);
-			holdScrollDown = (controllerState.Gamepad.sThumbRY < -scrollDeadZone);
-
 			//process input ---------------------------------------------------------------------------------------------------------------------------------
 			//process input ---------------------------------------------------------------------------------------------------------------------------------
 			//process input ---------------------------------------------------------------------------------------------------------------------------------
@@ -330,7 +323,7 @@ void gopherLoop(){
 				leftX += (int)addXLeft;
 			}
 
-			if (holdScrollUp)
+			if (controllerState.Gamepad.sThumbRY > scrollDeadZone)	// Scroll Up
 			{
 				INPUT input;
 				input.type = INPUT_MOUSE;
@@ -339,7 +332,7 @@ void gopherLoop(){
 				input.mi.time = 0;
 				SendInput(1, &input, sizeof(INPUT));
 			}
-			else if (holdScrollDown)
+			else if (controllerState.Gamepad.sThumbRY < -scrollDeadZone)	// Scroll Down
 			{
 				INPUT input;
 				input.type = INPUT_MOUSE;
@@ -480,7 +473,7 @@ void gopherLoop(){
 			}
 
 			// Left Stick
-			else if (Controller->holdLStick && !Controller->holdLStick)
+			else if (Controller->holdLStick && !Controller->holdingLStick)
 			{
 				Controller->buttonPressed(Controller->leftStick);
 				Controller->holdingLStick = true;
