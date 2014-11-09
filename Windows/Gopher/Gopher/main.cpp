@@ -14,15 +14,22 @@
 ---------------------------------------------------------------------------------*/
 
 //changes 0.96 -> 0.97: speed variable is global, detects bumpers, all timed (no enter), lbumper speed toggler
-//changes 0.97 -> 0.98: ...
+//changes 0.97 -> 0.98: performance improvements, operational volume function, shorter beeps, no XY text
+//changes 0.98 -> 0.99: unknown
+//1.0 requirements: bumpers+dpadup = bring back. bumpers+dpaddown = minimize to tray
 
 #include <Windows.h> //for Beep()
 #include <Xinput.h> //controller
 #include <stdio.h> //for printf
 #include <cmath> //for abs()
+#include <mmdeviceapi.h> //vol
+#include <endpointvolume.h> //vol
+
 #pragma comment(lib, "XInput.lib")
+#pragma comment(lib, "winmm") //for volume
 
 void gopherLoop();
+bool ChangeVolume(double nVolume,bool bScalar);
 BOOL IsElevated();
 
 /*To do:
@@ -97,7 +104,7 @@ CXBOXController* Controller;
 
 int main()
 {
-	SetConsoleTitle( TEXT( "Gopher v0.97" ) );
+	SetConsoleTitle( TEXT( "Gopher v0.98" ) );
 	Controller = new CXBOXController(1);
 
 	system("Color 1D");
@@ -109,9 +116,9 @@ int main()
 	printf("Welcome to Gopher/Gopher360 - a lightweight controller->keyboard & mouse tool.\nSee the GitHub repository at bit.ly/1syAhMT for more info. Copyleft 2014.\n\n-------------------------\n\n");
 	printf("Gopher is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n");
 	printf("\nYou should have received a copy of the GNU General Public License\nalong with this program. If not, see http://www.gnu.org/licenses/.\n\n-------------------------\n\n");
-	printf("Verify controller and wait 8 seconds to begin...\n\n\n");
+	printf("Plug in controller and THEN wait 5 seconds to begin...\n\n\n");
 
-	Sleep(8000);
+	Sleep(5000);
 
 	//getchar(); //press enter
 
@@ -124,11 +131,11 @@ int main()
 
 
 	printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBeginning read sequence at ~62.5 loops per second. Prepare for main loop!\n");
-	Sleep(1000);
+	Sleep(800);
 
-	Beep(1400,100);
-	Beep(1400,100);
-	Beep(1400,100);
+	Beep(1400,80);
+	Beep(1400,80);
+	Beep(1400,80);
 
 	while(true){
 		gopherLoop();
@@ -140,6 +147,7 @@ int main()
 void gopherLoop(){
 
 	//initialize variables ------------------------------------------------------------------------------------------------------------------
+	XINPUT_STATE currentState = Controller->GetState(); //added in 0.98
 
 	int leftX;
 	int leftY;
@@ -164,11 +172,11 @@ void gopherLoop(){
 
 
 		//XINPUT_GAMEPAD_BACK
-	if(Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_BACK)
+	if(currentState.Gamepad.wButtons == XINPUT_GAMEPAD_BACK)
 	{
 		holdBack = true;
 	}
-	else if (Controller->GetState().Gamepad.wButtons != XINPUT_GAMEPAD_BACK)
+	else if (currentState.Gamepad.wButtons != XINPUT_GAMEPAD_BACK)
 	{
 		holdBack = false;
 	}
@@ -205,14 +213,14 @@ void gopherLoop(){
 	}
 
 
-	if(disabled == false){
+	if(disabled == false){ //only listen to these if Gopher is enabled, otherwise only listens for the button that enables it, up ^
 
 
 
 	//get LX info
-	if(abs(Controller->GetState().Gamepad.sThumbLX) > deadZone)
+	if(abs(currentState.Gamepad.sThumbLX) > deadZone)
 	{
-		addXLeft = (speed * (Controller->GetState().Gamepad.sThumbLX*range));
+		addXLeft = (speed * (currentState.Gamepad.sThumbLX*range));
 	}
 
 	//zero check
@@ -224,9 +232,9 @@ void gopherLoop(){
 
 
 	//get LY info
-	if(abs(Controller->GetState().Gamepad.sThumbLY) > deadZone)
+	if(abs(currentState.Gamepad.sThumbLY) > deadZone)
 	{
-		addYLeft = -(speed * (Controller->GetState().Gamepad.sThumbLY*range));
+		addYLeft = -(speed * (currentState.Gamepad.sThumbLY*range));
 	}
 
 	//zero check
@@ -236,13 +244,13 @@ void gopherLoop(){
 	}
 
 	//Get RY info
-	holdScrollUp = (Controller->GetState().Gamepad.sThumbRY > scrollDeadZone);
-	holdScrollDown = (Controller->GetState().Gamepad.sThumbRY < -scrollDeadZone);
+	holdScrollUp = (currentState.Gamepad.sThumbRY > scrollDeadZone);
+	holdScrollDown = (currentState.Gamepad.sThumbRY < -scrollDeadZone);
 
 
 
 	//XINPUT_GAMEPAD_A
-	holdLeft = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_A);
+	holdLeft = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_A);
 
 	if (holdLeft)
 	{
@@ -256,7 +264,7 @@ void gopherLoop(){
 
 
 	//XINPUT_GAMEPAD_X
-	holdRight = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_X);
+	holdRight = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_X);
 
 	if (holdRight)
 	{
@@ -269,7 +277,7 @@ void gopherLoop(){
 
 
 	//XINPUT_GAMEPAD_B
-	holdEnter = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_B);
+	holdEnter = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_B);
 	
 	if (holdEnter)
 	{
@@ -281,28 +289,28 @@ void gopherLoop(){
 	}
 
 	//bumpers/shoulders
-	holdBLeft = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_LEFT_SHOULDER);
-	holdBRight = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_RIGHT_SHOULDER);
+	holdBLeft = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_LEFT_SHOULDER);
+	holdBRight = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_RIGHT_SHOULDER);
 
 
 
 	//XINPUT_GAMEPAD_START
-	holdStart = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_START);
+	holdStart = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_START);
 
 	//XINPUT_GAMEPAD_LEFT_THUMB
-	holdLThumb = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_LEFT_THUMB);
+	holdLThumb = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_LEFT_THUMB);
 
 	//XINPUT_GAMEPAD_DPAD_UP
-	holdDUp = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_UP);
+	holdDUp = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_UP);
 
 	//XINPUT_GAMEPAD_DPAD_DOWN
-	holdDDown = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_DOWN);
+	holdDDown = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_DOWN);
 
 	//XINPUT_GAMEPAD_DPAD_LEFT
-	holdDLeft = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_LEFT);
+	holdDLeft = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_LEFT);
 
 	//XINPUT_GAMEPAD_DPAD_RIGHT
-	holdDRight = (Controller->GetState().Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_RIGHT);
+	holdDRight = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_RIGHT);
 
 
 //process input ---------------------------------------------------------------------------------------------------------------------------------
@@ -333,7 +341,7 @@ void gopherLoop(){
 		}
 
 
-		//filter non-32768 and 32767, wireless ones can glitch sometimes and send it to the edge of the screen
+		//filter non-32768 and 32767, wireless ones can glitch sometimes and send it to the edge of the screen, it'll toss out some HUGE integer even when it's centered
 		if(addYLeft > 32767) addYLeft = 0;
 		if(addYLeft < -32768) addYLeft = 0;
 		if(addXLeft > 32767) addXLeft = 0;
@@ -612,11 +620,13 @@ void gopherLoop(){
 		else if(!holdBLeft && holdingBLeft){
 
 			holdingBLeft = false;
-			printf("---------------BLEFT-UP\n");
-			if(speed == speed_low) {Beep(240,250); speed = speed_med;}
-			else if(speed == speed_med) {Beep(260,250); speed = speed_high;}
-			else if(speed == speed_high){Beep(200,250); speed = speed_low;}
+			printf("---------------BLEFT-UP - CURSOR SPEED CHANGED\n");
+			if(speed == speed_low) {Beep(240,210); speed = speed_med;}
+			else if(speed == speed_med) {Beep(260,210); speed = speed_high;}
+			else if(speed == speed_high){Beep(200,210); speed = speed_low;}
+
 			
+			ChangeVolume(0.5,true); //works
 		}
 
 
@@ -638,7 +648,7 @@ void gopherLoop(){
 		SetCursorPos(leftX,leftY); //after all click input processing
 		
 
-		printf("Move X:%d, Y:%d\n", (int)addXLeft, -(int)addYLeft);
+		//printf("Move X:%d, Y:%d\n", (int)addXLeft, -(int)addYLeft); //disabled for being annoying
 
 		}
 		Sleep(sleepAmount);
@@ -669,6 +679,61 @@ BOOL IsElevated()
 
     return fRet;
 }
+
+
+//this works, but it's not enabled in the software since the best button for it is still undecided
+bool ChangeVolume(double nVolume,bool bScalar) //o b
+{
+ 
+    HRESULT hr=NULL;
+    bool decibels = false;
+    bool scalar = false;
+    double newVolume=nVolume;
+ 
+    CoInitialize(NULL);
+    IMMDeviceEnumerator *deviceEnumerator = NULL;
+    hr = CoCreateInstance(__uuidof(MMDeviceEnumerator), NULL, CLSCTX_INPROC_SERVER, 
+                          __uuidof(IMMDeviceEnumerator), (LPVOID *)&deviceEnumerator);
+    IMMDevice *defaultDevice = NULL;
+ 
+    hr = deviceEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, &defaultDevice);
+    deviceEnumerator->Release();
+    deviceEnumerator = NULL;
+ 
+    IAudioEndpointVolume *endpointVolume = NULL;
+    hr = defaultDevice->Activate(__uuidof(IAudioEndpointVolume), 
+         CLSCTX_INPROC_SERVER, NULL, (LPVOID *)&endpointVolume);
+    defaultDevice->Release();
+    defaultDevice = NULL;
+ 
+    // -------------------------
+    float currentVolume = 0;
+    endpointVolume->GetMasterVolumeLevel(&currentVolume);
+    //printf("Current volume in dB is: %f\n", currentVolume);
+
+    hr = endpointVolume->GetMasterVolumeLevelScalar(&currentVolume);
+    //CString strCur=L"";
+    //strCur.Format(L"%f",currentVolume);
+    //AfxMessageBox(strCur);
+
+    // printf("Current volume as a scalar is: %f\n", currentVolume);
+    if (bScalar==false)
+    {
+        hr = endpointVolume->SetMasterVolumeLevel((float)newVolume, NULL);
+    }
+    else if (bScalar==true)
+    {
+        hr = endpointVolume->SetMasterVolumeLevelScalar((float)newVolume, NULL);
+    }
+    endpointVolume->Release();
+ 
+    CoUninitialize();
+ 
+    return FALSE;
+}
+
+
+
 
 
 CXBOXController::CXBOXController(int playerNumber)
