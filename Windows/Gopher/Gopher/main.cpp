@@ -124,7 +124,7 @@ int main()
 
 	if(!IsElevated())
 	{
-		printf("Tip - Gopher isn't being ran as an administrator.\nWindows won't let you use the on-screen keyboard or games without it.\nLaunching in 3 seconds...\n\n");
+		printf("Tip - Gopher isn't being run as an administrator.\nWindows won't let you use the on-screen keyboard or games without it.\nLaunching in 3 seconds...\n\n");
 		Beep(1400,100);
 		Sleep(3000);
 	}
@@ -180,18 +180,26 @@ void gopherLoop(){
 	{
 		holdBack = false;
 	}
+	if(currentState.Gamepad.wButtons == XINPUT_GAMEPAD_START)
+	{
+		holdStart = true;
+	}
+	else if (currentState.Gamepad.wButtons != XINPUT_GAMEPAD_START)
+	{
+		holdStart = false;
+	}
 
 
 	//XINPUT_GAMEPAD_BACK - disable/enable
-	if(holdBack == true && holdingBack == false){ // && holdingLeftMouseButton == false
+	if(holdBack == true && holdStart == true && holdingBoth == false){ // && holdingLeftMouseButton == false
 
-		holdingBack = true;
-		printf("---------------BACK-DOWN\n");
+		holdingBoth = false;
+		printf("---------------BOTH-BACK-DOWN\n");
 	}
-	else if(holdBack == false && holdingBack == true){
-		holdingBack = false;
+	else if(holdBack == false && holdStart == false && holdingBoth == true){
+		holdingBoth = false;
 		if(disabled == false){
-				printf("---------------BACK-UP - Toggled off, ignoring all input but 'Back'.\n");
+				printf("---------------BOTH-BACK-UP - Toggled off, ignoring all input but 'Back && Start'.\n");
 				disabled = true;
 				Beep(1800,200);
 				Beep(1600,200);
@@ -201,7 +209,7 @@ void gopherLoop(){
 				//Sleep(1000);
 		}
 		else if(disabled == true){
-				printf("---------------BACK-UP - Toggled on, taking all input.\n");
+				printf("---------------BOTH-BACK-UP - Toggled on, taking all input.\n");
 				disabled = false;
 				Beep(1000,200);
 				Beep(1200,200);
