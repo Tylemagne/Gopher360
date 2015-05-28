@@ -6,15 +6,15 @@ Utility for turning controller input into mouse movement and click events. Gophe
 Gopher separates itself from the competition by being efficient, small, portable, free, and fully open. Competitors like XPadder and Joy2Key have their place, but Gopher really gives them a run for their money, even at its initial beta release.
 
 
-Video Demonstrations
+Video Demonstration
 ======
 
-None. Please create some and submit an issue to notify me!
+https://vine.co/v/MYadBgWXuWY
 
 
 Download Instructions
 ======
-Check out the 'releases' link at the top. I recommend you copy it somewhere outside of the ZIP and make a shortcut to it. Adding it to your startup folder in your HTPC can make bootups a lot more convenient!
+Check out the 'releases' link at the top for executables or source code downloads. I recommend you copy it somewhere outside of the ZIP and make a shortcut to it. Adding it to your startup folder in your HTPC can make bootups a lot more convenient!
 
 Controls
 ======
