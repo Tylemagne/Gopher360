@@ -15,10 +15,13 @@
 
 //changes 0.96 -> 0.97: speed variable is global, detects bumpers, all timed (no enter), lbumper speed toggler
 //changes 0.97 -> 0.98: performance improvements, operational volume function, shorter beeps, no XY text
-//changes 0.98 -> 0.99: unknown
-//1.0 requirements: bumpers+dpadup = bring back. bumpers+dpaddown = minimize to tray
+//changes 0.98 -> 0.985: 144Hz, Y to hide window(added float stillHoldingY), code cleanup, comments added
+//1.0 requirements: bumpers+dpadup = bring back. bumpers+dpaddown = minimize to tray. trigger=hide/minimize to tray?
+
+
 
 #include <Windows.h> //for Beep()
+#include <iostream> 
 #include <Xinput.h> //controller
 #include <stdio.h> //for printf
 #include <cmath> //for abs()
@@ -29,8 +32,9 @@
 #pragma comment(lib, "winmm") //for volume
 
 void gopherLoop();
-bool ChangeVolume(double nVolume,bool bScalar);
-BOOL IsElevated();
+void hideWindow(); //If press Y, toggle hide
+bool ChangeVolume(double nVolume,bool bScalar); //not used yet
+BOOL IsElevated(); //check if administrator, makes on-screen keyboard clickable
 
 /*To do:
 * Enable/disable button
@@ -51,18 +55,22 @@ public:
 	bool IsConnected();
 };
 
-CXBOXController* Controller;
+    CXBOXController* Controller; //begin declaring variables. TODO: Make them hold their control name rather than designated input (B instead of Enter)
 
-	float speed = 0.000125f; //multiplied by integer value of analog X and Y (32,000).
-	float speed_low  = 0.000075f;
-	float speed_med  = 0.000125f;
-	float speed_high = 0.000175f;
+	float speed      = 0.000085f; //multiplied by integer value of analog X and Y (32,000). NEEDS TO EQUAL ONE OF THE 3 SPEEDS.
+	float speed_low  = 0.000055f;
+	float speed_med  = 0.000085f;
+	float speed_high = 0.000125f;
 
 	bool holdLeft; //instructed to hold
 	bool holdingLeft; //is actually holding
 
 	bool holdRight;
 	bool holdingRight;
+
+	bool holdY;
+	bool holdingY;
+	bool stillHoldingY; //to check if it's still being held from the last loop
 	
 	bool holdScrollUp;
 	bool holdingScrollUp = false;
@@ -101,13 +109,16 @@ CXBOXController* Controller;
 	bool holdingBRight;
 
 	bool disabled = false; //use for Select sleep mode
+	bool hidden = false; //press Y to hide, check this var
 
 int main()
 {
-	SetConsoleTitle( TEXT( "Gopher v0.98" ) );
+	SetConsoleTitle( TEXT( "Gopher v0.985" ) ); 
 	Controller = new CXBOXController(1);
 
 	system("Color 1D");
+
+
 
 
 	//MessageBox(NULL,L"You'll need to run Gopher as an administrator if you intend use the on-screen keyboard. Otherwise, Windows will ignore attempted keystrokes. If not, carry on!",L"Gopher", MB_OK | MB_ICONINFORMATION);
@@ -118,19 +129,19 @@ int main()
 	printf("\nYou should have received a copy of the GNU General Public License\nalong with this program. If not, see http://www.gnu.org/licenses/.\n\n-------------------------\n\n");
 	printf("Plug in controller and THEN wait 5 seconds to begin...\n\n\n");
 
-	Sleep(5000);
+	Sleep(3000);
 
 	//getchar(); //press enter
 
 	if(!IsElevated())
 	{
-		printf("Tip - Gopher isn't being ran as an administrator.\nWindows won't let you use the on-screen keyboard or games without it.\nLaunching in 3 seconds...\n\n");
+		printf("Tip - Gopher isn't being ran as an administrator.\nWindows won't let you use the on-screen keyboard or games without it.\nLaunching in 2 seconds...\n\n");
 		Beep(1400,100);
-		Sleep(3000);
+		Sleep(2000);
 	}
 
 
-	printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBeginning read sequence at ~62.5 loops per second. Prepare for main loop!\n");
+	printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBeginning read sequence at 144FPS. Prepare for main loop!\n");
 	Sleep(800);
 
 	Beep(1400,80);
@@ -142,7 +153,21 @@ int main()
 	}
 }
 
-
+void hideWindow()
+{
+	if(!hidden){
+		HWND hWnd = GetConsoleWindow();
+		ShowWindow( hWnd, SW_HIDE ); 
+		hidden = true;
+		printf("Window hidden\n");
+	}
+	else if(hidden){
+		HWND hWnd = GetConsoleWindow();
+		ShowWindow( hWnd, SW_SHOW ); 
+		hidden = false;
+		printf("Window unhidden\n");
+	}
+}
 
 void gopherLoop(){
 
@@ -162,8 +187,8 @@ void gopherLoop(){
 	int scrollSpeed = 20; // Speed at which you scroll page.
 	float range = 4.0f; //4 gives a decent range. Raising this requires a lowering of speed as well.
 	int truncZone = 3; //anything below this is ignored and the mouse sits still, similar to a deadzone
-	int sleepAmount = 16; //ideally 16, refreshes 60 times per second (1000/16 = ~60)
-	POINT cursor; //ehh
+	int sleepAmount = 6; //ms to sleep. 16 = 60fps, 6 = 144fps
+	POINT cursor; //cursor data
 
 
 //read input ---------------------------------------------------------------------------------------------------------------------------------
@@ -259,6 +284,25 @@ void gopherLoop(){
 	else
 	{
 		//printf("NOT HOLDING..........................\n");
+	}
+
+
+	//XINPUT_GAMEPAD_Y                 TODO: Make it not spam
+	holdY = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_Y);
+
+	if (holdY)
+	{
+		if(!stillHoldingY){
+		hideWindow();
+		stillHoldingY = true;
+		}
+		
+		//printf("HOLDING Y..........................\n");
+	}
+	else
+	{
+		stillHoldingY = false;
+		//printf("NOT HOLDING Y..........................\n");
 	}
 
 
@@ -626,7 +670,7 @@ void gopherLoop(){
 			else if(speed == speed_high){Beep(200,210); speed = speed_low;}
 
 			
-			ChangeVolume(0.5,true); //works
+			//ChangeVolume(0.5,true); //works
 		}
 
 
