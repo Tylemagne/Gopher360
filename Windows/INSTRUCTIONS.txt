@@ -2,3 +2,5 @@
 2. Make sure Xinput is properly configured with the project
 3. Select "Release"
 4. Press F7
+
+To get the source, click "Download Zip" or go here: https://github.com/Tylemagne/Gopher360/archive/master.zip
