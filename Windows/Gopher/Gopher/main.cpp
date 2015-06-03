@@ -124,7 +124,7 @@ int main()
 	//MessageBox(NULL,L"You'll need to run Gopher as an administrator if you intend use the on-screen keyboard. Otherwise, Windows will ignore attempted keystrokes. If not, carry on!",L"Gopher", MB_OK | MB_ICONINFORMATION);
 	//Add admin rights checker. If none, display this?
 
-	printf("Welcome to Gopher/Gopher360 - a lightweight controller->keyboard & mouse tool.\nSee the GitHub repository at bit.ly/1syAhMT for more info. Copyleft 2014.\n\n-------------------------\n\n");
+	printf("Welcome to Gopher360 - a lightweight controller-to-KBM tool.\nSee /r/Gopher360 and the GitHub repository at bit.ly/1syAhMT for more info. Copyleft 2014.\n\n-------------------------\n\n");
 	printf("Gopher is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n");
 	printf("\nYou should have received a copy of the GNU General Public License\nalong with this program. If not, see http://www.gnu.org/licenses/.\n\n-------------------------\n\n");
 	printf("Plug in controller and THEN wait 5 seconds to begin...\n\n\n");
