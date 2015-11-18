@@ -17,29 +17,19 @@ void Gopher::hideWindow()
 }
 
 void Gopher::loop() {
+	currentState = Controller->GetState();
 
-	//initialize variables ------------------------------------------------------------------------------------------------------------------
-	currentState = Controller->GetState(); //added in 0.98
-
-										   //XINPUT_GAMEPAD_BACK
-	if (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_BACK)
-	{
-		holdBack = true;
-	}
-	else if (currentState.Gamepad.wButtons != XINPUT_GAMEPAD_BACK)
-	{
-		holdBack = false;
-	}
+	holdBack = currentState.Gamepad.wButtons == XINPUT_GAMEPAD_BACK;
 
 	//XINPUT_GAMEPAD_BACK - disable/enable
-	if (holdBack == true && holdingBack == false) { // && holdingLeftMouseButton == false
+	if (holdBack && !holdingBack) { // && !holdingLeftMouseButton
 
 		holdingBack = true;
 		printf("---------------BACK-DOWN\n");
 	}
-	else if (holdBack == false && holdingBack == true) {
+	else if (!holdBack && holdingBack) {
 		holdingBack = false;
-		if (disabled == false) {
+		if (!disabled) {
 			printf("---------------BACK-UP - Toggled off, ignoring all input but 'Back'.\n");
 			disabled = true;
 			Beep(1800, 200);
@@ -49,7 +39,7 @@ void Gopher::loop() {
 			Beep(1000, 200);
 			//Sleep(1000);
 		}
-		else if (disabled == true) {
+		else if (disabled) {
 			printf("---------------BACK-UP - Toggled on, taking all input.\n");
 			disabled = false;
 			Beep(1000, 200);
@@ -61,7 +51,7 @@ void Gopher::loop() {
 		}
 	}
 
-	if (disabled == false) { //only listen to these if Gopher is enabled, otherwise only listens for the button that enables it, up ^
+	if (!disabled) { //only listen to these if Gopher is enabled, otherwise only listens for the button that enables it, up ^
 
 							 //get LX info
 		if (abs(currentState.Gamepad.sThumbLX) > deadZone)
@@ -201,7 +191,7 @@ void Gopher::loop() {
 		if (addXLeft < -32768) addXLeft = 0;
 
 		//lmouse click
-		if (holdLeft && !holdingLeft) { // && holdingLeftMouseButton == false
+		if (holdLeft && !holdingLeft) { // && !holdingLeftMouseButton
 			INPUT input;
 			input.type = INPUT_MOUSE;
 			input.mi.mouseData = 0;
@@ -223,7 +213,7 @@ void Gopher::loop() {
 		}
 
 		//rmouse click
-		if (holdRight && !holdingRight) { // && holdingLeftMouseButton == false
+		if (holdRight && !holdingRight) { // && !holdingLeftMouseButton
 			INPUT input;
 			input.type = INPUT_MOUSE;
 			input.mi.mouseData = 0;
