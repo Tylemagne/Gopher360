@@ -28,7 +28,7 @@
 #include <mmdeviceapi.h> //vol
 #include <endpointvolume.h> //vol
 
-#pragma comment(lib, "XInput.lib")
+#pragma comment(lib, "XInput9_1_0.lib")
 #pragma comment(lib, "winmm") //for volume
 
 void gopherLoop();
