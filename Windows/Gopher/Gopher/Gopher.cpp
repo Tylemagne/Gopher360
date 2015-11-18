@@ -16,8 +16,41 @@ void Gopher::hideWindow()
 	}
 }
 
+void Gopher::handleDPad()
+{
+}
+
+void Gopher::handleMouse()
+{
+	POINT cursor;
+	GetCursorPos(&cursor);
+
+	int addXLeft = (speed * (currentState.Gamepad.sThumbLX * range));
+	int addYLeft = -(speed * (currentState.Gamepad.sThumbLY * range));
+
+	//filter non-32768 and 32767, wireless ones can glitch sometimes and send it to the edge of the screen, it'll toss out some HUGE integer even when it's centered
+	if (addYLeft > 32767) addYLeft = 0;
+	if (addYLeft < -32768) addYLeft = 0;
+	if (addXLeft > 32767) addXLeft = 0;
+	if (addXLeft < -32768) addXLeft = 0;
+
+	int leftX = cursor.x;
+	int leftY = cursor.y;
+
+	int dist = addXLeft * addXLeft + addYLeft * addYLeft;
+
+	if (dist > truncZone * truncZone)
+	{
+		leftY += (int)addYLeft;
+		leftX += (int)addXLeft;
+	}
+
+	SetCursorPos(leftX, leftY); //after all click input processing
+}
+
 void Gopher::loop() {
 	currentState = Controller->GetState();
+	handleMouse();
 
 	holdBack = currentState.Gamepad.wButtons == XINPUT_GAMEPAD_BACK;
 
@@ -54,28 +87,7 @@ void Gopher::loop() {
 	if (!disabled) { //only listen to these if Gopher is enabled, otherwise only listens for the button that enables it, up ^
 
 							 //get LX info
-		if (abs(currentState.Gamepad.sThumbLX) > deadZone)
-		{
-			addXLeft = (speed * (currentState.Gamepad.sThumbLX * range));
-		}
-
-		//zero check
-		else
-		{
-			addXLeft = 0.0f;
-		}
-
-		//get LY info
-		if (abs(currentState.Gamepad.sThumbLY) > deadZone)
-		{
-			addYLeft = -(speed * (currentState.Gamepad.sThumbLY * range));
-		}
-
-		//zero check
-		else
-		{
-			addYLeft = 0.0f;
-		}
+		
 
 		//Get RY info
 		holdScrollUp = (currentState.Gamepad.sThumbRY > scrollDeadZone);
@@ -156,39 +168,6 @@ void Gopher::loop() {
 
 		//XINPUT_GAMEPAD_DPAD_RIGHT
 		holdDRight = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_RIGHT);
-
-		//process input ---------------------------------------------------------------------------------------------------------------------------------
-		//process input ---------------------------------------------------------------------------------------------------------------------------------
-		//process input ---------------------------------------------------------------------------------------------------------------------------------
-
-		GetCursorPos(&cursor);
-
-		leftX = cursor.x;
-		leftY = cursor.y;
-
-		if (abs(addYLeft) > truncZone)
-		{
-			leftY += (int)addYLeft;
-		}
-		else // truncate extremely low values
-		{
-			//printf("Truncated Y\n");
-		}
-
-		if (abs(addXLeft) > truncZone)
-		{
-			leftX += (int)addXLeft;
-		}
-		else // truncate extremely low values
-		{
-			//printf("Truncated X\n");
-		}
-
-		//filter non-32768 and 32767, wireless ones can glitch sometimes and send it to the edge of the screen, it'll toss out some HUGE integer even when it's centered
-		if (addYLeft > 32767) addYLeft = 0;
-		if (addYLeft < -32768) addYLeft = 0;
-		if (addXLeft > 32767) addXLeft = 0;
-		if (addXLeft < -32768) addXLeft = 0;
 
 		//lmouse click
 		if (holdLeft && !holdingLeft) { // && !holdingLeftMouseButton
@@ -476,7 +455,6 @@ void Gopher::loop() {
 			printf("---------------BRIGHT-UP\n");
 		}
 
-		SetCursorPos(leftX, leftY); //after all click input processing
 
 									//printf("Move X:%d, Y:%d\n", (int)addXLeft, -(int)addYLeft); //disabled for being annoying
 

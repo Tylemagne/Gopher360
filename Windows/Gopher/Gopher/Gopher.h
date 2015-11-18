@@ -11,7 +11,7 @@
 #pragma once
 class Gopher
 {
-public:
+private:
 	const int deadZone = 3000; //X and Y minimum, below this is ignored since all controllers have some stick to them
 	const int scrollDeadZone = 7000; // Right thumbstick should be less sensitive.
 	const int scrollSpeed = 20; // Speed at which you scroll page.
@@ -20,16 +20,6 @@ public:
 	const int sleepAmount = 6; //ms to sleep. 16 = 60fps, 6 = 144fps
 
 	XINPUT_STATE currentState;
-
-	int leftX;
-	int leftY;
-
-	float addXLeft;
-	float addYLeft;
-
-	POINT cursor;
-
-	CXBOXController* Controller; //begin declaring variables. TODO: Make them hold their control name rather than designated input (B instead of Enter)
 
 	float speed_low = 0.000055f;
 	float speed_med = 0.000085f;
@@ -86,6 +76,12 @@ public:
 	bool hidden = false; //press Y to hide, check this var
 
 public:
+	CXBOXController* Controller; //begin declaring variables. TODO: Make them hold their control name rather than designated input (B instead of Enter)
+
 	void loop();
 	void hideWindow();
+
+	void handleDPad();
+	void handleMouse();
+
 };
