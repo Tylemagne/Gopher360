@@ -1,4 +1,4 @@
-/*-------------------------------------------------------------------------------   
+/*-------------------------------------------------------------------------------
     Gopher free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -18,10 +18,8 @@
 //changes 0.98 -> 0.985: 144Hz, Y to hide window(added float stillHoldingY), code cleanup, comments added
 //1.0 requirements: bumpers+dpadup = bring back. bumpers+dpaddown = minimize to tray. trigger=hide/minimize to tray?
 
-
-
 #include <Windows.h> //for Beep()
-#include <iostream> 
+#include <iostream>
 #include <Xinput.h> //controller
 #include <stdio.h> //for printf
 #include <cmath> //for abs()
@@ -33,7 +31,7 @@
 
 void gopherLoop();
 void hideWindow(); //If press Y, toggle hide
-bool ChangeVolume(double nVolume,bool bScalar); //not used yet
+bool ChangeVolume(double nVolume, bool bScalar); //not used yet
 BOOL IsElevated(); //check if administrator, makes on-screen keyboard clickable
 
 /*To do:
@@ -55,71 +53,68 @@ public:
 	bool IsConnected();
 };
 
-    CXBOXController* Controller; //begin declaring variables. TODO: Make them hold their control name rather than designated input (B instead of Enter)
+CXBOXController* Controller; //begin declaring variables. TODO: Make them hold their control name rather than designated input (B instead of Enter)
 
-	float speed      = 0.000085f; //multiplied by integer value of analog X and Y (32,000). NEEDS TO EQUAL ONE OF THE 3 SPEEDS.
-	float speed_low  = 0.000055f;
-	float speed_med  = 0.000085f;
-	float speed_high = 0.000125f;
+float speed      = 0.000085f; //multiplied by integer value of analog X and Y (32,000). NEEDS TO EQUAL ONE OF THE 3 SPEEDS.
+float speed_low  = 0.000055f;
+float speed_med  = 0.000085f;
+float speed_high = 0.000125f;
 
-	bool holdLeft; //instructed to hold
-	bool holdingLeft; //is actually holding
+bool holdLeft; //instructed to hold
+bool holdingLeft; //is actually holding
 
-	bool holdRight;
-	bool holdingRight;
+bool holdRight;
+bool holdingRight;
 
-	bool holdY;
-	bool holdingY;
-	bool stillHoldingY; //to check if it's still being held from the last loop
-	
-	bool holdScrollUp;
-	bool holdingScrollUp = false;
+bool holdY;
+bool holdingY;
+bool stillHoldingY; //to check if it's still being held from the last loop
 
-	bool holdScrollDown;
-	bool holdingScrollDown = false;
+bool holdScrollUp;
+bool holdingScrollUp = false;
 
-	bool holdEnter;
-	bool holdingEnter;
+bool holdScrollDown;
+bool holdingScrollDown = false;
 
-	bool holdBack;
-	bool holdingBack;
+bool holdEnter;
+bool holdingEnter;
 
-	bool holdStart;
-	bool holdingStart;
+bool holdBack;
+bool holdingBack;
 
-	bool holdLThumb;
-	bool holdingLThumb;
+bool holdStart;
+bool holdingStart;
 
-	bool holdDUp; //dpad
-	bool holdingDUp;
+bool holdLThumb;
+bool holdingLThumb;
 
-	bool holdDDown;
-	bool holdingDDown;
+bool holdDUp; //dpad
+bool holdingDUp;
 
-	bool holdDLeft;
-	bool holdingDLeft;
+bool holdDDown;
+bool holdingDDown;
 
-	bool holdDRight;
-	bool holdingDRight;
+bool holdDLeft;
+bool holdingDLeft;
 
-	bool holdBLeft; //bumpers
-	bool holdingBLeft;
+bool holdDRight;
+bool holdingDRight;
 
-	bool holdBRight;
-	bool holdingBRight;
+bool holdBLeft; //bumpers
+bool holdingBLeft;
 
-	bool disabled = false; //use for Select sleep mode
-	bool hidden = false; //press Y to hide, check this var
+bool holdBRight;
+bool holdingBRight;
+
+bool disabled = false; //use for Select sleep mode
+bool hidden = false; //press Y to hide, check this var
 
 int main()
 {
-	SetConsoleTitle( TEXT( "Gopher v0.985" ) ); 
+	SetConsoleTitle( TEXT( "Gopher v0.985" ) );
 	Controller = new CXBOXController(1);
 
 	system("Color 1D");
-
-
-
 
 	//MessageBox(NULL,L"You'll need to run Gopher as an administrator if you intend use the on-screen keyboard. Otherwise, Windows will ignore attempted keystrokes. If not, carry on!",L"Gopher", MB_OK | MB_ICONINFORMATION);
 	//Add admin rights checker. If none, display this?
@@ -133,43 +128,42 @@ int main()
 
 	//getchar(); //press enter
 
-	if(!IsElevated())
+	if (!IsElevated())
 	{
 		printf("Tip - Gopher isn't being ran as an administrator.\nWindows won't let you use the on-screen keyboard or games without it.\nLaunching in 2 seconds...\n\n");
-		Beep(1400,100);
+		Beep(1400, 100);
 		Sleep(2000);
 	}
-
 
 	printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBeginning read sequence at 144FPS. Prepare for main loop!\n");
 	Sleep(800);
 
-	Beep(1400,80);
-	Beep(1400,80);
-	Beep(1400,80);
+	Beep(1400, 80);
+	Beep(1400, 80);
+	Beep(1400, 80);
 
-	while(true){
+	while (true) {
 		gopherLoop();
 	}
 }
 
 void hideWindow()
 {
-	if(!hidden){
+	if (!hidden) {
 		HWND hWnd = GetConsoleWindow();
-		ShowWindow( hWnd, SW_HIDE ); 
+		ShowWindow( hWnd, SW_HIDE );
 		hidden = true;
 		printf("Window hidden\n");
 	}
-	else if(hidden){
+	else if (hidden) {
 		HWND hWnd = GetConsoleWindow();
-		ShowWindow( hWnd, SW_SHOW ); 
+		ShowWindow( hWnd, SW_SHOW );
 		hidden = false;
 		printf("Window unhidden\n");
 	}
 }
 
-void gopherLoop(){
+void gopherLoop() {
 
 	//initialize variables ------------------------------------------------------------------------------------------------------------------
 	XINPUT_STATE currentState = Controller->GetState(); //added in 0.98
@@ -190,14 +184,12 @@ void gopherLoop(){
 	int sleepAmount = 6; //ms to sleep. 16 = 60fps, 6 = 144fps
 	POINT cursor; //cursor data
 
-
 //read input ---------------------------------------------------------------------------------------------------------------------------------
 //read input ---------------------------------------------------------------------------------------------------------------------------------
 //read input ---------------------------------------------------------------------------------------------------------------------------------
 
-
-		//XINPUT_GAMEPAD_BACK
-	if(currentState.Gamepad.wButtons == XINPUT_GAMEPAD_BACK)
+	//XINPUT_GAMEPAD_BACK
+	if (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_BACK)
 	{
 		holdBack = true;
 	}
@@ -206,163 +198,148 @@ void gopherLoop(){
 		holdBack = false;
 	}
 
-
 	//XINPUT_GAMEPAD_BACK - disable/enable
-	if(holdBack == true && holdingBack == false){ // && holdingLeftMouseButton == false
+	if (holdBack == true && holdingBack == false) { // && holdingLeftMouseButton == false
 
 		holdingBack = true;
 		printf("---------------BACK-DOWN\n");
 	}
-	else if(holdBack == false && holdingBack == true){
+	else if (holdBack == false && holdingBack == true) {
 		holdingBack = false;
-		if(disabled == false){
-				printf("---------------BACK-UP - Toggled off, ignoring all input but 'Back'.\n");
-				disabled = true;
-				Beep(1800,200);
-				Beep(1600,200);
-				Beep(1400,200);
-				Beep(1200,200);
-				Beep(1000,200);
-				//Sleep(1000);
+		if (disabled == false) {
+			printf("---------------BACK-UP - Toggled off, ignoring all input but 'Back'.\n");
+			disabled = true;
+			Beep(1800, 200);
+			Beep(1600, 200);
+			Beep(1400, 200);
+			Beep(1200, 200);
+			Beep(1000, 200);
+			//Sleep(1000);
 		}
-		else if(disabled == true){
-				printf("---------------BACK-UP - Toggled on, taking all input.\n");
-				disabled = false;
-				Beep(1000,200);
-				Beep(1200,200);
-				Beep(1400,200);
-				Beep(1600,200);
-				Beep(1800,200);
-				//Sleep(1000);
+		else if (disabled == true) {
+			printf("---------------BACK-UP - Toggled on, taking all input.\n");
+			disabled = false;
+			Beep(1000, 200);
+			Beep(1200, 200);
+			Beep(1400, 200);
+			Beep(1600, 200);
+			Beep(1800, 200);
+			//Sleep(1000);
 		}
 	}
 
+	if (disabled == false) { //only listen to these if Gopher is enabled, otherwise only listens for the button that enables it, up ^
 
-	if(disabled == false){ //only listen to these if Gopher is enabled, otherwise only listens for the button that enables it, up ^
-
-
-
-	//get LX info
-	if(abs(currentState.Gamepad.sThumbLX) > deadZone)
-	{
-		addXLeft = (speed * (currentState.Gamepad.sThumbLX*range));
-	}
-
-	//zero check
-	else
-	{
-		addXLeft = 0.0f;
-	}
-
-
-
-	//get LY info
-	if(abs(currentState.Gamepad.sThumbLY) > deadZone)
-	{
-		addYLeft = -(speed * (currentState.Gamepad.sThumbLY*range));
-	}
-
-	//zero check
-	else
-	{
-		addYLeft = 0.0f;
-	}
-
-	//Get RY info
-	holdScrollUp = (currentState.Gamepad.sThumbRY > scrollDeadZone);
-	holdScrollDown = (currentState.Gamepad.sThumbRY < -scrollDeadZone);
-
-
-
-	//XINPUT_GAMEPAD_A
-	holdLeft = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_A);
-
-	if (holdLeft)
-	{
-		//printf("HOLDING MOUSE1..........................\n");
-	}
-	else
-	{
-		//printf("NOT HOLDING..........................\n");
-	}
-
-
-	//XINPUT_GAMEPAD_Y                 TODO: Make it not spam
-	holdY = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_Y);
-
-	if (holdY)
-	{
-		if(!stillHoldingY){
-		hideWindow();
-		stillHoldingY = true;
+		//get LX info
+		if (abs(currentState.Gamepad.sThumbLX) > deadZone)
+		{
+			addXLeft = (speed * (currentState.Gamepad.sThumbLX * range));
 		}
-		
-		//printf("HOLDING Y..........................\n");
-	}
-	else
-	{
-		stillHoldingY = false;
-		//printf("NOT HOLDING Y..........................\n");
-	}
 
+		//zero check
+		else
+		{
+			addXLeft = 0.0f;
+		}
 
+		//get LY info
+		if (abs(currentState.Gamepad.sThumbLY) > deadZone)
+		{
+			addYLeft = -(speed * (currentState.Gamepad.sThumbLY * range));
+		}
 
-	//XINPUT_GAMEPAD_X
-	holdRight = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_X);
+		//zero check
+		else
+		{
+			addYLeft = 0.0f;
+		}
 
-	if (holdRight)
-	{
-		//printf("HOLDING X..........................\n");
-	}
-	else
-	{
-		//printf("NOT HOLDING X..........................\n");
-	}
+		//Get RY info
+		holdScrollUp = (currentState.Gamepad.sThumbRY > scrollDeadZone);
+		holdScrollDown = (currentState.Gamepad.sThumbRY < -scrollDeadZone);
 
+		//XINPUT_GAMEPAD_A
+		holdLeft = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_A);
 
-	//XINPUT_GAMEPAD_B
-	holdEnter = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_B);
-	
-	if (holdEnter)
-	{
-		//printf("HOLDING B..........................\n");
-	}
-	else
-	{
-		//printf("NOT HOLDING B..........................\n");
-	}
+		if (holdLeft)
+		{
+			//printf("HOLDING MOUSE1..........................\n");
+		}
+		else
+		{
+			//printf("NOT HOLDING..........................\n");
+		}
 
-	//bumpers/shoulders
-	holdBLeft = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_LEFT_SHOULDER);
-	holdBRight = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_RIGHT_SHOULDER);
+		//XINPUT_GAMEPAD_Y                 TODO: Make it not spam
+		holdY = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_Y);
 
+		if (holdY)
+		{
+			if (!stillHoldingY) {
+				hideWindow();
+				stillHoldingY = true;
+			}
 
+			//printf("HOLDING Y..........................\n");
+		}
+		else
+		{
+			stillHoldingY = false;
+			//printf("NOT HOLDING Y..........................\n");
+		}
 
-	//XINPUT_GAMEPAD_START
-	holdStart = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_START);
+		//XINPUT_GAMEPAD_X
+		holdRight = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_X);
 
-	//XINPUT_GAMEPAD_LEFT_THUMB
-	holdLThumb = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_LEFT_THUMB);
+		if (holdRight)
+		{
+			//printf("HOLDING X..........................\n");
+		}
+		else
+		{
+			//printf("NOT HOLDING X..........................\n");
+		}
 
-	//XINPUT_GAMEPAD_DPAD_UP
-	holdDUp = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_UP);
+		//XINPUT_GAMEPAD_B
+		holdEnter = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_B);
 
-	//XINPUT_GAMEPAD_DPAD_DOWN
-	holdDDown = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_DOWN);
+		if (holdEnter)
+		{
+			//printf("HOLDING B..........................\n");
+		}
+		else
+		{
+			//printf("NOT HOLDING B..........................\n");
+		}
 
-	//XINPUT_GAMEPAD_DPAD_LEFT
-	holdDLeft = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_LEFT);
+		//bumpers/shoulders
+		holdBLeft = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_LEFT_SHOULDER);
+		holdBRight = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_RIGHT_SHOULDER);
 
-	//XINPUT_GAMEPAD_DPAD_RIGHT
-	holdDRight = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_RIGHT);
+		//XINPUT_GAMEPAD_START
+		holdStart = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_START);
 
+		//XINPUT_GAMEPAD_LEFT_THUMB
+		holdLThumb = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_LEFT_THUMB);
 
-//process input ---------------------------------------------------------------------------------------------------------------------------------
-//process input ---------------------------------------------------------------------------------------------------------------------------------
-//process input ---------------------------------------------------------------------------------------------------------------------------------
+		//XINPUT_GAMEPAD_DPAD_UP
+		holdDUp = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_UP);
 
-	GetCursorPos(&cursor);
-	
+		//XINPUT_GAMEPAD_DPAD_DOWN
+		holdDDown = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_DOWN);
+
+		//XINPUT_GAMEPAD_DPAD_LEFT
+		holdDLeft = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_LEFT);
+
+		//XINPUT_GAMEPAD_DPAD_RIGHT
+		holdDRight = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_RIGHT);
+
+		//process input ---------------------------------------------------------------------------------------------------------------------------------
+		//process input ---------------------------------------------------------------------------------------------------------------------------------
+		//process input ---------------------------------------------------------------------------------------------------------------------------------
+
+		GetCursorPos(&cursor);
+
 		leftX = cursor.x;
 		leftY = cursor.y;
 
@@ -384,29 +361,27 @@ void gopherLoop(){
 			//printf("Truncated X\n");
 		}
 
-
 		//filter non-32768 and 32767, wireless ones can glitch sometimes and send it to the edge of the screen, it'll toss out some HUGE integer even when it's centered
-		if(addYLeft > 32767) addYLeft = 0;
-		if(addYLeft < -32768) addYLeft = 0;
-		if(addXLeft > 32767) addXLeft = 0;
-		if(addXLeft < -32768) addXLeft = 0;
-
+		if (addYLeft > 32767) addYLeft = 0;
+		if (addYLeft < -32768) addYLeft = 0;
+		if (addXLeft > 32767) addXLeft = 0;
+		if (addXLeft < -32768) addXLeft = 0;
 
 		//lmouse click
-		if(holdLeft && !holdingLeft){ // && holdingLeftMouseButton == false
+		if (holdLeft && !holdingLeft) { // && holdingLeftMouseButton == false
 			INPUT input;
 			input.type = INPUT_MOUSE;
-			input.mi.mouseData=0;
+			input.mi.mouseData = 0;
 			input.mi.dwFlags =  MOUSEEVENTF_LEFTDOWN;
 			input.mi.time = 0;
 			SendInput(1, &input, sizeof(INPUT));
 			holdingLeft = true;
 			printf("---------------L-DOWN\n");
 		}
-		else if(!holdLeft && holdingLeft){
+		else if (!holdLeft && holdingLeft) {
 			INPUT input;
 			input.type = INPUT_MOUSE;
-			input.mi.mouseData=0;
+			input.mi.mouseData = 0;
 			input.mi.dwFlags =  MOUSEEVENTF_LEFTUP;
 			input.mi.time = 0;
 			SendInput(1, &input, sizeof(INPUT));
@@ -415,20 +390,20 @@ void gopherLoop(){
 		}
 
 		//rmouse click
-		if(holdRight && !holdingRight){ // && holdingLeftMouseButton == false
+		if (holdRight && !holdingRight) { // && holdingLeftMouseButton == false
 			INPUT input;
 			input.type = INPUT_MOUSE;
-			input.mi.mouseData=0;
+			input.mi.mouseData = 0;
 			input.mi.dwFlags =  MOUSEEVENTF_RIGHTDOWN;
 			input.mi.time = 0;
 			SendInput(1, &input, sizeof(INPUT));
 			holdingRight = true;
 			printf("---------------R-DOWN\n");
 		}
-		else if(!holdRight && holdingRight){
+		else if (!holdRight && holdingRight) {
 			INPUT input;
 			input.type = INPUT_MOUSE;
-			input.mi.mouseData=0;
+			input.mi.mouseData = 0;
 			input.mi.dwFlags =  MOUSEEVENTF_RIGHTUP;
 			input.mi.time = 0;
 			SendInput(1, &input, sizeof(INPUT));
@@ -437,27 +412,27 @@ void gopherLoop(){
 		}
 
 		//middlemouse click
-		if(holdLThumb && !holdingLThumb){
+		if (holdLThumb && !holdingLThumb) {
 			INPUT input;
 			input.type = INPUT_MOUSE;
-			input.mi.mouseData=0;
+			input.mi.mouseData = 0;
 			input.mi.dwFlags =  MOUSEEVENTF_MIDDLEDOWN;
 			input.mi.time = 0;
 			SendInput(1, &input, sizeof(INPUT));
 			holdingLThumb = true;
 			printf("---------------MM-DOWN\n");
 		}
-		else if(!holdLThumb && holdingLThumb){
+		else if (!holdLThumb && holdingLThumb) {
 			INPUT input;
 			input.type = INPUT_MOUSE;
-			input.mi.mouseData=0;
+			input.mi.mouseData = 0;
 			input.mi.dwFlags =  MOUSEEVENTF_MIDDLEUP;
 			input.mi.time = 0;
 			SendInput(1, &input, sizeof(INPUT));
 			holdingLThumb = false;
 			printf("---------------MM-UP\n");
 		}
-		
+
 		//scrollwheel up
 		if (holdScrollUp)
 		{
@@ -483,7 +458,7 @@ void gopherLoop(){
 		}
 
 		//arrow up
-		if(holdDUp && !holdingDUp){
+		if (holdDUp && !holdingDUp) {
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -496,7 +471,7 @@ void gopherLoop(){
 			holdingDUp = true;
 			printf("---------------DPU-DOWN\n");
 		}
-		else if(!holdDUp && holdingDUp){
+		else if (!holdDUp && holdingDUp) {
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -511,7 +486,7 @@ void gopherLoop(){
 		}
 
 		//arrow down
-		if(holdDDown && !holdingDDown){
+		if (holdDDown && !holdingDDown) {
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -524,7 +499,7 @@ void gopherLoop(){
 			holdingDDown = true;
 			printf("---------------DPD-DOWN\n");
 		}
-		else if(!holdDDown && holdingDDown){
+		else if (!holdDDown && holdingDDown) {
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -538,9 +513,8 @@ void gopherLoop(){
 			printf("---------------DPD-UP\n");
 		}
 
-
 		//arrow left
-		if(holdDLeft && !holdingDLeft){
+		if (holdDLeft && !holdingDLeft) {
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -553,7 +527,7 @@ void gopherLoop(){
 			holdingDLeft = true;
 			printf("---------------DPL-DOWN\n");
 		}
-		else if(!holdDLeft && holdingDLeft){
+		else if (!holdDLeft && holdingDLeft) {
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -567,9 +541,8 @@ void gopherLoop(){
 			printf("---------------DPL-UP\n");
 		}
 
-
 		//arrow right
-		if(holdDRight && !holdingDRight){
+		if (holdDRight && !holdingDRight) {
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -582,7 +555,7 @@ void gopherLoop(){
 			holdingDRight = true;
 			printf("---------------DPR-DOWN\n");
 		}
-		else if(!holdDRight && holdingDRight){
+		else if (!holdDRight && holdingDRight) {
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -596,11 +569,8 @@ void gopherLoop(){
 			printf("---------------DPR-UP\n");
 		}
 
-
-
-
 		//start
-		if(holdStart && !holdingStart){
+		if (holdStart && !holdingStart) {
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -613,7 +583,7 @@ void gopherLoop(){
 			holdingStart = true;
 			printf("---------------START-DOWN\n");
 		}
-		else if(!holdStart && holdingStart){
+		else if (!holdStart && holdingStart) {
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -627,9 +597,8 @@ void gopherLoop(){
 			printf("---------------START-UP\n");
 		}
 
-
 		//enter
-		if(holdEnter && !holdingEnter){
+		if (holdEnter && !holdingEnter) {
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -642,7 +611,7 @@ void gopherLoop(){
 			holdingEnter = true;
 			printf("---------------B-DOWN\n");
 		}
-		else if(!holdEnter && holdingEnter){
+		else if (!holdEnter && holdingEnter) {
 			INPUT input;
 			input.type = INPUT_KEYBOARD;
 			input.ki.wScan = 0;
@@ -657,128 +626,116 @@ void gopherLoop(){
 		}
 
 		//left bumper/shoulder (speed cycler)
-		if(holdBLeft && !holdingBLeft){
+		if (holdBLeft && !holdingBLeft) {
 			holdingBLeft = true;
 			printf("---------------BLEFT-DOWN\n");
 		}
-		else if(!holdBLeft && holdingBLeft){
+		else if (!holdBLeft && holdingBLeft) {
 
 			holdingBLeft = false;
 			printf("---------------BLEFT-UP - CURSOR SPEED CHANGED\n");
-			if(speed == speed_low) {Beep(240,210); speed = speed_med;}
-			else if(speed == speed_med) {Beep(260,210); speed = speed_high;}
-			else if(speed == speed_high){Beep(200,210); speed = speed_low;}
+			if (speed == speed_low) {Beep(240, 210); speed = speed_med;}
+			else if (speed == speed_med) {Beep(260, 210); speed = speed_high;}
+			else if (speed == speed_high) {Beep(200, 210); speed = speed_low;}
 
-			
 			//ChangeVolume(0.5,true); //works
 		}
 
-
 		//left bumper/shoulder
-		if(holdBRight && !holdingBRight){
-	
+		if (holdBRight && !holdingBRight) {
 
 			holdingBRight = true;
 			printf("---------------BRIGHT-DOWN\n");
 		}
-		else if(!holdBRight && holdingBRight){
+		else if (!holdBRight && holdingBRight) {
 
 			holdingBRight = false;
 			printf("---------------BRIGHT-UP\n");
 		}
 
-
-		
-		SetCursorPos(leftX,leftY); //after all click input processing
-		
+		SetCursorPos(leftX, leftY); //after all click input processing
 
 		//printf("Move X:%d, Y:%d\n", (int)addXLeft, -(int)addYLeft); //disabled for being annoying
 
-		}
-		Sleep(sleepAmount);
+	}
+	Sleep(sleepAmount);
 
 } //..........................................................................................End GopherLoop
 
-
 BOOL IsElevated()
 {
-    BOOL   fRet = FALSE;
-    HANDLE hToken = NULL;
+	BOOL   fRet = FALSE;
+	HANDLE hToken = NULL;
 
-    if(OpenProcessToken(GetCurrentProcess(),TOKEN_QUERY,&hToken))
+	if (OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken))
 	{
-        TOKEN_ELEVATION Elevation;
-        DWORD cbSize = sizeof( TOKEN_ELEVATION );
+		TOKEN_ELEVATION Elevation;
+		DWORD cbSize = sizeof( TOKEN_ELEVATION );
 
-        if(GetTokenInformation(hToken, TokenElevation, &Elevation, sizeof( Elevation), &cbSize))
+		if (GetTokenInformation(hToken, TokenElevation, &Elevation, sizeof( Elevation), &cbSize))
 		{
-            fRet = Elevation.TokenIsElevated;
-        }
-    }
+			fRet = Elevation.TokenIsElevated;
+		}
+	}
 
-    if(hToken)
+	if (hToken)
 	{
-        CloseHandle(hToken);
-    }
+		CloseHandle(hToken);
+	}
 
-    return fRet;
+	return fRet;
 }
-
 
 //this works, but it's not enabled in the software since the best button for it is still undecided
-bool ChangeVolume(double nVolume,bool bScalar) //o b
+bool ChangeVolume(double nVolume, bool bScalar) //o b
 {
- 
-    HRESULT hr=NULL;
-    bool decibels = false;
-    bool scalar = false;
-    double newVolume=nVolume;
- 
-    CoInitialize(NULL);
-    IMMDeviceEnumerator *deviceEnumerator = NULL;
-    hr = CoCreateInstance(__uuidof(MMDeviceEnumerator), NULL, CLSCTX_INPROC_SERVER, 
-                          __uuidof(IMMDeviceEnumerator), (LPVOID *)&deviceEnumerator);
-    IMMDevice *defaultDevice = NULL;
- 
-    hr = deviceEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, &defaultDevice);
-    deviceEnumerator->Release();
-    deviceEnumerator = NULL;
- 
-    IAudioEndpointVolume *endpointVolume = NULL;
-    hr = defaultDevice->Activate(__uuidof(IAudioEndpointVolume), 
-         CLSCTX_INPROC_SERVER, NULL, (LPVOID *)&endpointVolume);
-    defaultDevice->Release();
-    defaultDevice = NULL;
- 
-    // -------------------------
-    float currentVolume = 0;
-    endpointVolume->GetMasterVolumeLevel(&currentVolume);
-    //printf("Current volume in dB is: %f\n", currentVolume);
 
-    hr = endpointVolume->GetMasterVolumeLevelScalar(&currentVolume);
-    //CString strCur=L"";
-    //strCur.Format(L"%f",currentVolume);
-    //AfxMessageBox(strCur);
+	HRESULT hr = NULL;
+	bool decibels = false;
+	bool scalar = false;
+	double newVolume = nVolume;
 
-    // printf("Current volume as a scalar is: %f\n", currentVolume);
-    if (bScalar==false)
-    {
-        hr = endpointVolume->SetMasterVolumeLevel((float)newVolume, NULL);
-    }
-    else if (bScalar==true)
-    {
-        hr = endpointVolume->SetMasterVolumeLevelScalar((float)newVolume, NULL);
-    }
-    endpointVolume->Release();
- 
-    CoUninitialize();
- 
-    return FALSE;
+	CoInitialize(NULL);
+	IMMDeviceEnumerator *deviceEnumerator = NULL;
+	hr = CoCreateInstance(__uuidof(MMDeviceEnumerator), NULL, CLSCTX_INPROC_SERVER,
+	                      __uuidof(IMMDeviceEnumerator), (LPVOID *)&deviceEnumerator);
+	IMMDevice *defaultDevice = NULL;
+
+	hr = deviceEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, &defaultDevice);
+	deviceEnumerator->Release();
+	deviceEnumerator = NULL;
+
+	IAudioEndpointVolume *endpointVolume = NULL;
+	hr = defaultDevice->Activate(__uuidof(IAudioEndpointVolume),
+	                             CLSCTX_INPROC_SERVER, NULL, (LPVOID *)&endpointVolume);
+	defaultDevice->Release();
+	defaultDevice = NULL;
+
+	// -------------------------
+	float currentVolume = 0;
+	endpointVolume->GetMasterVolumeLevel(&currentVolume);
+	//printf("Current volume in dB is: %f\n", currentVolume);
+
+	hr = endpointVolume->GetMasterVolumeLevelScalar(&currentVolume);
+	//CString strCur=L"";
+	//strCur.Format(L"%f",currentVolume);
+	//AfxMessageBox(strCur);
+
+	// printf("Current volume as a scalar is: %f\n", currentVolume);
+	if (bScalar == false)
+	{
+		hr = endpointVolume->SetMasterVolumeLevel((float)newVolume, NULL);
+	}
+	else if (bScalar == true)
+	{
+		hr = endpointVolume->SetMasterVolumeLevelScalar((float)newVolume, NULL);
+	}
+	endpointVolume->Release();
+
+	CoUninitialize();
+
+	return FALSE;
 }
-
-
-
-
 
 CXBOXController::CXBOXController(int playerNumber)
 {
