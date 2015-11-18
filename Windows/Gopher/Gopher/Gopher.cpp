@@ -83,20 +83,48 @@ void Gopher::handleDisableButton()
 	}
 }
 
+void Gopher::handleScrolling()
+{
+	bool holdScrollUp = (currentState.Gamepad.sThumbRY > scrollDeadZone);
+	bool holdScrollDown = (currentState.Gamepad.sThumbRY < -scrollDeadZone);
+
+	if (holdScrollUp)
+	{
+		INPUT input;
+		input.type = INPUT_MOUSE;
+		input.mi.mouseData = scrollSpeed;
+		input.mi.dwFlags = MOUSEEVENTF_WHEEL;
+		input.mi.time = 0;
+		SendInput(1, &input, sizeof(INPUT));
+		printf("---------------WHEEL-UP\n");
+	}
+
+	if (holdScrollDown)
+	{
+		INPUT input;
+		input.type = INPUT_MOUSE;
+		input.mi.mouseData = -scrollSpeed;
+		input.mi.dwFlags = MOUSEEVENTF_WHEEL;
+		input.mi.time = 0;
+		SendInput(1, &input, sizeof(INPUT));
+		printf("---------------WHEEL-DOWN\n");
+	}
+}
+
 void Gopher::loop() {
 	Sleep(sleepAmount);
 	
 	currentState = Controller->GetState();
-	handleMouse();
+	handleDisableButton();
 
 	if (disabled)
 	{
 		return;
 	}
+	
+	handleMouse();
+	handleScrolling();
 
-	//Get RY info
-	holdScrollUp = (currentState.Gamepad.sThumbRY > scrollDeadZone);
-	holdScrollDown = (currentState.Gamepad.sThumbRY < -scrollDeadZone);
 
 	//XINPUT_GAMEPAD_A
 	holdLeft = (currentState.Gamepad.wButtons == XINPUT_GAMEPAD_A);
@@ -230,30 +258,6 @@ void Gopher::loop() {
 		SendInput(1, &input, sizeof(INPUT));
 		holdingLThumb = false;
 		printf("---------------MM-UP\n");
-	}
-
-	//scrollwheel up
-	if (holdScrollUp)
-	{
-		INPUT input;
-		input.type = INPUT_MOUSE;
-		input.mi.mouseData = scrollSpeed;
-		input.mi.dwFlags = MOUSEEVENTF_WHEEL;
-		input.mi.time = 0;
-		SendInput(1, &input, sizeof(INPUT));
-		printf("---------------WHEEL-UP\n");
-	}
-
-	//scrollwheel down
-	if (holdScrollDown)
-	{
-		INPUT input;
-		input.type = INPUT_MOUSE;
-		input.mi.mouseData = -scrollSpeed;
-		input.mi.dwFlags = MOUSEEVENTF_WHEEL;
-		input.mi.time = 0;
-		SendInput(1, &input, sizeof(INPUT));
-		printf("---------------WHEEL-DOWN\n");
 	}
 
 	//arrow up

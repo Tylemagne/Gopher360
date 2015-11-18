@@ -36,12 +36,6 @@ private:
 	bool holdingY;
 	bool stillHoldingY; //to check if it's still being held from the last loop
 
-	bool holdScrollUp;
-	bool holdingScrollUp = false;
-
-	bool holdScrollDown;
-	bool holdingScrollDown = false;
-
 	bool holdEnter;
 	bool holdingEnter;
 
@@ -85,5 +79,7 @@ public:
 	void handleMouse();
 
 	void handleDisableButton();
+
+	void handleScrolling();
 
 };
