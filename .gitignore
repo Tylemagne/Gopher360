@@ -1,0 +1,5 @@
+Windows/Gopher/.vs
+Windows/**/Debug
+Windows/**/Release
+*.opensdf
+*.sdf
