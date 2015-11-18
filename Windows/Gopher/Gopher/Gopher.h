@@ -84,4 +84,6 @@ public:
 	void handleDPad();
 	void handleMouse();
 
+	void handleDisableButton();
+
 };
