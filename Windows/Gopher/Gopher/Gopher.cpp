@@ -32,14 +32,19 @@ void mouseEvent(WORD dwFlags, DWORD mouseData=0)
 	SendInput(1, &input, sizeof(INPUT));
 }
 
-void Gopher::loop() {
-	Sleep(sleepAmount);
+Gopher::Gopher(CXBOXController * controller)
+	: _controller(controller)
+{
+}
 
-	currentState = _controller->GetState();
+void Gopher::loop() {
+	Sleep(SLEEP_AMOUNT);
+
+	_currentState = _controller->GetState();
 	
 	handleDisableButton();
 
-	if (disabled)
+	if (_disabled)
 	{
 		return;
 	}
@@ -57,7 +62,7 @@ void Gopher::loop() {
 	mapKeyboard(XINPUT_GAMEPAD_DPAD_RIGHT, VK_RIGHT);
 
 	setXboxClickState(XINPUT_GAMEPAD_Y);
-	if (ButtonIsDown[XINPUT_GAMEPAD_Y])
+	if (_xboxClickIsDown[XINPUT_GAMEPAD_Y])
 	{
 		toggleWindowVisibility();
 	}
@@ -68,22 +73,22 @@ void Gopher::loop() {
 	setXboxClickState(XINPUT_GAMEPAD_LEFT_SHOULDER);
 
 
-	if (ButtonIsDown[XINPUT_GAMEPAD_LEFT_SHOULDER]) {
+	if (_xboxClickIsDown[XINPUT_GAMEPAD_LEFT_SHOULDER]) {
 
-		if (speed == speed_low)
+		if (speed == SPEED_LOW)
 		{
 			Beep(240, 210);
-			speed = speed_med;
+			speed = SPEED_MED;
 		}
-		else if (speed == speed_med)
+		else if (speed == SPEED_MED)
 		{
 			Beep(260, 210);
-			speed = speed_high;
+			speed = SPEED_HIGH;
 		}
-		else if (speed == speed_high)
+		else if (speed == SPEED_HIGH)
 		{
 			Beep(200, 210);
-			speed = speed_low;
+			speed = SPEED_LOW;
 		}
 	}
 }
@@ -91,11 +96,11 @@ void Gopher::loop() {
 void Gopher::handleDisableButton()
 {
 	setXboxClickState(XINPUT_GAMEPAD_BACK);
-	if (ButtonIsDown[XINPUT_GAMEPAD_BACK])
+	if (_xboxClickIsDown[XINPUT_GAMEPAD_BACK])
 	{
-		disabled = !disabled;
+		_disabled = !_disabled;
 
-		if (disabled) {
+		if (_disabled) {
 			Beep(1800, 200);
 			Beep(1600, 200);
 			Beep(1400, 200);
@@ -115,9 +120,9 @@ void Gopher::handleDisableButton()
 
 void Gopher::toggleWindowVisibility()
 {
-	hidden = !hidden;
+	_hidden = !_hidden;
 
-	if (hidden)
+	if (_hidden)
 	{
 		HWND hWnd = GetConsoleWindow();
 		ShowWindow(hWnd, SW_HIDE);
@@ -136,8 +141,8 @@ void Gopher::handleMouseMovement()
 	POINT cursor;
 	GetCursorPos(&cursor);
 
-	int addXLeft = (speed * (currentState.Gamepad.sThumbLX * range));
-	int addYLeft = -(speed * (currentState.Gamepad.sThumbLY * range));
+	int addXLeft = (speed * (_currentState.Gamepad.sThumbLX * RANGE));
+	int addYLeft = -(speed * (_currentState.Gamepad.sThumbLY * RANGE));
 
 	//filter non-32768 and 32767, wireless ones can glitch sometimes and send it to the edge of the screen, it'll toss out some HUGE integer even when it's centered
 	if (addYLeft > 32767) addYLeft = 0;
@@ -150,7 +155,7 @@ void Gopher::handleMouseMovement()
 
 	int dist = addXLeft * addXLeft + addYLeft * addYLeft;
 
-	if (dist > truncZone * truncZone)
+	if (dist > TRUNC_ZONE * TRUNC_ZONE)
 	{
 		leftY += (int)addYLeft;
 		leftX += (int)addXLeft;
@@ -161,25 +166,24 @@ void Gopher::handleMouseMovement()
 
 void Gopher::handleScrolling()
 {
-	bool holdScrollUp = currentState.Gamepad.sThumbRY > scrollDeadZone;
-	bool holdScrollDown = currentState.Gamepad.sThumbRY < -scrollDeadZone;
+	bool holdScrollUp = _currentState.Gamepad.sThumbRY > SCROLL_DEAD_ZONE;
+	bool holdScrollDown = _currentState.Gamepad.sThumbRY < -SCROLL_DEAD_ZONE;
 
 	if (holdScrollUp)
 	{
 		INPUT input;
 		input.type = INPUT_MOUSE;
-		input.mi.mouseData = scrollSpeed;
+		input.mi.mouseData = SCROLL_SPEED;
 		input.mi.dwFlags = MOUSEEVENTF_WHEEL;
 		input.mi.time = 0;
 		SendInput(1, &input, sizeof(INPUT));
-		mouseEvent(MOUSEEVENTF_WHEEL, scrollSpeed);
 	}
 
 	if (holdScrollDown)
 	{
 		INPUT input;
 		input.type = INPUT_MOUSE;
-		input.mi.mouseData = -scrollSpeed;
+		input.mi.mouseData = -SCROLL_SPEED;
 		input.mi.dwFlags = MOUSEEVENTF_WHEEL;
 		input.mi.time = 0;
 		SendInput(1, &input, sizeof(INPUT));
@@ -188,35 +192,35 @@ void Gopher::handleScrolling()
 
 void Gopher::setXboxClickState(DWORD STATE)
 {
-	ButtonIsDown[STATE] = false;
-	ButtonIsUp[STATE] = false;
+	_xboxClickIsDown[STATE] = false;
+	_xboxClickIsUp[STATE] = false;
 
 	if (!this->xboxClickStateExists(STATE))
 	{
-		ButtonStateLastIteration[STATE] = false;
+		_xboxClickStateLastIteration[STATE] = false;
 	}
 
-	bool isDown = currentState.Gamepad.wButtons == STATE;
+	bool isDown = _currentState.Gamepad.wButtons == STATE;
 
-	if (isDown && !ButtonStateLastIteration[STATE])
+	if (isDown && !_xboxClickStateLastIteration[STATE])
 	{
-		ButtonStateLastIteration[STATE] = true;
-		ButtonIsDown[STATE] = true;
+		_xboxClickStateLastIteration[STATE] = true;
+		_xboxClickIsDown[STATE] = true;
 	}
 
-	if (!isDown && ButtonStateLastIteration[STATE])
+	if (!isDown && _xboxClickStateLastIteration[STATE])
 	{
-		ButtonStateLastIteration[STATE] = false;
-		ButtonIsUp[STATE] = true;
+		_xboxClickStateLastIteration[STATE] = false;
+		_xboxClickIsUp[STATE] = true;
 	}
 
-	ButtonStateLastIteration[STATE] = isDown;
+	_xboxClickStateLastIteration[STATE] = isDown;
 }
 
 bool Gopher::xboxClickStateExists(DWORD xinput)
 {
-	auto it = ButtonStateLastIteration.find(xinput);
-	if (it == ButtonStateLastIteration.end())
+	auto it = _xboxClickStateLastIteration.find(xinput);
+	if (it == _xboxClickStateLastIteration.end())
 	{
 		return false;
 	}
@@ -227,12 +231,12 @@ bool Gopher::xboxClickStateExists(DWORD xinput)
 void Gopher::mapKeyboard(DWORD STATE, DWORD key)
 {
 	setXboxClickState(STATE);
-	if (ButtonIsDown[STATE])
+	if (_xboxClickIsDown[STATE])
 	{
 		inputKeyboardDown(key);
 	}
 
-	if (ButtonIsUp[STATE])
+	if (_xboxClickIsUp[STATE])
 	{
 		inputKeyboardUp(key);
 	}
@@ -241,12 +245,12 @@ void Gopher::mapKeyboard(DWORD STATE, DWORD key)
 void Gopher::mapMouseClick(DWORD STATE, DWORD keyDown, DWORD keyUp)
 {
 	setXboxClickState(STATE);
-	if (ButtonIsDown[STATE])
+	if (_xboxClickIsDown[STATE])
 	{
 		mouseEvent(keyDown);
 	}
 
-	if (ButtonIsUp[STATE])
+	if (_xboxClickIsUp[STATE])
 	{
 		mouseEvent(keyUp);
 	}

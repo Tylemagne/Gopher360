@@ -14,30 +14,32 @@
 class Gopher
 {
 private:
-	const int deadZone = 3000; //X and Y minimum, below this is ignored since all controllers have some stick to them
-	const int scrollDeadZone = 7000; // Right thumbstick should be less sensitive.
-	const int scrollSpeed = 20; // Speed at which you scroll page.
-	const float range = 4.0f; //4 gives a decent range. Raising this requires a lowering of speed as well.
-	const int truncZone = 1; //anything below this is ignored and the mouse sits still, similar to a deadzone
-	const int sleepAmount = 6; //ms to sleep. 16 = 60fps, 6 = 144fps
+	const int DEAD_ZONE = 3000; //X and Y minimum, below this is ignored since all controllers have some stick to them
+	const int SCROLL_DEAD_ZONE = 7000; // Right thumbstick should be less sensitive.
+	const int SCROLL_SPEED = 20; // Speed at which you scroll page.
+	const int TRUNC_ZONE = 1; //anything below this is ignored and the mouse sits still, similar to a deadzone
+	const int SLEEP_AMOUNT = 6; //ms to sleep. 16 = 60fps, 6 = 144fps
+	const float RANGE = 4.0f; //4 gives a decent range. Raising this requires a lowering of speed as well.
 
-	XINPUT_STATE currentState;
+	XINPUT_STATE _currentState;
 
-	float speed_low = 0.000055f;
-	float speed_med = 0.000085f;
-	float speed_high = 0.000125f;
-	float speed = speed_low; //multiplied by integer value of analog X and Y (32,000). NEEDS TO EQUAL ONE OF THE 3 SPEEDS.
+	const float SPEED_LOW = 0.000055f;
+	const float SPEED_MED = 0.000085f;
+	const float SPEED_HIGH = 0.000125f;
+	float speed = SPEED_LOW;
 
-	bool disabled = false; //use for Select sleep mode
-	bool hidden = false; //press Y to hide, check this var
+	bool _disabled = false; //use for Select sleep mode
+	bool _hidden = false; //press Y to hide, check this var
 
-	std::map<DWORD, bool> ButtonStateLastIteration;
-	std::map<DWORD, bool> ButtonIsDown;
-	std::map<DWORD, bool> ButtonIsUp;
+	std::map<DWORD, bool> _xboxClickStateLastIteration;
+	std::map<DWORD, bool> _xboxClickIsDown;
+	std::map<DWORD, bool> _xboxClickIsUp;
 
+	CXBOXController* _controller;
 
 public:
-	CXBOXController* _controller; //begin declaring variables. TODO: Make them hold their control name rather than designated input (B instead of Enter)
+
+	Gopher(CXBOXController* controller);
 
 	void loop();
 

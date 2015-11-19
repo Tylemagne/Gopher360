@@ -28,7 +28,7 @@
 #include "Gopher.h"
 
 bool ChangeVolume(double nVolume, bool bScalar); //not used yet
-BOOL IsElevated(); //check if administrator, makes on-screen keyboard clickable
+BOOL isRunningAsAdministrator(); //check if administrator, makes on-screen keyboard clickable
 
 /*To do:
 * Enable/disable button
@@ -38,13 +38,11 @@ xinput
 http://msdn.microsoft.com/en-us/library/windows/desktop/microsoft.directx_sdk.reference.xinput_gamepad%28v=vs.85%29.aspx
 */
 
-Gopher* gopher;
-
 int main()
 {
+	CXBOXController controller(1);
+	Gopher gopher(&controller);
 	SetConsoleTitle( TEXT( "Gopher v0.985" ) );
-	gopher = new Gopher();
-	gopher->_controller = new CXBOXController(1);
 
 	system("Color 1D");
 
@@ -54,30 +52,23 @@ int main()
 	printf("Welcome to Gopher360 - a lightweight controller-to-KBM tool.\nSee /r/Gopher360 and the GitHub repository at bit.ly/1syAhMT for more info. Copyleft 2014.\n\n-------------------------\n\n");
 	printf("Gopher is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n");
 	printf("\nYou should have received a copy of the GNU General Public License\nalong with this program. If not, see http://www.gnu.org/licenses/.\n\n-------------------------\n\n");
-	printf("Plug in controller and THEN wait 5 seconds to begin...\n\n\n");
 
-	Sleep(3000);
-
-	if (!IsElevated())
+	if (!isRunningAsAdministrator())
 	{
 		printf("Tip - Gopher isn't being ran as an administrator.\nWindows won't let you use the on-screen keyboard or games without it.\nLaunching in 2 seconds...\n\n");
 		Beep(1400, 100);
-		Sleep(2000);
 	}
-
-	printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBeginning read sequence at 144FPS. Prepare for main loop!\n");
-	Sleep(800);
 
 	Beep(1400, 80);
 	Beep(1400, 80);
 	Beep(1400, 80);
 
 	while (true) {
-		gopher->loop();
+		gopher.loop();
 	}
 }
 
-BOOL IsElevated()
+BOOL isRunningAsAdministrator()
 {
 	BOOL   fRet = FALSE;
 	HANDLE hToken = NULL;
