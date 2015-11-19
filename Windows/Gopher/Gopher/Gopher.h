@@ -6,6 +6,8 @@
 #include <mmdeviceapi.h> //vol
 #include <endpointvolume.h> //vol
 
+#include <map>
+
 #include "CXBOXController.h"
 
 #pragma once
@@ -26,60 +28,32 @@ private:
 	float speed_high = 0.000125f;
 	float speed = speed_low; //multiplied by integer value of analog X and Y (32,000). NEEDS TO EQUAL ONE OF THE 3 SPEEDS.
 
-	bool holdLeft; //instructed to hold
-	bool holdingLeft; //is actually holding
-
-	bool holdRight;
-	bool holdingRight;
-
-	bool holdY;
-	bool holdingY;
-	bool stillHoldingY; //to check if it's still being held from the last loop
-
-	bool holdEnter;
-	bool holdingEnter;
-
-	bool holdBack;
-	bool holdingBack;
-
-	bool holdStart;
-	bool holdingStart;
-
-	bool holdLThumb;
-	bool holdingLThumb;
-
-	bool holdDUp;
-	bool holdingDUp;
-
-	bool holdDDown;
-	bool holdingDDown;
-
-	bool holdDLeft;
-	bool holdingDLeft;
-
-	bool holdDRight;
-	bool holdingDRight;
-
-	bool holdBLeft; //bumpers
-	bool holdingBLeft;
-
-	bool holdBRight;
-	bool holdingBRight;
-
 	bool disabled = false; //use for Select sleep mode
 	bool hidden = false; //press Y to hide, check this var
 
+	std::map<DWORD, bool> ButtonStateLastIteration;
+	std::map<DWORD, bool> ButtonIsDown;
+	std::map<DWORD, bool> ButtonIsUp;
+
+
 public:
-	CXBOXController* Controller; //begin declaring variables. TODO: Make them hold their control name rather than designated input (B instead of Enter)
+	CXBOXController* _controller; //begin declaring variables. TODO: Make them hold their control name rather than designated input (B instead of Enter)
 
 	void loop();
-	void hideWindow();
 
-	void handleDPad();
-	void handleMouse();
+	void toggleWindowVisibility();
+
+	void handleMouseMovement();
 
 	void handleDisableButton();
 
 	void handleScrolling();
 
+	bool xboxClickStateExists(DWORD xinput);
+
+	void mapKeyboard(DWORD STATE, DWORD key);
+
+	void mapMouseClick(DWORD STATE, DWORD keyDown, DWORD keyUp);
+
+	void setXboxClickState(DWORD state);
 };

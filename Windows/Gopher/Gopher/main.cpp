@@ -44,7 +44,7 @@ int main()
 {
 	SetConsoleTitle( TEXT( "Gopher v0.985" ) );
 	gopher = new Gopher();
-	gopher->Controller = new CXBOXController(1);
+	gopher->_controller = new CXBOXController(1);
 
 	system("Color 1D");
 
