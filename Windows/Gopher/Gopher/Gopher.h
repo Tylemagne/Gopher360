@@ -28,6 +28,9 @@ private:
 	const float SPEED_HIGH = 0.000125f;
 	float speed = SPEED_LOW;
 
+	float _xRest = 0.0f;
+	float _yRest = 0.0f;
+
 	bool _disabled = false; //use for Select sleep mode
 	bool _hidden = false; //press Y to hide, check this var
 

@@ -55,13 +55,13 @@ int main()
 
 	if (!isRunningAsAdministrator())
 	{
-		printf("Tip - Gopher isn't being ran as an administrator.\nWindows won't let you use the on-screen keyboard or games without it.\nLaunching in 2 seconds...\n\n");
-		Beep(1400, 100);
+		printf("Tip - Gopher isn't being ran as an administrator.\nWindows won't let you use the on-screen keyboard or games without it.\n\n");
 	}
 
+	/*Beep(1400, 100);
 	Beep(1400, 80);
 	Beep(1400, 80);
-	Beep(1400, 80);
+	Beep(1400, 80);*/
 
 	while (true) {
 		gopher.loop();

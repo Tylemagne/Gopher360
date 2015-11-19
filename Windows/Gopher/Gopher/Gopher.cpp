@@ -141,27 +141,33 @@ void Gopher::handleMouseMovement()
 	POINT cursor;
 	GetCursorPos(&cursor);
 
-	int addXLeft = (speed * (_currentState.Gamepad.sThumbLX * RANGE));
-	int addYLeft = -(speed * (_currentState.Gamepad.sThumbLY * RANGE));
+	short tx = _currentState.Gamepad.sThumbLX;
+	short ty = _currentState.Gamepad.sThumbLY;
+
+	float dx = speed * tx * RANGE;
+	float dy = -speed * ty * RANGE;
 
 	//filter non-32768 and 32767, wireless ones can glitch sometimes and send it to the edge of the screen, it'll toss out some HUGE integer even when it's centered
-	if (addYLeft > 32767) addYLeft = 0;
-	if (addYLeft < -32768) addYLeft = 0;
-	if (addXLeft > 32767) addXLeft = 0;
-	if (addXLeft < -32768) addXLeft = 0;
+	if (dy > 32767) dy = 0;
+	if (dy < -32768) dy = 0;
+	if (dx > 32767) dx = 0;
+	if (dx < -32768) dx = 0;
 
-	int leftX = cursor.x;
-	int leftY = cursor.y;
+	float x = cursor.x + _xRest;
+	float y = cursor.y + _yRest;
 
-	int dist = addXLeft * addXLeft + addYLeft * addYLeft;
+	int dist = dx * dx + dy * dy;
 
 	if (dist > TRUNC_ZONE * TRUNC_ZONE)
 	{
-		leftY += (int)addYLeft;
-		leftX += (int)addXLeft;
-	}
+		x += dx;
+		y += dy;
 
-	SetCursorPos(leftX, leftY); //after all click input processing
+		_xRest = x - (float)((int)x);
+		_yRest = y - (float)((int)y);
+
+		SetCursorPos((int)x, (int)y); //after all click input processing
+	}
 }
 
 void Gopher::handleScrolling()
