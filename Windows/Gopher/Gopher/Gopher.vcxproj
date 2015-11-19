@@ -81,7 +81,6 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ButtonState.h" />
     <ClInclude Include="CXBOXController.h" />
     <ClInclude Include="Gopher.h" />
   </ItemGroup>

@@ -32,8 +32,5 @@
     <ClInclude Include="CXBOXController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ButtonState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
