@@ -136,8 +136,27 @@ void Gopher::toggleWindowVisibility()
 	}
 }
 
-template <typename T> int sgn(T val) {
+template <typename T>
+int sgn(T val)
+{
 	return (T(0) < val) - (val < T(0));
+}
+
+float Gopher::getDelta(short t)
+{
+	//filter non-32768 and 32767, wireless ones can glitch sometimes and send it to the edge of the screen, it'll toss out some HUGE integer even when it's centered
+	if (t > 32767) t = 0;
+	if (t < -32768) t = 0;
+
+	float delta = 0.0;
+
+	if (abs(t) > TRUNC_ZONE)
+	{
+		t = sgn(t) * (abs(t) - TRUNC_ZONE);
+		delta = speed * t * RANGE;
+	}
+
+	return delta;
 }
 
 void Gopher::handleMouseMovement()
@@ -148,33 +167,17 @@ void Gopher::handleMouseMovement()
 	short tx = _currentState.Gamepad.sThumbLX;
 	short ty = _currentState.Gamepad.sThumbLY;
 
-
-	//filter non-32768 and 32767, wireless ones can glitch sometimes and send it to the edge of the screen, it'll toss out some HUGE integer even when it's centered
-	if (ty > 32767) ty = 0;
-	if (ty < -32768) ty = 0;
-	if (tx > 32767) tx = 0;
-	if (tx < -32768) tx = 0;
-
 	float x = cursor.x + _xRest;
 	float y = cursor.y + _yRest;
 
-	float dist = tx * tx + ty * ty;
+	float dx = getDelta(tx);
+	float dy = getDelta(ty);
 
-	if (abs(tx) > TRUNC_ZONE)
-	{
-		tx = sgn(tx) * (abs(tx) - TRUNC_ZONE);
-		float dx = speed * tx * RANGE;
-		x += dx;
-		_xRest = x - (float)((int)x);
-	}
+	x += dx;
+	_xRest = x - (float)((int)x);
 
-	if (abs(ty) > TRUNC_ZONE)
-	{
-		ty = sgn(ty) * (abs(ty) - TRUNC_ZONE);
-		float dy = -speed * ty * RANGE;
-		y += dy;
-		_yRest = y - (float)((int)y);
-	}
+	y -= dy;
+	_yRest = y - (float)((int)y);
 	
 	SetCursorPos((int)x, (int)y); //after all click input processing
 }

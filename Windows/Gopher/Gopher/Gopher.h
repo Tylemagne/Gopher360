@@ -48,6 +48,8 @@ public:
 
 	void toggleWindowVisibility();
 
+	float getDelta(short tx);
+
 	void handleMouseMovement();
 
 	void handleDisableButton();
