@@ -17,7 +17,7 @@ private:
 	const int DEAD_ZONE = 3000; //X and Y minimum, below this is ignored since all controllers have some stick to them
 	const int SCROLL_DEAD_ZONE = 7000; // Right thumbstick should be less sensitive.
 	const int SCROLL_SPEED = 20; // Speed at which you scroll page.
-	const int TRUNC_ZONE = 1; //anything below this is ignored and the mouse sits still, similar to a deadzone
+	const int TRUNC_ZONE = 3000; //anything below this is ignored and the mouse sits still, similar to a deadzone
 	const int SLEEP_AMOUNT = 6; //ms to sleep. 16 = 60fps, 6 = 144fps
 	const float RANGE = 4.0f; //4 gives a decent range. Raising this requires a lowering of speed as well.
 

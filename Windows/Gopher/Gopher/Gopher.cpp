@@ -156,18 +156,22 @@ void Gopher::handleMouseMovement()
 	float x = cursor.x + _xRest;
 	float y = cursor.y + _yRest;
 
-	int dist = dx * dx + dy * dy;
+	float dist = tx * tx + ty * ty;
+	printf("dist: %f\n", dist);
 
-	if (dist > TRUNC_ZONE * TRUNC_ZONE)
+	if (abs(tx) > TRUNC_ZONE)
 	{
 		x += dx;
-		y += dy;
-
 		_xRest = x - (float)((int)x);
-		_yRest = y - (float)((int)y);
-
-		SetCursorPos((int)x, (int)y); //after all click input processing
 	}
+
+	if (abs(ty) > TRUNC_ZONE)
+	{
+		y += dy;
+		_yRest = y - (float)((int)y);
+	}
+	
+	SetCursorPos((int)x, (int)y); //after all click input processing
 }
 
 void Gopher::handleScrolling()
