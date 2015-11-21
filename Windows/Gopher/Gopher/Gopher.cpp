@@ -150,10 +150,10 @@ float Gopher::getDelta(short t)
 
 	float delta = 0.0;
 
-	if (abs(t) > TRUNC_ZONE)
+	if (abs(t) > DEAD_ZONE)
 	{
-		t = sgn(t) * (abs(t) - TRUNC_ZONE);
-		delta = speed * t * RANGE;
+		t = sgn(t) * (abs(t) - DEAD_ZONE);
+		delta = speed * t / FPS;
 	}
 
 	return delta;
