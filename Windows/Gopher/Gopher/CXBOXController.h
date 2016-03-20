@@ -12,4 +12,5 @@ public:
 	CXBOXController(int playerNumber);
 	XINPUT_STATE GetState();
 	bool IsConnected();
+	void CXBOXController::Vibrate(int leftVal, int rightVal);
 };

@@ -14,8 +14,9 @@
 class Gopher
 {
 private:
-	const int DEAD_ZONE = 5000; //X and Y minimum, below this is ignored since all controllers have some stick to them
-	const int SCROLL_DEAD_ZONE = 7000; // Right thumbstick should be less sensitive.
+	const int DEAD_ZONE = 9000; //X and Y minimum, below this is ignored since all controllers have some stick to them
+	const int SCROLL_DEAD_ZONE = 9000; // Right thumbstick should be less sensitive.
+	const int TRIGGER_DEAD_ZONE = 0;
 	const int SCROLL_SPEED = 20; // Speed at which you scroll page.
 	const int FPS = 150;
 	const int SLEEP_AMOUNT = 1000/FPS; // number of milliseconds to sleep per iteration
@@ -32,6 +33,8 @@ private:
 
 	bool _disabled = false; //use for Select sleep mode
 	bool _hidden = false; //press Y to hide, check this var
+	bool _lTriggerPrevious = false;
+	bool _rTriggerPrevious = false;
 
 	std::map<DWORD, bool> _xboxClickStateLastIteration;
 	std::map<DWORD, bool> _xboxClickIsDown;
@@ -55,9 +58,11 @@ public:
 
 	void handleScrolling();
 
+	void handleTriggers(WORD lKey, WORD rKey);
+
 	bool xboxClickStateExists(DWORD xinput);
 
-	void mapKeyboard(DWORD STATE, DWORD key);
+	void mapKeyboard(DWORD STATE, WORD key);
 
 	void mapMouseClick(DWORD STATE, DWORD keyDown, DWORD keyUp);
 

@@ -22,7 +22,7 @@ void inputKeyboardUp(WORD cmd)
 	inputKeyboard(cmd, KEYEVENTF_KEYUP);
 }
 
-void mouseEvent(WORD dwFlags, DWORD mouseData=0)
+void mouseEvent(DWORD dwFlags, DWORD mouseData=0)
 {
 	INPUT input;
 	input.type = INPUT_MOUSE;
@@ -51,6 +51,7 @@ void Gopher::loop() {
 
 	handleMouseMovement();
 	handleScrolling();
+	handleTriggers(VK_SPACE,VK_BACK);
 
 	mapMouseClick(XINPUT_GAMEPAD_A, MOUSEEVENTF_LEFTDOWN, MOUSEEVENTF_LEFTUP);
 	mapMouseClick(XINPUT_GAMEPAD_X, MOUSEEVENTF_RIGHTDOWN, MOUSEEVENTF_RIGHTUP);
@@ -69,51 +70,55 @@ void Gopher::loop() {
 
 	mapKeyboard(XINPUT_GAMEPAD_START, VK_LWIN);
 	mapKeyboard(XINPUT_GAMEPAD_B, VK_RETURN);
+	mapKeyboard(XINPUT_GAMEPAD_RIGHT_SHOULDER, VK_BROWSER_FORWARD);
+	mapKeyboard(XINPUT_GAMEPAD_LEFT_SHOULDER, VK_BROWSER_BACK);
+	mapKeyboard(XINPUT_GAMEPAD_BACK, VK_BROWSER_REFRESH);
 
-	setXboxClickState(XINPUT_GAMEPAD_LEFT_SHOULDER);
-
-
-	if (_xboxClickIsDown[XINPUT_GAMEPAD_LEFT_SHOULDER]) {
+	//Left and Right Shoulders will change speed.
+	setXboxClickState(XINPUT_GAMEPAD_LEFT_SHOULDER | XINPUT_GAMEPAD_RIGHT_SHOULDER);
+	if (_xboxClickIsDown[XINPUT_GAMEPAD_LEFT_SHOULDER | XINPUT_GAMEPAD_RIGHT_SHOULDER]) {
 
 		if (speed == SPEED_LOW)
 		{
-			Beep(240, 210);
 			speed = SPEED_MED;
+			_controller->Vibrate(0, 30000);
+			Sleep(400);
+			_controller->Vibrate(0, 0);
 		}
 		else if (speed == SPEED_MED)
 		{
-			Beep(260, 210);
 			speed = SPEED_HIGH;
+			_controller->Vibrate(0, 65000);
+			Sleep(400);
+			_controller->Vibrate(0, 0);
 		}
 		else if (speed == SPEED_HIGH)
 		{
-			Beep(200, 210);
 			speed = SPEED_LOW;
+			_controller->Vibrate(0, 10000);
+			Sleep(400);
+			_controller->Vibrate(0, 0);
 		}
 	}
 }
 
 void Gopher::handleDisableButton()
 {
-	setXboxClickState(XINPUT_GAMEPAD_BACK);
-	if (_xboxClickIsDown[XINPUT_GAMEPAD_BACK])
+	//Select + Start will disable.
+    setXboxClickState(XINPUT_GAMEPAD_BACK | XINPUT_GAMEPAD_START);
+	if (_xboxClickIsDown[XINPUT_GAMEPAD_BACK | XINPUT_GAMEPAD_START])
 	{
 		_disabled = !_disabled;
 
 		if (_disabled) {
-			Beep(1800, 200);
-			Beep(1600, 200);
-			Beep(1400, 200);
-			Beep(1200, 200);
-			Beep(1000, 200);
+			_controller->Vibrate(10000, 10000);
+			Sleep(400);
+			_controller->Vibrate(0, 0);
 		}
-		else
-		{
-			Beep(1000, 200);
-			Beep(1200, 200);
-			Beep(1400, 200);
-			Beep(1600, 200);
-			Beep(1800, 200);
+		else {
+			_controller->Vibrate(65000, 65000);
+			Sleep(400);
+			_controller->Vibrate(0, 0);
 		}
 	}
 }
@@ -208,6 +213,38 @@ void Gopher::handleScrolling()
 	}
 }
 
+void Gopher::handleTriggers(WORD lKey, WORD rKey)
+{
+	bool lTriggerIsDown = _currentState.Gamepad.bLeftTrigger > TRIGGER_DEAD_ZONE;
+	bool rTriggerIsDown = _currentState.Gamepad.bRightTrigger > TRIGGER_DEAD_ZONE;
+	
+
+	if(lTriggerIsDown != _lTriggerPrevious)
+	{
+		_lTriggerPrevious = lTriggerIsDown;
+		if (lTriggerIsDown)
+		{
+ 			inputKeyboardDown(lKey);
+		}else
+		{
+			inputKeyboardUp(lKey);
+		}
+	}
+
+	if(rTriggerIsDown != _rTriggerPrevious)
+	{
+		_rTriggerPrevious = rTriggerIsDown;
+		if (rTriggerIsDown)
+		{
+			inputKeyboardDown(rKey);
+		}
+		else
+		{
+			inputKeyboardUp(rKey);
+		}
+	}
+}
+
 void Gopher::setXboxClickState(DWORD STATE)
 {
 	_xboxClickIsDown[STATE] = false;
@@ -246,7 +283,7 @@ bool Gopher::xboxClickStateExists(DWORD xinput)
 	return true;
 }
 
-void Gopher::mapKeyboard(DWORD STATE, DWORD key)
+void Gopher::mapKeyboard(DWORD STATE, WORD key)
 {
 	setXboxClickState(STATE);
 	if (_xboxClickIsDown[STATE])
