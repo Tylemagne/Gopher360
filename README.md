@@ -35,19 +35,23 @@ Controls
 
 **Left Analog Click**: Middle mouse click (for scrolling web pages).
 
-**Back**: Toggle. Useful for when you launch emulators or open Steam Big Picture mode. Press again to re-enable.
+**Back**: Browser refresh
 
-**LBumper**: Cycle speed (x3)
+**Back + Start**: Toggle. Useful for when you launch emulators or open Steam Big Picture mode. Press again to re-enable.
 
-(planned)**RBumper**: Cycle master volume (x8)
+**LBumper**: Browser previous
+
+**RBumper**: Browser next
+
+**LBumber + RBummper**: Cycle speed (x3)
+
+**LTrigger**: Space
+
+**RTrigger**: Backspace
 
 TODO
 ======
-Call GetState once per frame - thanks for catching that!
-
-Allow adjustment of sensitivilty & volume via top L / R buttons. Text/beep feedback.
-
-Easter egg that plays Ice Caves when you hold down LTrigger :D:D:D
+Config file for keybinding
 
 
 
