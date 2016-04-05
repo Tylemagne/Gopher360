@@ -16,7 +16,7 @@
 //changes 0.96 -> 0.97: speed variable is global, detects bumpers, all timed (no enter), lbumper speed toggler
 //changes 0.97 -> 0.98: performance improvements, operational volume function, shorter beeps, no XY text
 //changes 0.98 -> 0.985: 144Hz, Y to hide window(added float stillHoldingY), code cleanup, comments added
-//1.0 requirements: bumpers+dpadup = bring back. bumpers+dpaddown = minimize to tray. trigger=hide/minimize to tray?
+//changes 0.985 -> 0.986: Adding configuration file, changing from beeps to vibration.
 
 #include <Windows.h> //for Beep()
 #include <iostream>
@@ -42,7 +42,7 @@ int main()
 {
 	CXBOXController controller(1);
 	Gopher gopher(&controller);
-	SetConsoleTitle( TEXT( "Gopher v0.985" ) );
+	SetConsoleTitle( TEXT( "Gopher v0.986" ) );
 
 	system("Color 1D");
 
@@ -57,6 +57,8 @@ int main()
 	{
 		printf("Tip - Gopher isn't being ran as an administrator.\nWindows won't let you use the on-screen keyboard or games without it.\n\n");
 	}
+
+	gopher.loadConfigFile();
 
 	while (true) {
 		gopher.loop();
