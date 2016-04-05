@@ -24,12 +24,21 @@
     <ClCompile Include="CXBOXController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ConfigFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Gopher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CXBOXController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Convert.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

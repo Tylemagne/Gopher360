@@ -76,11 +76,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ConfigFile.cpp" />
     <ClCompile Include="CXBOXController.cpp" />
     <ClCompile Include="Gopher.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ConfigFile.h" />
+    <ClInclude Include="Convert.h" />
     <ClInclude Include="CXBOXController.h" />
     <ClInclude Include="Gopher.h" />
   </ItemGroup>
