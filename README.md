@@ -15,7 +15,8 @@ https://vine.co/v/MYadBgWXuWY
 Download Instructions
 ======
 Download the latest release here: https://github.com/wishIwasabear/Gopher360/releases
-I recommend you copy it somewhere outside of the ZIP and make a shortcut to it. Adding it to your startup folder in your HTPC can make bootups a lot more convenient!
+
+I recommend that you copy it somewhere outside of the ZIP and make a shortcut to it. Adding it to your startup folder in your HTPC can make bootups a lot more convenient!
 
 Default Controls
 ======
@@ -48,16 +49,6 @@ Default Controls
 
 **RBumper**: Browser next
 
-**LBumber + RBummper**: Cycle speed (x3)
-
-**LTrigger**: Space
-
-**RTrigger**: Backspace
-
-TODO
-======
-Config file for keybinding
-=======
 **LBumber + RBummper**: Cycle speed (x3)
 
 **LTrigger**: Space
