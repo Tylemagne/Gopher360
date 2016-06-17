@@ -1,4 +1,5 @@
 #include "Gopher.h"
+#include "ConfigFile.h"
 
 void inputKeyboard(WORD cmd, DWORD flag)
 {
@@ -22,7 +23,7 @@ void inputKeyboardUp(WORD cmd)
 	inputKeyboard(cmd, KEYEVENTF_KEYUP);
 }
 
-void mouseEvent(WORD dwFlags, DWORD mouseData=0)
+void mouseEvent(DWORD dwFlags, DWORD mouseData = 0)
 {
 	INPUT input;
 	input.type = INPUT_MOUSE;
@@ -37,13 +38,45 @@ Gopher::Gopher(CXBOXController * controller)
 {
 }
 
+void Gopher::loadConfigFile()
+{
+	ConfigFile cfg("config.ini");
+	
+	//Configuration bindings
+	CONFIG_MOUSE_LEFT = strtol(cfg.getValueOfKey<std::string>("CONFIG_MOUSE_LEFT").c_str(), 0, 0);
+	CONFIG_MOUSE_RIGHT = strtol(cfg.getValueOfKey<std::string>("CONFIG_MOUSE_RIGHT").c_str(), 0, 0);
+	CONFIG_MOUSE_MIDDLE = strtol(cfg.getValueOfKey<std::string>("CONFIG_MOUSE_MIDDLE").c_str(), 0, 0);
+	CONFIG_HIDE = strtol(cfg.getValueOfKey<std::string>("CONFIG_HIDE").c_str(), 0, 0);
+	CONFIG_DISABLE = strtol(cfg.getValueOfKey<std::string>("CONFIG_DISABLE").c_str(), 0, 0);
+	CONFIG_SPEED_CHANGE = strtol(cfg.getValueOfKey<std::string>("CONFIG_SPEED_CHANGE").c_str(), 0, 0);
+
+	//Controller bindings
+	GAMEPAD_DPAD_UP = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_DPAD_UP").c_str(), 0, 0);
+	GAMEPAD_DPAD_DOWN = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_DPAD_DOWN").c_str(), 0, 0);
+	GAMEPAD_DPAD_LEFT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_DPAD_LEFT").c_str(), 0, 0);
+	GAMEPAD_DPAD_RIGHT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_DPAD_RIGHT").c_str(), 0, 0);
+	GAMEPAD_START = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_START").c_str(), 0, 0);
+	GAMEPAD_BACK = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_BACK").c_str(), 0, 0);
+	GAMEPAD_LEFT_THUMB = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_LEFT_THUMB").c_str(), 0, 0);
+	GAMEPAD_RIGHT_THUMB = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_RIGHT_THUMB").c_str(), 0, 0);
+	GAMEPAD_LEFT_SHOULDER = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_LEFT_SHOULDER").c_str(), 0, 0);
+	GAMEPAD_RIGHT_SHOULDER = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_RIGHT_SHOULDER").c_str(), 0, 0);
+	GAMEPAD_A = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_A").c_str(), 0, 0);
+	GAMEPAD_B = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_B").c_str(), 0, 0);
+	GAMEPAD_X = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_X").c_str(), 0, 0);
+	GAMEPAD_Y = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_Y").c_str(), 0, 0);
+	GAMEPAD_TRIGGER_LEFT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_TRIGGER_LEFT").c_str(), 0, 0);
+	GAMEPAD_TRIGGER_RIGHT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_TRIGGER_RIGHT").c_str(), 0, 0);
+
+	//LOOP over all the other keys
+}
+
 void Gopher::loop() {
 	Sleep(SLEEP_AMOUNT);
 
 	_currentState = _controller->GetState();
-	
-	handleDisableButton();
 
+	handleDisableButton();
 	if (_disabled)
 	{
 		return;
@@ -52,68 +85,100 @@ void Gopher::loop() {
 	handleMouseMovement();
 	handleScrolling();
 
-	mapMouseClick(XINPUT_GAMEPAD_A, MOUSEEVENTF_LEFTDOWN, MOUSEEVENTF_LEFTUP);
-	mapMouseClick(XINPUT_GAMEPAD_X, MOUSEEVENTF_RIGHTDOWN, MOUSEEVENTF_RIGHTUP);
-	mapMouseClick(XINPUT_GAMEPAD_LEFT_THUMB, MOUSEEVENTF_MIDDLEDOWN, MOUSEEVENTF_MIDDLEUP);
+	//Mouse functions
+	if (CONFIG_MOUSE_LEFT)
+		mapMouseClick(CONFIG_MOUSE_LEFT, MOUSEEVENTF_LEFTDOWN, MOUSEEVENTF_LEFTUP);
+	if (CONFIG_MOUSE_RIGHT)
+		mapMouseClick(CONFIG_MOUSE_RIGHT, MOUSEEVENTF_RIGHTDOWN, MOUSEEVENTF_RIGHTUP);
+	if (CONFIG_MOUSE_MIDDLE)
+		mapMouseClick(CONFIG_MOUSE_MIDDLE, MOUSEEVENTF_MIDDLEDOWN, MOUSEEVENTF_MIDDLEUP);
 
-	mapKeyboard(XINPUT_GAMEPAD_DPAD_UP, VK_UP);
-	mapKeyboard(XINPUT_GAMEPAD_DPAD_DOWN, VK_DOWN);
-	mapKeyboard(XINPUT_GAMEPAD_DPAD_LEFT, VK_LEFT);
-	mapKeyboard(XINPUT_GAMEPAD_DPAD_RIGHT, VK_RIGHT);
-
-	setXboxClickState(XINPUT_GAMEPAD_Y);
-	if (_xboxClickIsDown[XINPUT_GAMEPAD_Y])
+	//Hides the console
+	if (CONFIG_HIDE)
 	{
-		toggleWindowVisibility();
+		setXboxClickState(CONFIG_HIDE);
+		if (_xboxClickIsDown[CONFIG_HIDE])
+		{
+			toggleWindowVisibility();
+		}
 	}
 
-	mapKeyboard(XINPUT_GAMEPAD_START, VK_LWIN);
-	mapKeyboard(XINPUT_GAMEPAD_B, VK_RETURN);
-
-	setXboxClickState(XINPUT_GAMEPAD_LEFT_SHOULDER);
-
-
-	if (_xboxClickIsDown[XINPUT_GAMEPAD_LEFT_SHOULDER]) {
+	//Will change between the current speed values
+	setXboxClickState(CONFIG_SPEED_CHANGE);
+	if (_xboxClickIsDown[CONFIG_SPEED_CHANGE]) {
 
 		if (speed == SPEED_LOW)
 		{
-			Beep(240, 210);
 			speed = SPEED_MED;
+			_controller->Vibrate(0, 30000);
+			Sleep(400);
+			_controller->Vibrate(0, 0);
 		}
 		else if (speed == SPEED_MED)
 		{
-			Beep(260, 210);
 			speed = SPEED_HIGH;
+			_controller->Vibrate(0, 65000);
+			Sleep(400);
+			_controller->Vibrate(0, 0);
 		}
 		else if (speed == SPEED_HIGH)
 		{
-			Beep(200, 210);
 			speed = SPEED_LOW;
+			_controller->Vibrate(0, 10000);
+			Sleep(400);
+			_controller->Vibrate(0, 0);
 		}
 	}
+
+	//Set all controller keys.
+	handleTriggers(GAMEPAD_TRIGGER_LEFT, GAMEPAD_TRIGGER_RIGHT);
+	if (GAMEPAD_DPAD_UP)
+		mapKeyboard(XINPUT_GAMEPAD_DPAD_UP, GAMEPAD_DPAD_UP);
+	if (GAMEPAD_DPAD_DOWN)
+		mapKeyboard(XINPUT_GAMEPAD_DPAD_DOWN, GAMEPAD_DPAD_DOWN);
+	if (GAMEPAD_DPAD_LEFT)
+		mapKeyboard(XINPUT_GAMEPAD_DPAD_LEFT, GAMEPAD_DPAD_LEFT);
+	if (GAMEPAD_DPAD_RIGHT)
+		mapKeyboard(XINPUT_GAMEPAD_DPAD_RIGHT, GAMEPAD_DPAD_RIGHT);
+	if (GAMEPAD_START)
+		mapKeyboard(XINPUT_GAMEPAD_START, GAMEPAD_START);
+	if (GAMEPAD_BACK)
+		mapKeyboard(XINPUT_GAMEPAD_BACK, GAMEPAD_BACK);
+	if (GAMEPAD_LEFT_THUMB)
+		mapKeyboard(XINPUT_GAMEPAD_LEFT_THUMB, GAMEPAD_LEFT_THUMB);
+	if (GAMEPAD_RIGHT_THUMB)
+		mapKeyboard(XINPUT_GAMEPAD_RIGHT_THUMB, GAMEPAD_RIGHT_THUMB);
+	if (GAMEPAD_LEFT_SHOULDER)
+		mapKeyboard(XINPUT_GAMEPAD_LEFT_SHOULDER, GAMEPAD_LEFT_SHOULDER);
+	if (GAMEPAD_RIGHT_SHOULDER)
+		mapKeyboard(XINPUT_GAMEPAD_RIGHT_SHOULDER, GAMEPAD_RIGHT_SHOULDER);
+	if (GAMEPAD_A)
+		mapKeyboard(XINPUT_GAMEPAD_A, GAMEPAD_A);
+	if (GAMEPAD_B)
+		mapKeyboard(XINPUT_GAMEPAD_B, GAMEPAD_B);
+	if (GAMEPAD_X)
+		mapKeyboard(XINPUT_GAMEPAD_X, GAMEPAD_X);
+	if (GAMEPAD_Y)
+		mapKeyboard(XINPUT_GAMEPAD_Y, GAMEPAD_Y);
 }
 
 void Gopher::handleDisableButton()
 {
-	setXboxClickState(XINPUT_GAMEPAD_BACK);
-	if (_xboxClickIsDown[XINPUT_GAMEPAD_BACK])
+	//Select + Start will disable.
+	setXboxClickState(CONFIG_DISABLE);
+	if (_xboxClickIsDown[CONFIG_DISABLE])
 	{
 		_disabled = !_disabled;
 
 		if (_disabled) {
-			Beep(1800, 200);
-			Beep(1600, 200);
-			Beep(1400, 200);
-			Beep(1200, 200);
-			Beep(1000, 200);
+			_controller->Vibrate(10000, 10000);
+			Sleep(400);
+			_controller->Vibrate(0, 0);
 		}
-		else
-		{
-			Beep(1000, 200);
-			Beep(1200, 200);
-			Beep(1400, 200);
-			Beep(1600, 200);
-			Beep(1800, 200);
+		else {
+			_controller->Vibrate(65000, 65000);
+			Sleep(400);
+			_controller->Vibrate(0, 0);
 		}
 	}
 }
@@ -178,7 +243,7 @@ void Gopher::handleMouseMovement()
 
 	y -= dy;
 	_yRest = y - (float)((int)y);
-	
+
 	SetCursorPos((int)x, (int)y); //after all click input processing
 }
 
@@ -205,6 +270,39 @@ void Gopher::handleScrolling()
 		input.mi.dwFlags = MOUSEEVENTF_WHEEL;
 		input.mi.time = 0;
 		SendInput(1, &input, sizeof(INPUT));
+	}
+}
+
+void Gopher::handleTriggers(WORD lKey, WORD rKey)
+{
+	bool lTriggerIsDown = _currentState.Gamepad.bLeftTrigger > TRIGGER_DEAD_ZONE;
+	bool rTriggerIsDown = _currentState.Gamepad.bRightTrigger > TRIGGER_DEAD_ZONE;
+
+
+	if (lTriggerIsDown != _lTriggerPrevious)
+	{
+		_lTriggerPrevious = lTriggerIsDown;
+		if (lTriggerIsDown)
+		{
+			inputKeyboardDown(lKey);
+		}
+		else
+		{
+			inputKeyboardUp(lKey);
+		}
+	}
+
+	if (rTriggerIsDown != _rTriggerPrevious)
+	{
+		_rTriggerPrevious = rTriggerIsDown;
+		if (rTriggerIsDown)
+		{
+			inputKeyboardDown(rKey);
+		}
+		else
+		{
+			inputKeyboardUp(rKey);
+		}
 	}
 }
 
@@ -246,7 +344,7 @@ bool Gopher::xboxClickStateExists(DWORD xinput)
 	return true;
 }
 
-void Gopher::mapKeyboard(DWORD STATE, DWORD key)
+void Gopher::mapKeyboard(DWORD STATE, WORD key)
 {
 	setXboxClickState(STATE);
 	if (_xboxClickIsDown[STATE])
