@@ -81,7 +81,7 @@ public:
 
 	void toggleWindowVisibility();
 
-	void setWindowVisibility(const bool& hidden) const;
+	void setWindowVisibility(const bool& hidden, const bool &verbose) const;
 
 	float getDelta(short tx);
 
