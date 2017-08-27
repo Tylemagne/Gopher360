@@ -68,6 +68,9 @@ void Gopher::loadConfigFile()
 	GAMEPAD_TRIGGER_LEFT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_TRIGGER_LEFT").c_str(), 0, 0);
 	GAMEPAD_TRIGGER_RIGHT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_TRIGGER_RIGHT").c_str(), 0, 0);
 
+	//Set Initial States
+	setWindowVisibility(_hidden);
+
 	//LOOP over all the other keys
 }
 
@@ -186,7 +189,11 @@ void Gopher::handleDisableButton()
 void Gopher::toggleWindowVisibility()
 {
 	_hidden = !_hidden;
+	setWindowVisibility(_hidden);
+}
 
+void Gopher::setWindowVisibility(const bool &hidden) const
+{
 	if (_hidden)
 	{
 		HWND hWnd = GetConsoleWindow();

@@ -81,6 +81,8 @@ public:
 
 	void toggleWindowVisibility();
 
+	void setWindowVisibility(const bool& hidden) const;
+
 	float getDelta(short tx);
 
 	void handleMouseMovement();
