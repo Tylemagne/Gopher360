@@ -48,6 +48,7 @@ void Gopher::loadConfigFile()
 	CONFIG_MOUSE_MIDDLE = strtol(cfg.getValueOfKey<std::string>("CONFIG_MOUSE_MIDDLE").c_str(), 0, 0);
 	CONFIG_HIDE = strtol(cfg.getValueOfKey<std::string>("CONFIG_HIDE").c_str(), 0, 0);
 	CONFIG_DISABLE = strtol(cfg.getValueOfKey<std::string>("CONFIG_DISABLE").c_str(), 0, 0);
+	CONFIG_DISABLE_VIBRATION = strtol(cfg.getValueOfKey<std::string>("CONFIG_DISABLE_VIBRATION").c_str(), 0, 0);
 	CONFIG_SPEED_CHANGE = strtol(cfg.getValueOfKey<std::string>("CONFIG_SPEED_CHANGE").c_str(), 0, 0);
 
 	//Controller bindings
@@ -85,6 +86,9 @@ void Gopher::loop() {
 		return;
 	}
 
+	if (CONFIG_DISABLE_VIBRATION)
+		_vibrationDisabled = !_vibrationDisabled;
+
 	handleMouseMovement();
 	handleScrolling();
 
@@ -113,23 +117,17 @@ void Gopher::loop() {
 		if (speed == SPEED_LOW)
 		{
 			speed = SPEED_MED;
-			_controller->Vibrate(0, 30000);
-			Sleep(400);
-			_controller->Vibrate(0, 0);
+			pulseVibrate(400, 0, 3000);
 		}
 		else if (speed == SPEED_MED)
 		{
 			speed = SPEED_HIGH;
-			_controller->Vibrate(0, 65000);
-			Sleep(400);
-			_controller->Vibrate(0, 0);
+			pulseVibrate(400, 0, 65000);
 		}
 		else if (speed == SPEED_HIGH)
 		{
 			speed = SPEED_LOW;
-			_controller->Vibrate(0, 10000);
-			Sleep(400);
-			_controller->Vibrate(0, 0);
+			pulseVibrate(400, 0, 10000);
 		}
 	}
 
@@ -165,6 +163,16 @@ void Gopher::loop() {
 		mapKeyboard(XINPUT_GAMEPAD_Y, GAMEPAD_Y);
 }
 
+void Gopher::pulseVibrate(const int duration, const int l, const int r) const
+{
+	if(!_vibrationDisabled)
+	{
+		_controller->Vibrate(l, r);
+		Sleep(duration);
+		_controller->Vibrate(0, 0);
+	}
+}
+
 void Gopher::handleDisableButton()
 {
 	//Select + Start will disable.
@@ -174,14 +182,10 @@ void Gopher::handleDisableButton()
 		_disabled = !_disabled;
 
 		if (_disabled) {
-			_controller->Vibrate(10000, 10000);
-			Sleep(400);
-			_controller->Vibrate(0, 0);
+			pulseVibrate(400, 10000, 10000);
 		}
 		else {
-			_controller->Vibrate(65000, 65000);
-			Sleep(400);
-			_controller->Vibrate(0, 0);
+			pulseVibrate(400, 65000, 65000);
 		}
 	}
 }

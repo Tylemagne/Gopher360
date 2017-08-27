@@ -45,6 +45,8 @@ Default Controls
 
 **Back + Start**: Toggle. Useful for when you launch emulators or open Steam Big Picture mode. Press again to re-enable.
 
+**Left Analog Click + Right Analog Click**: Toggle gopher vibration setting.
+
 **LBumper**: Browser previous
 
 **RBumper**: Browser next
