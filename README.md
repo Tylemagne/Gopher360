@@ -43,7 +43,9 @@ Default Controls
 
 **Start**: Left Windows Key
 
-**Back + Start**: Toggle. Useful for when you launch emulators or open Steam Big Picture mode. Press again to re-enable.
+**Start + Back**: Toggle. Useful for when you launch emulators or open Steam Big Picture mode. Press again to re-enable.
+
+**Start + DPad Up**: Toggle gopher vibration setting.
 
 **LBumper**: Browser previous
 

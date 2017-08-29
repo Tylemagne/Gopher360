@@ -32,6 +32,7 @@ private:
 	float _yRest = 0.0f;
 
 	bool _disabled = false; //use for Select sleep mode
+	bool _vibrationDisabled = false; //use for Select sleep mode
 	bool _hidden = false; //press Y to hide, check this var
 	bool _lTriggerPrevious = false;
 	bool _rTriggerPrevious = false;
@@ -40,10 +41,11 @@ private:
 	DWORD CONFIG_MOUSE_LEFT = NULL;
 	DWORD CONFIG_MOUSE_RIGHT = NULL;
 	DWORD CONFIG_MOUSE_MIDDLE = NULL;
-
+	
 	//Gopher Settings
 	DWORD CONFIG_HIDE = NULL;
 	DWORD CONFIG_DISABLE = NULL;
+	DWORD CONFIG_DISABLE_VIBRATION = NULL;
 	DWORD CONFIG_SPEED_CHANGE = NULL;
 
 	//Gamepad bindings
@@ -79,13 +81,19 @@ public:
 
 	void loop();
 
+	void pulseVibrate(const int duration, const int l, const int r) const;
+
 	void toggleWindowVisibility();
+
+	void setWindowVisibility(const bool& hidden) const;
 
 	float getDelta(short tx);
 
 	void handleMouseMovement();
 
 	void handleDisableButton();
+
+	void handleVibrationButton();
 
 	void handleScrolling();
 
