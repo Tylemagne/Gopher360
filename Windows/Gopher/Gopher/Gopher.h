@@ -85,13 +85,15 @@ public:
 
 	void toggleWindowVisibility();
 
-	void setWindowVisibility(const bool& hidden, const bool &verbose) const;
+	void setWindowVisibility(const bool& hidden) const;
 
 	float getDelta(short tx);
 
 	void handleMouseMovement();
 
 	void handleDisableButton();
+
+	void handleVibrationButton();
 
 	void handleScrolling();
 

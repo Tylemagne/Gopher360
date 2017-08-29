@@ -70,7 +70,7 @@ void Gopher::loadConfigFile()
 	GAMEPAD_TRIGGER_RIGHT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_TRIGGER_RIGHT").c_str(), 0, 0);
 
 	//Set Initial States
-	setWindowVisibility(_hidden, false);
+	setWindowVisibility(_hidden);
 
 	//LOOP over all the other keys
 }
@@ -86,8 +86,8 @@ void Gopher::loop() {
 		return;
 	}
 
-	if (CONFIG_DISABLE_VIBRATION)
-		_vibrationDisabled = !_vibrationDisabled;
+	//Vibration
+	handleVibrationButton();
 
 	handleMouseMovement();
 	handleScrolling();
@@ -190,28 +190,29 @@ void Gopher::handleDisableButton()
 	}
 }
 
+void Gopher::handleVibrationButton()
+{
+	//DPadUp + Start will disable.
+	setXboxClickState(CONFIG_DISABLE_VIBRATION);
+	if (_xboxClickIsDown[CONFIG_DISABLE_VIBRATION])
+	{
+		_vibrationDisabled = !_vibrationDisabled;
+		printf("Vibration %s\n", _vibrationDisabled ? "Disabled" : "Enabled");
+		Sleep(1000);
+	}
+}
+
 void Gopher::toggleWindowVisibility()
 {
 	_hidden = !_hidden;
-	setWindowVisibility(_hidden, true);
+	printf("Window %s\n", _hidden ? "hidden" : "unhidden");
+	setWindowVisibility(_hidden);
 }
 
-void Gopher::setWindowVisibility(const bool &hidden, const bool& verbose) const
+void Gopher::setWindowVisibility(const bool &hidden) const
 {
-	if (_hidden)
-	{
-		HWND hWnd = GetConsoleWindow();
-		ShowWindow(hWnd, SW_HIDE);
-		if(verbose)
-			printf("Window hidden\n");
-	}
-	else
-	{
-		HWND hWnd = GetConsoleWindow();
-		ShowWindow(hWnd, SW_SHOW);
-		if (verbose)
-			printf("Window unhidden\n");
-	}
+	HWND hWnd = GetConsoleWindow();
+	ShowWindow(hWnd, _hidden ? SW_HIDE : SW_SHOW);
 }
 
 template <typename T>
