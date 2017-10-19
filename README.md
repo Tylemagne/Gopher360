@@ -1,3 +1,11 @@
+Note to users of Gopher360
+=======
+
+Gopher360 is [no longer actively developed by its original auther][1]. If you use Gopher360 and would be interested in taking some responsibility, please express it [here][1].
+
+[1]: https://github.com/Tylemagne/Gopher360/issues/52
+
+
 About Gopher
 ======
 
@@ -43,7 +51,9 @@ Default Controls
 
 **Start**: Left Windows Key
 
-**Back + Start**: Toggle. Useful for when you launch emulators or open Steam Big Picture mode. Press again to re-enable.
+**Start + Back**: Toggle. Useful for when you launch emulators or open Steam Big Picture mode. Press again to re-enable.
+
+**Start + DPad Up**: Toggle gopher vibration setting.
 
 **LBumper**: Browser previous
 
