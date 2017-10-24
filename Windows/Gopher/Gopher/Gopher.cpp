@@ -227,15 +227,15 @@ float Gopher::getDelta(short t)
 	if (t > 32767) t = 0;
 	if (t < -32768) t = 0;
 
-	float delta = 0.0;
+	return t;
+}
 
-	if (abs(t) > DEAD_ZONE)
-	{
-		t = sgn(t) * (abs(t) - DEAD_ZONE);
-		delta = speed * t / FPS;
-	}
-
-	return delta;
+float Gopher::getMult(float lengthsq, float deadzone)
+{
+	float mult = sqrt((lengthsq - (deadzone * deadzone)) / lengthsq) / FPS;
+	mult *= mult;
+	mult *= mult;
+	return mult * 8000000;
 }
 
 void Gopher::handleMouseMovement()
@@ -249,8 +249,16 @@ void Gopher::handleMouseMovement()
 	float x = cursor.x + _xRest;
 	float y = cursor.y + _yRest;
 
-	float dx = getDelta(tx);
-	float dy = getDelta(ty);
+	float dx = 0;
+	float dy = 0;
+
+	if ((tx * tx + ty * ty) > DEAD_ZONE * DEAD_ZONE) {
+		float length = tx * tx + ty * ty;
+		float mult = speed * getMult(length, DEAD_ZONE);
+
+		dx = getDelta(tx) * mult;
+		dy = getDelta(ty) * mult;
+	}
 
 	x += dx;
 	_xRest = x - (float)((int)x);
@@ -263,24 +271,13 @@ void Gopher::handleMouseMovement()
 
 void Gopher::handleScrolling()
 {
-	bool holdScrollUp = _currentState.Gamepad.sThumbRY > SCROLL_DEAD_ZONE;
-	bool holdScrollDown = _currentState.Gamepad.sThumbRY < -SCROLL_DEAD_ZONE;
+	short ty = _currentState.Gamepad.sThumbRY;
 
-	if (holdScrollUp)
+	if (abs(ty) > SCROLL_DEAD_ZONE)
 	{
 		INPUT input;
 		input.type = INPUT_MOUSE;
-		input.mi.mouseData = SCROLL_SPEED;
-		input.mi.dwFlags = MOUSEEVENTF_WHEEL;
-		input.mi.time = 0;
-		SendInput(1, &input, sizeof(INPUT));
-	}
-
-	if (holdScrollDown)
-	{
-		INPUT input;
-		input.type = INPUT_MOUSE;
-		input.mi.mouseData = -SCROLL_SPEED;
+		input.mi.mouseData = getDelta(ty) * getMult(ty * ty, SCROLL_DEAD_ZONE) * 0.33;
 		input.mi.dwFlags = MOUSEEVENTF_WHEEL;
 		input.mi.time = 0;
 		SendInput(1, &input, sizeof(INPUT));
@@ -330,7 +327,7 @@ void Gopher::setXboxClickState(DWORD STATE)
 		_xboxClickStateLastIteration[STATE] = false;
 	}
 
-	bool isDown = _currentState.Gamepad.wButtons == STATE;
+	bool isDown = (_currentState.Gamepad.wButtons & STATE) == STATE;
 
 	if (isDown && !_xboxClickStateLastIteration[STATE])
 	{

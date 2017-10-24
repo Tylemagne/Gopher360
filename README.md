@@ -22,7 +22,7 @@ https://vine.co/v/MYadBgWXuWY
 
 Download Instructions
 ======
-Download the latest release here: https://github.com/wishIwasabear/Gopher360/releases
+Download the latest release here: https://github.com/irungentoo/Gopher360/releases
 
 I recommend that you copy it somewhere outside of the ZIP and make a shortcut to it. Adding it to your startup folder in your HTPC can make bootups a lot more convenient!
 
