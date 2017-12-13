@@ -23,9 +23,9 @@ private:
 
 	XINPUT_STATE _currentState;
 
-	const float SPEED_LOW = 0.032f;
-	const float SPEED_MED = 0.04f;
-	const float SPEED_HIGH = 0.072f;
+	const float SPEED_LOW = 0.011f;
+	const float SPEED_MED = 0.041f;
+	const float SPEED_HIGH = 0.061f;
 	float speed = SPEED_MED;
 
 	float _xRest = 0.0f;
