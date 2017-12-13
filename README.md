@@ -5,6 +5,9 @@ Gopher is a utility for couch-oriented PC users that wish to entirely control th
 
 Gopher separates itself from the competition by being efficient, small, portable, free, and fully open. Competitors like XPadder and Joy2Key have their place, but Gopher really gives them a run for their money, even at its initial beta release.
 
+Using DualShock Controllers
+======
+DualShock controllers don't use typical xinput libraries like the X360 and Xbone controllers do, so you'll need something like InputMapper to "emulate" an xinput device in order to get xinput-using applications like Gopher360 to understand it. Gopher360 DOES NOT automatically offer these emulation layers, so you'll need to use something to emulate it.
 
 Video Demonstration
 ======
@@ -20,6 +23,7 @@ I recommend that you copy it somewhere outside of the ZIP and make a shortcut to
 
 Default Controls
 ======
+Gopher360 automatically generates a config file, which will contain documentation information on all input types and key bindings.
 
 **A**: Left Mouse-Click.
 
