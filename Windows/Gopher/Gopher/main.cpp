@@ -17,8 +17,10 @@
 //changes 0.97 -> 0.98: performance improvements, operational volume function, shorter beeps, no XY text
 //changes 0.98 -> 0.985: 144Hz, Y to hide window(added float stillHoldingY), code cleanup, comments added
 //changes 0.985 -> 0.986: Adding configuration file, changing from beeps to vibration.
+//changes 0.986 -> 0.989: Improved speeds and speed reporting, created automatic config generator!
+//TODO FOR FUTURE VERSIONS - offload speeds into config file
 
-#include <Windows.h> //for Beep()
+#include <windows.h> //for Beep()
 #include <iostream>
 
 
@@ -42,21 +44,37 @@ int main()
 {
 	CXBOXController controller(1);
 	Gopher gopher(&controller);
-	SetConsoleTitle( TEXT( "Gopher v0.986" ) );
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTitle( TEXT( "Gopher v0.989" ) );
 
 	system("Color 1D");
 
 	//MessageBox(NULL,L"You'll need to run Gopher as an administrator if you intend use the on-screen keyboard. Otherwise, Windows will ignore attempted keystrokes. If not, carry on!",L"Gopher", MB_OK | MB_ICONINFORMATION);
 	//Add admin rights checker. If none, display this?
 
-	printf("Welcome to Gopher360 - a lightweight controller-to-KBM tool.\nSee /r/Gopher360 and the GitHub repository at bit.ly/1syAhMT for more info. Copyleft 2014.\n\n-------------------------\n\n");
-	printf("Gopher is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n");
-	printf("\nYou should have received a copy of the GNU General Public License\nalong with this program. If not, see http://www.gnu.org/licenses/.\n\n-------------------------\n\n");
+	printf("Welcome to Gopher360 - a VERY fast and lightweight controller-to-keyboard & mouse input tool.\n");
+	printf("All you need is an Xbox360/Xbone controller (wired or wireless adapter), or DualShock (with InputMapper 1.5+)\n");
+	printf("Gopher will autofind the xinput device and begin reading input - if nothing happens, verify connectivity.\n");
+	printf("See the GitHub repository at bit.ly/1syAhMT for more info. Twitter contact: TylerAt60FPS\n\n-------------------------\n\n");
+	
+	SetConsoleTextAttribute(hConsole, 23);
+	printf("Gopher is free (as in freedom) software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n");
+	printf("\nYou should have received a copy of the GNU General Public License\nalong with this program. If not, see http://www.gnu.org/licenses/.");
+	SetConsoleTextAttribute(hConsole, 29);
+	printf("\n\n-------------------------\n\n");
+
+	SetConsoleTextAttribute(hConsole, 5); //set color to purple on black (windows only)
+	//29 default
+
+	//dump important tips
+	printf("Tip - Press left and right bumpers simultaneously to toggle speeds!\n");
 
 	if (!isRunningAsAdministrator())
 	{
-		printf("Tip - Gopher isn't being ran as an administrator.\nWindows won't let you use the on-screen keyboard or games without it.\n\n");
+		printf("Tip - Not running as an admin! Windows on-screen keyboard and others won't work without admin rights.\n");
 	}
+
+	
 
 	gopher.loadConfigFile();
 
