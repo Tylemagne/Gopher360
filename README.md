@@ -43,6 +43,8 @@ Video Demonstration
 
 https://vine.co/v/MYadBgWXuWY
 
+[![Gopher Video](http://img.youtube.com/vi/UWYUodeontM/0.jpg)](https://www.youtube.com/watch?v=UWYUodeontM)
+
 
 Download Instructions
 ======
