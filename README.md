@@ -1,4 +1,4 @@
-[![Github All Releases](https://img.shields.io/github/downloads/Tylemagne/Gopher360/total.svg?style=for-the-badge&label=Download%20Gopher360%20v0.989&logo=appveyor&colorA=00cc0a&colorB=000000)](https://github.com/Tylemagne/Gopher360/releases/download/v0.989/Gopher.exe)
+[![Github All Releases](https://img.shields.io/github/downloads/Tylemagne/Gopher360/total.svg?style=for-the-badge&label=Download%20Gopher360&logo=appveyor&colorA=00cc0a&colorB=000000)](https://github.com/Tylemagne/Gopher360/releases/download/v0.989/Gopher.exe)
 
 
 
