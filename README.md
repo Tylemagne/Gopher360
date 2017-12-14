@@ -9,6 +9,18 @@ Feedback
 
 [![Static](https://img.shields.io/badge/Feedback%20Survey-03-blue.svg?logo=eclipse)](https://docs.google.com/forms/d/e/1FAIpQLScbsasEPPPLY0utFSnowtZFAr_O60hAHvrLt7_wEHZ3pzY9AA/viewform)
 
+Table of contents
+=================
+
+  * [About](#about-gopher)
+  * [Default Controls](#default-controls)
+  * [Requirements](#requirements)
+  * [DualShock Controllers](#using-dualshock-controllers)
+  * [Re-binding Controls](#config-file-instructions)
+  * [Building](#build-instructions)
+  * [License](#license)
+
+
 
 About Gopher
 ======
@@ -24,7 +36,7 @@ Gopher is incredibly great at being a standalone program, but with one major exc
 
 Using DualShock Controllers
 ======
-DualShock controllers don't use typical xinput libraries like the X360 and Xbone controllers do, so you'll need something like InputMapper to "emulate" an xinput device in order to get xinput-using applications like Gopher360 to understand it. Gopher360 DOES NOT automatically offer these emulation layers, so you'll need to use something to emulate it.
+DualShock controllers don't use typical xinput libraries like the X360 and Xbone controllers do, so you'll need something like InputMapper or DS3Tool to "emulate" an xinput device in order to get xinput-using applications like Gopher360 to understand it. Gopher360 DOES NOT automatically offer these emulation layers, so you'll need to use something to emulate it before Gopher can understand it.
 
 Video Demonstration
 ======
@@ -92,15 +104,10 @@ https://msdn.microsoft.com/en-us/library/windows/desktop/microsoft.directx_sdk.r
 
 More instruction in the configuration file.
 
-Port Progress
+
+Build Instructions
 ======
-Linux: Not started.
-
-Windows: Initial port complete.
-
-OSX: Not started.
-
-
+Building is pretty straightforward, but you may get a "missing win32 include" error due to the solution targetting. Simply follow the instructions the error provides (Project -> Retarget solution) to ensure your project has a working link to the libraries it needs.
 
 License
 ======
