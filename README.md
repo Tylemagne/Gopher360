@@ -92,7 +92,11 @@ Gopher360 automatically generates a config file, which will contain documentatio
 
 Config file instructions
 ======
-There is a configuration file config.ini for simple keybindings.
+There is a configuration file (config.ini) that can be reconfigured for simple keybindings.
+
+```diff
+- IF YOU MESS SOMETHING UP, Gopher will automatically re-generate a config file.
+```
 
 You can set which controller buttons will activate the configuration events based on the official microsoft keys hexadecimal values.
 
@@ -103,6 +107,11 @@ XInput Controller Buttons:
 https://msdn.microsoft.com/en-us/library/windows/desktop/microsoft.directx_sdk.reference.xinput_gamepad%28v=vs.85%29.aspx
 
 More instruction in the configuration file.
+
+
+```diff
++ If you make a config file you feel could benefit people with the same use scenario as you, feel free to make a pull request for it in the public configs directory.
+```
 
 
 Build Instructions
