@@ -1,3 +1,7 @@
+[Download Gopher 0.989](https://github.com/Tylemagne/Gopher360/releases/download/v0.989/Gopher.exe)
+
+[![Github All Releases](https://img.shields.io/github/downloads/Tylemagne/Gopher360/total.svg)]()
+
 About Gopher
 ======
 
