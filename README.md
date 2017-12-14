@@ -3,14 +3,19 @@ Download
 
 [![Github All Releases](https://img.shields.io/github/downloads/Tylemagne/Gopher360/total.svg?style=flat&label=Download%20Gopher360%20Standalone&logo=appveyor&colorA=00cc0a&colorB=000000)](https://github.com/Tylemagne/Gopher360/releases/download/v0.989/Gopher.exe)
 
+
+Feedback
+======
+
+[![Static](https://img.shields.io/badge/Feedback%20Survey-03-blue.svg?logo=eclipse)](https://docs.google.com/forms/d/e/1FAIpQLScbsasEPPPLY0utFSnowtZFAr_O60hAHvrLt7_wEHZ3pzY9AA/viewform)
+
+
 About Gopher
 ======
 
 Gopher is a utility for couch-oriented PC users that wish to entirely control their PC from the couch with a controller. Gopher works by transforming Xbox (or PlayStation, if using DS3Tool) controller input into traditional keyboard and mouse input that many applications and games still completely rely on with no controller-based alternative input options. The analog sticks move the mouse, the buttons click - it's very simple. Gopher completely skips this requirement and brings controller compatibility to ALL your applications and MOST of your games. Games like Runescape will be just fine. Crysis? Maybe not so much. It all depends on what amount of traditional input the game requires. Gopher is an excellent tool for PC gaming from the couch, as it's fully capable of web browsing, playing mouse-based games, controlling media players, and launching emulators. Don't stand up and waste calories, just download Gopher!
 
-Gopher separates itself from the competition by being efficient, small, portable, free, and fully open. If you have something you'd like to see improved, added, or changed, please fill out a survey.
-
-[![Static](https://img.shields.io/badge/Feedback%20Survey-03-blue.svg?logo=eclipse)](https://github.com)
+Gopher separates itself from the competition by being efficient, small, portable, free, and fully open. If you have something you'd like to see improved, added, or changed, please fill out the survey.
 
 
 Requirements
