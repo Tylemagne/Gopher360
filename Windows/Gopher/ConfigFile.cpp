@@ -130,7 +130,7 @@ void ConfigFile::ExtractKeys()
 		else
 		{
 
-			printf("Success!\nUsing %s...\n", fName.c_str());
+			printf("Success!\nNow using %s.\n", fName.c_str());
 		}
 	}
 
