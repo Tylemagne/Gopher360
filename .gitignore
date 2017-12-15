@@ -3,3 +3,5 @@ Windows/**/Debug
 Windows/**/Release
 *.opensdf
 *.sdf
+Windows/.vs/Gopher/v15/.suo
+Windows/.vs/Gopher/v15/Browse.VC.db
