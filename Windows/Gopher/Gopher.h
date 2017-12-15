@@ -14,7 +14,7 @@
 class Gopher
 {
 private:
-	const int DEAD_ZONE = 4000; //X and Y minimum, below this is ignored since all controllers have some stick to them
+	const int DEAD_ZONE = 5000; //X and Y minimum, below this is ignored since all controllers have some stick to them
 	const int SCROLL_DEAD_ZONE = 5000; // Right thumbstick should be less sensitive.
 	const int TRIGGER_DEAD_ZONE = 0;
 	const int SCROLL_SPEED = 20; // Speed at which you scroll page.
@@ -23,6 +23,7 @@ private:
 
 	XINPUT_STATE _currentState;
 
+	const float SPEED_ULTRALOW = 0.006f;
 	const float SPEED_LOW = 0.011f;
 	const float SPEED_MED = 0.041f;
 	const float SPEED_HIGH = 0.061f;

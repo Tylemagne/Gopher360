@@ -114,7 +114,13 @@ void Gopher::loop() {
 	setXboxClickState(CONFIG_SPEED_CHANGE);
 	if (_xboxClickIsDown[CONFIG_SPEED_CHANGE]) {
 
-		if (speed == SPEED_LOW)
+		if (speed == SPEED_ULTRALOW)
+		{
+			printf("Setting speed to LOW...\n");
+			speed = SPEED_LOW;
+			pulseVibrate(450, 65000, 65000);
+		}
+		else if (speed == SPEED_LOW)
 		{
 			printf("Setting speed to MEDIUM...\n");
 			speed = SPEED_MED;
@@ -128,8 +134,8 @@ void Gopher::loop() {
 		}
 		else if (speed == SPEED_HIGH)
 		{
-			printf("Setting speed to LOW...\n");
-			speed = SPEED_LOW;
+			printf("Setting speed to ULTRALOW...\n");
+			speed = SPEED_ULTRALOW;
 			pulseVibrate(450, 65000, 65000);
 		}
 	}
