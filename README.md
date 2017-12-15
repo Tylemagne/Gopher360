@@ -47,7 +47,7 @@ Gopher is incredibly great at being a standalone program, but with one major exc
 
 Using DualShock Controllers
 ======
-DualShock controllers don't use typical xinput libraries like the X360 and Xbone controllers do, so you'll need something like InputMapper or DS3Tool to "emulate" an xinput device in order to get xinput-using applications like Gopher360 to understand it. Gopher360 DOES NOT automatically offer these emulation layers, so you'll need to use something to emulate it before Gopher can understand it.
+DualShock controllers don't use typical xinput libraries like the X360 and Xbone controllers do, so you'll need something like InputMapper, SCP, DS4Windows, or DS3Tool to "emulate" an xinput device in order to get xinput-using applications like Gopher360 to understand it. Gopher360 DOES NOT automatically offer these emulation layers ( yet ;) ), so you'll need to use something to emulate it before Gopher can understand it.
 
 Video Demonstration
 ======
