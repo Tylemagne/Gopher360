@@ -1,10 +1,45 @@
+Download
+======
+
+[![Github All Releases](https://img.shields.io/github/downloads/Tylemagne/Gopher360/total.svg?style=flat&label=Download%20Gopher360%20Standalone&logo=appveyor&colorA=00cc0a&colorB=000000)](https://github.com/Tylemagne/Gopher360/releases/download/v0.989/Gopher.exe)
+
+
+Feedback
+======
+
+[![Static](https://img.shields.io/badge/Feedback%20Survey-03-blue.svg?logo=eclipse)](https://docs.google.com/forms/d/e/1FAIpQLScbsasEPPPLY0utFSnowtZFAr_O60hAHvrLt7_wEHZ3pzY9AA/viewform)
+
+Table of contents
+=================
+
+  * [About](#about-gopher)
+  * [Default Controls](#default-controls)
+  * [Requirements](#requirements)
+  * [DualShock Controllers](#using-dualshock-controllers)
+  * [Re-binding Controls](#config-file-instructions)
+  * [Building](#build-instructions)
+  * [License](#license)
+
+
+
 About Gopher
 ======
 
 Gopher is a utility for couch-oriented PC users that wish to entirely control their PC from the couch with a controller. Gopher works by transforming Xbox (or PlayStation, if using DS3Tool) controller input into traditional keyboard and mouse input that many applications and games still completely rely on with no controller-based alternative input options. The analog sticks move the mouse, the buttons click - it's very simple. Gopher completely skips this requirement and brings controller compatibility to ALL your applications and MOST of your games. Games like Runescape will be just fine. Crysis? Maybe not so much. It all depends on what amount of traditional input the game requires. Gopher is an excellent tool for PC gaming from the couch, as it's fully capable of web browsing, playing mouse-based games, controlling media players, and launching emulators. Don't stand up and waste calories, just download Gopher!
 
-Gopher separates itself from the competition by being efficient, small, portable, free, and fully open.
+Gopher separates itself from the competition by being efficient, small, portable, free, and fully open. If you have something you'd like to see improved, added, or changed, please fill out the survey.
 
+[![Github Releases (by Release)](https://img.shields.io/github/downloads/Tylemagne/Gopher360/v0.989/total.svg)]()
+
+[![GitHub repo size in bytes](https://img.shields.io/github/repo-size/Tylemagne/Gopher360.svg)]()
+
+[![GitHub last commit](https://img.shields.io/github/last-commit/Tylemagne/gopher360.svg)]()
+
+[![GitHub top language](https://img.shields.io/github/languages/top/Tylemagne/gopher360.svg)]()
+
+[![GitHub release](https://img.shields.io/github/release/Tylemagne/gopher360.svg)]()
+
+[![Github commits (since latest release)](https://img.shields.io/github/commits-since/Tylemagne/gopher360/latest.svg)]()
 
 Requirements
 ======
@@ -12,12 +47,16 @@ Gopher is incredibly great at being a standalone program, but with one major exc
 
 Using DualShock Controllers
 ======
-DualShock controllers don't use typical xinput libraries like the X360 and Xbone controllers do, so you'll need something like InputMapper to "emulate" an xinput device in order to get xinput-using applications like Gopher360 to understand it. Gopher360 DOES NOT automatically offer these emulation layers, so you'll need to use something to emulate it.
+DualShock controllers don't use typical xinput libraries like the X360 and Xbone controllers do, so you'll need something like InputMapper, SCP, DS4Windows, or DS3Tool to "emulate" an xinput device in order to get xinput-using applications like Gopher360 to understand it. Gopher360 DOES NOT automatically offer these emulation layers ( yet ;) ), so you'll need to use something to emulate it before Gopher can understand it.
 
 Video Demonstration
 ======
 
 https://vine.co/v/MYadBgWXuWY
+
+[![Gopher Video 1](http://img.youtube.com/vi/UWYUodeontM/0.jpg)](https://www.youtube.com/watch?v=UWYUodeontM)
+
+[![Gopher Video 2](http://img.youtube.com/vi/8APmA1ohPdM/0.jpg)](https://www.youtube.com/watch?v=8APmA1ohPdM)
 
 
 Download Instructions
@@ -68,7 +107,11 @@ Gopher360 automatically generates a config file, which will contain documentatio
 
 Config file instructions
 ======
-There is a configuration file config.ini for simple keybindings.
+There is a configuration file (config.ini) that can be reconfigured for simple keybindings.
+
+```diff
+- IF YOU MESS SOMETHING UP, Gopher will automatically re-generate a config file.
+```
 
 You can set which controller buttons will activate the configuration events based on the official microsoft keys hexadecimal values.
 
@@ -80,15 +123,15 @@ https://msdn.microsoft.com/en-us/library/windows/desktop/microsoft.directx_sdk.r
 
 More instruction in the configuration file.
 
-Port Progress
+
+```diff
++ If you make a config file you feel could benefit people with the same use scenario as you, feel free to make a pull request for it in the public configs directory.
+```
+
+
+Build Instructions
 ======
-Linux: Not started.
-
-Windows: Initial port complete.
-
-OSX: Not started.
-
-
+Building is pretty straightforward, but you may get a "missing win32 include" error due to the solution targetting. Simply follow the instructions the error provides (Project -> Retarget solution) to ensure your project has a working link to the libraries it needs.
 
 License
 ======
@@ -97,3 +140,8 @@ Gopher free software: you can redistribute it and/or modify it under the terms o
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses/.
+
+
+
+
+![Controller GIF](https://thumbs.gfycat.com/ElasticUnrulyBighorn-max-1mb.gif)
