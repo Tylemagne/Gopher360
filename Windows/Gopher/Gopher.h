@@ -1,6 +1,6 @@
-#include <Windows.h> //for Beep()
+#include <windows.h> //for Beep()
 #include <iostream>
-#include <Xinput.h> //controller
+#include <xinput.h> //controller
 #include <stdio.h> //for printf
 #include <cmath> //for abs()
 #include <mmdeviceapi.h> //vol
