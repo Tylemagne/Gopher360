@@ -5,22 +5,22 @@ Download
 
 Compatible Controllers
 ======
-## Xbox 360
+### Xbox 360
 * [Official Wired Xbox 360 Controller for Windows](https://www.amazon.com/Microsoft-Wired-Controller-Windows-Console/dp/B004QRKWLA/)
 * [Official Wireless Xbox 360 Controller](https://www.amazon.com/Xbox-360-Wireless-Controller-Glossy-microsoft/dp/B003ZSP0WW/)
 * [A compatible wireless adapter](https://www.amazon.com/Microsoft-Xbox-Wireless-Receiver-Windows/dp/B000HZFCT2/) is required to get a standard controller to connect to a Windows PC)
 
-## Xbox One
+### Xbox One
 * [Offical Xbox One Wireless Controller](https://www.amazon.com/Xbox-Wireless-Controller-Black-one/dp/B01LPZM7VI/)
 * [A bluetooth adapter/antenna](https://www.amazon.com/Bluetooth-Wireless-Headphone-Controller-Keyboard/dp/B0774NZNGX/) is needed for XBone controller Bluetooth mode. Many laptops and tablets will *already* have this. Read the manual!
 * [A wireless adapter](https://www.amazon.com/Microsoft-Xbox-Wireless-Adapter-Windows-one/dp/B00ZB7W4QU/) is needed if you want wireless mode.
 * [A decently long MicroUSB cable](https://www.amazon.com/Charger-Durable-Charging-Smartphones-Motorola/dp/B06XZTK2JL/) will be needed for comfortable direct wired mode usage. This is the cheapest option if you already have the controller and no Bluetooth antenna!
 
-## DualShock
+### DualShock
 DualShock controllers are great, but you NEED to emulate Xinput for Gopher to see and understand them. Fortunately, Xinput emulation is a very popular thing, as there are just as many people with DualShock controllers as there are Xbox controllers. Listings coming soon.
 
-## Third party
-* SOME third party controllers will most likely work as well. I haven't seen one not work, but I'd imagine some wouldn't. Research before buying, Gopher expects native Xinput devices, so the controller should as well. I won't be listing any for now until I know what ones will work. If I can find one that does the job and saves you from Microsoft's extreme profit margins, I'll list it.
+### Third party
+SOME third party controllers will most likely work as well. I haven't seen one not work, but I'd imagine some wouldn't. Research before buying, Gopher expects native Xinput devices, so the controller should as well. I won't be listing any for now until I know what ones will work. If I can find one that does the job and saves you from Microsoft's extreme profit margins, I'll list it.
 
 Feedback
 ======
