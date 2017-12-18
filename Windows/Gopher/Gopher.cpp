@@ -287,11 +287,11 @@ void Gopher::handleScrolling()
 	{
 		INPUT input;
 		input.type = INPUT_MOUSE;
-		input.mi.mouseData = getDelta(tx) * getMult(tx * tx, SCROLL_DEAD_ZONE) * 0.33;
+		input.mi.mouseData = getDelta(tx) * getMult(tx * tx, SCROLL_DEAD_ZONE) * SCROLL_SPEED;
 		input.mi.dwFlags = MOUSEEVENTF_HWHEEL;
 		input.mi.time = 0;
 		SendInput(1, &input, sizeof(INPUT));
-		input.mi.mouseData = getDelta(ty) * getMult(ty * ty, SCROLL_DEAD_ZONE) * 0.33;
+		input.mi.mouseData = getDelta(ty) * getMult(ty * ty, SCROLL_DEAD_ZONE) * SCROLL_SPEED;
 		input.mi.dwFlags = MOUSEEVENTF_WHEEL;
 		SendInput(1, &input, sizeof(INPUT));
 	}
