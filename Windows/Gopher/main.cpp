@@ -45,7 +45,7 @@ int main()
 	CXBOXController controller(1);
 	Gopher gopher(&controller);
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTitle( TEXT( "Gopher v0.989" ) );
+	SetConsoleTitle( TEXT( "Gopher360" ) );
 
 	system("Color 1D");
 
