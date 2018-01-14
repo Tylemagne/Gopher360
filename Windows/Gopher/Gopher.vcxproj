@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
+    <TargetName>Gopher360</TargetName>
     <ProjectGuid>{896B8CDE-8FC8-42F3-AC14-FA6D202DBBD7}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Gopher</RootNamespace>
