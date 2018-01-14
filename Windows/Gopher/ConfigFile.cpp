@@ -1,7 +1,7 @@
 #include "ConfigFile.h"
 #include <iostream>
 #include <fstream> 
-#include <Windows.h>
+#include <windows.h>
 
 void ConfigFile::removeComment(std::string &line) const
 {
