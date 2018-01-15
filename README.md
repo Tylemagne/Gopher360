@@ -3,6 +3,11 @@ Download
 
 [![Github All Releases](https://img.shields.io/github/downloads/Tylemagne/Gopher360/total.svg?style=flat&label=Download%20Gopher360%20Standalone&logo=appveyor&colorA=00cc0a&colorB=000000)](https://github.com/Tylemagne/Gopher360/releases/download/v0.989/Gopher.exe)
 
+Donate
+======
+
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ETDWNUEJG2UY2)
+
 Compatible Controllers
 ======
 ### Xbox 360
