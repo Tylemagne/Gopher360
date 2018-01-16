@@ -74,6 +74,9 @@ void Gopher::loadConfigFile()
 	if (speed < 0.00001f || speed > 0.1f)
 		speed = SPEED_MED;
 
+	// Acceleration factor
+	acceleration_factor = strtof(cfg.getValueOfKey<std::string>("ACCELERATION_FACTOR").c_str(), 0);
+
 	//Set Initial States
 	setWindowVisibility(_hidden);
 
@@ -268,6 +271,16 @@ void Gopher::handleMouseMovement()
 
 	if ((tx * tx + ty * ty) > DEAD_ZONE * DEAD_ZONE) {
 		float length = tx * tx + ty * ty;
+
+		// exponential factor
+		if (acceleration_factor != 0.0f)
+		{
+			float efact = length / (MAXSHORT * MAXSHORT + MAXSHORT * MAXSHORT);
+			float efact2 = pow(1.0f - efact, -acceleration_factor) - 1.0f;
+
+			length = (length - DEAD_ZONE * DEAD_ZONE) * efact2 + DEAD_ZONE * DEAD_ZONE;
+		}
+
 		float mult = speed * getMult(length, DEAD_ZONE);
 
 		dx = getDelta(tx) * mult;

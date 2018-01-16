@@ -119,6 +119,8 @@ void ConfigFile::ExtractKeys()
 		outfile << "\n" << std::endl;
 		outfile << "#  SET INITIAL CURSOR SPEED (ULTRALOW = 0.005, LOW = 0.015, MED = 0.025, HIGH = 0.04)" << std::endl;
 		outfile << "# INITIAL_SPEED = 0.025" << std::endl;
+		outfile << "#  SET ACCELERATION FACTOR FOR NON-LINEAR CURSOR SPEED" << std::endl;
+		outfile << "# ACCELERATION_FACTOR = 0.25" << std::endl;
 		//end cfg dump
 
 		outfile.close();

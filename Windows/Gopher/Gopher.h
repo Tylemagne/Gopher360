@@ -28,6 +28,7 @@ private:
 	const float SPEED_MED = 0.025f;
 	const float SPEED_HIGH = 0.04f;
 	float speed = SPEED_MED;
+	float acceleration_factor = 0.0f;
 
 	float _xRest = 0.0f;
 	float _yRest = 0.0f;
