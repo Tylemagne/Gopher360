@@ -137,7 +137,7 @@ void Gopher::loop() {
 			speed = SPEED_ULTRALOW;
 			pulseVibrate(450, 65000, 65000);
 		}
-		else if (speed == SPEED_LOW)
+		else
 		{
 			printf("Setting speed to MEDIUM...\n");
 			speed = SPEED_MED;
