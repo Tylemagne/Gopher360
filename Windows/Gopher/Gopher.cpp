@@ -77,6 +77,20 @@ void Gopher::loadConfigFile()
 	// Acceleration factor
 	acceleration_factor = strtof(cfg.getValueOfKey<std::string>("ACCELERATION_FACTOR").c_str(), 0);
 
+	//Dead zones
+	DEAD_ZONE = strtol(cfg.getValueOfKey<std::string>("DEAD_ZONE").c_str(), 0, 0);
+	if (DEAD_ZONE == 0)
+		DEAD_ZONE = 6000;
+	SCROLL_DEAD_ZONE = strtol(cfg.getValueOfKey<std::string>("SCROLL_DEAD_ZONE").c_str(), 0, 0);
+	if (SCROLL_DEAD_ZONE == 0)
+		SCROLL_DEAD_ZONE = 5000;
+	SCROLL_SPEED = strtof(cfg.getValueOfKey<std::string>("SCROLL_SPEED").c_str(), 0);
+	if (SCROLL_SPEED < 0.00001f)
+		SCROLL_SPEED = 0.1f;
+
+
+
+
 	//Set Initial States
 	setWindowVisibility(_hidden);
 
@@ -270,12 +284,12 @@ void Gopher::handleMouseMovement()
 	float dy = 0;
 
 	float length = tx * tx + ty * ty;
-	if (acceleration_factor != 0.0f)
+	if (acceleration_factor != 0.0f && length > DEAD_ZONE * DEAD_ZONE)
 	{
-		float efact = length / (MAXSHORT * MAXSHORT + MAXSHORT * MAXSHORT);
+		float efact = (length - DEAD_ZONE * DEAD_ZONE) / ((MAXSHORT - DEAD_ZONE) * (MAXSHORT - DEAD_ZONE));
 		float efact2 = pow(2.0f, pow(efact, acceleration_factor)) - 0.999f;
 
-		length *= efact2;
+		length = (length - DEAD_ZONE * DEAD_ZONE) * efact2 + DEAD_ZONE * DEAD_ZONE;
 	}
 
 	if (length > DEAD_ZONE * DEAD_ZONE)
