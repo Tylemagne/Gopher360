@@ -69,6 +69,11 @@ void Gopher::loadConfigFile()
 	GAMEPAD_TRIGGER_LEFT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_TRIGGER_LEFT").c_str(), 0, 0);
 	GAMEPAD_TRIGGER_RIGHT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_TRIGGER_RIGHT").c_str(), 0, 0);
 
+	//Initial speed
+	speed = strtof(cfg.getValueOfKey<std::string>("INITIAL_SPEED").c_str(), 0);
+	if (speed < 0.00001f || speed > 0.1f)
+		speed = SPEED_MED;
+
 	//Set Initial States
 	setWindowVisibility(_hidden);
 
@@ -120,12 +125,6 @@ void Gopher::loop() {
 			speed = SPEED_LOW;
 			pulseVibrate(450, 65000, 65000);
 		}
-		else if (speed == SPEED_LOW)
-		{
-			printf("Setting speed to MEDIUM...\n");
-			speed = SPEED_MED;
-			pulseVibrate(450, 65000, 65000);
-		}
 		else if (speed == SPEED_MED)
 		{
 			printf("Setting speed to HIGH...\n");
@@ -136,6 +135,12 @@ void Gopher::loop() {
 		{
 			printf("Setting speed to ULTRALOW...\n");
 			speed = SPEED_ULTRALOW;
+			pulseVibrate(450, 65000, 65000);
+		}
+		else if (speed == SPEED_LOW)
+		{
+			printf("Setting speed to MEDIUM...\n");
+			speed = SPEED_MED;
 			pulseVibrate(450, 65000, 65000);
 		}
 	}
