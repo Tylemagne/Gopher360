@@ -71,6 +71,8 @@ private:
 
 	std::map<DWORD, bool> _xboxClickStateLastIteration;
 	std::map<DWORD, bool> _xboxClickIsDown;
+	std::map<DWORD, bool> _xboxClickIsDownLong;
+	std::map<DWORD, int> _xboxClickDownLength;
 	std::map<DWORD, bool> _xboxClickIsUp;
 
 	CXBOXController* _controller;

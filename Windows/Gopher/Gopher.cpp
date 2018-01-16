@@ -365,12 +365,22 @@ void Gopher::setXboxClickState(DWORD STATE)
 	{
 		_xboxClickStateLastIteration[STATE] = true;
 		_xboxClickIsDown[STATE] = true;
+		_xboxClickDownLength[STATE] = 0;
+		_xboxClickIsDownLong[STATE] = false;
+	}
+
+	if (isDown && _xboxClickStateLastIteration[STATE])
+	{
+		_xboxClickDownLength[STATE] = _xboxClickDownLength[STATE] + 1;
+		if (_xboxClickDownLength[STATE] * SLEEP_AMOUNT > 200)
+			_xboxClickIsDownLong[STATE] = true;
 	}
 
 	if (!isDown && _xboxClickStateLastIteration[STATE])
 	{
 		_xboxClickStateLastIteration[STATE] = false;
 		_xboxClickIsUp[STATE] = true;
+		_xboxClickIsDownLong[STATE] = false;
 	}
 
 	_xboxClickStateLastIteration[STATE] = isDown;
@@ -413,4 +423,10 @@ void Gopher::mapMouseClick(DWORD STATE, DWORD keyDown, DWORD keyUp)
 	{
 		mouseEvent(keyUp);
 	}
+
+	/*if (_xboxClickIsDownLong[STATE])
+	{
+		mouseEvent(keyDown | keyUp);
+		mouseEvent(keyDown | keyUp);
+	}*/
 }
