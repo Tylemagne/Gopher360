@@ -287,7 +287,7 @@ void Gopher::handleMouseMovement()
 	if (acceleration_factor != 0.0f && length > DEAD_ZONE * DEAD_ZONE)
 	{
 		float efact = (length - DEAD_ZONE * DEAD_ZONE) / ((MAXSHORT - DEAD_ZONE) * (MAXSHORT - DEAD_ZONE));
-		float efact2 = pow(2.0f, pow(efact, acceleration_factor)) - 0.999f;
+		float efact2 = pow(efact, acceleration_factor) * 0.00001f;
 
 		length = (length - DEAD_ZONE * DEAD_ZONE) * efact2 + DEAD_ZONE * DEAD_ZONE;
 	}
