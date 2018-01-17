@@ -14,10 +14,10 @@
 class Gopher
 {
 private:
-	const int DEAD_ZONE = 6000; //X and Y minimum, below this is ignored since all controllers have some stick to them
-	const int SCROLL_DEAD_ZONE = 5000; // Right thumbstick should be less sensitive.
+	int DEAD_ZONE = 6000; //X and Y minimum, below this is ignored since all controllers have some stick to them
+	int SCROLL_DEAD_ZONE = 5000; // Right thumbstick should be less sensitive.
 	const int TRIGGER_DEAD_ZONE = 0;
-	const float SCROLL_SPEED = 0.1; // Speed at which you scroll page.
+	float SCROLL_SPEED = 0.1; // Speed at which you scroll page.
 	const int FPS = 150;
 	const int SLEEP_AMOUNT = 1000/FPS; // number of milliseconds to sleep per iteration
 
@@ -28,6 +28,7 @@ private:
 	const float SPEED_MED = 0.025f;
 	const float SPEED_HIGH = 0.04f;
 	float speed = SPEED_MED;
+	float acceleration_factor = 0.0f;
 
 	float _xRest = 0.0f;
 	float _yRest = 0.0f;
@@ -70,6 +71,8 @@ private:
 
 	std::map<DWORD, bool> _xboxClickStateLastIteration;
 	std::map<DWORD, bool> _xboxClickIsDown;
+	std::map<DWORD, bool> _xboxClickIsDownLong;
+	std::map<DWORD, int> _xboxClickDownLength;
 	std::map<DWORD, bool> _xboxClickIsUp;
 
 	CXBOXController* _controller;

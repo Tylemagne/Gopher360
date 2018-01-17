@@ -69,6 +69,28 @@ void Gopher::loadConfigFile()
 	GAMEPAD_TRIGGER_LEFT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_TRIGGER_LEFT").c_str(), 0, 0);
 	GAMEPAD_TRIGGER_RIGHT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_TRIGGER_RIGHT").c_str(), 0, 0);
 
+	//Initial speed
+	speed = strtof(cfg.getValueOfKey<std::string>("INITIAL_SPEED").c_str(), 0);
+	if (speed < 0.00001f || speed > 0.1f)
+		speed = SPEED_MED;
+
+	// Acceleration factor
+	acceleration_factor = strtof(cfg.getValueOfKey<std::string>("ACCELERATION_FACTOR").c_str(), 0);
+
+	//Dead zones
+	DEAD_ZONE = strtol(cfg.getValueOfKey<std::string>("DEAD_ZONE").c_str(), 0, 0);
+	if (DEAD_ZONE == 0)
+		DEAD_ZONE = 6000;
+	SCROLL_DEAD_ZONE = strtol(cfg.getValueOfKey<std::string>("SCROLL_DEAD_ZONE").c_str(), 0, 0);
+	if (SCROLL_DEAD_ZONE == 0)
+		SCROLL_DEAD_ZONE = 5000;
+	SCROLL_SPEED = strtof(cfg.getValueOfKey<std::string>("SCROLL_SPEED").c_str(), 0);
+	if (SCROLL_SPEED < 0.00001f)
+		SCROLL_SPEED = 0.1f;
+
+
+
+
 	//Set Initial States
 	setWindowVisibility(_hidden);
 
@@ -120,12 +142,6 @@ void Gopher::loop() {
 			speed = SPEED_LOW;
 			pulseVibrate(450, 65000, 65000);
 		}
-		else if (speed == SPEED_LOW)
-		{
-			printf("Setting speed to MEDIUM...\n");
-			speed = SPEED_MED;
-			pulseVibrate(450, 65000, 65000);
-		}
 		else if (speed == SPEED_MED)
 		{
 			printf("Setting speed to HIGH...\n");
@@ -136,6 +152,12 @@ void Gopher::loop() {
 		{
 			printf("Setting speed to ULTRALOW...\n");
 			speed = SPEED_ULTRALOW;
+			pulseVibrate(450, 65000, 65000);
+		}
+		else
+		{
+			printf("Setting speed to MEDIUM...\n");
+			speed = SPEED_MED;
 			pulseVibrate(450, 65000, 65000);
 		}
 	}
@@ -261,8 +283,17 @@ void Gopher::handleMouseMovement()
 	float dx = 0;
 	float dy = 0;
 
-	if ((tx * tx + ty * ty) > DEAD_ZONE * DEAD_ZONE) {
-		float length = tx * tx + ty * ty;
+	float length = tx * tx + ty * ty;
+	if (acceleration_factor != 0.0f && length > DEAD_ZONE * DEAD_ZONE)
+	{
+		float efact = (length - DEAD_ZONE * DEAD_ZONE) / ((MAXSHORT - DEAD_ZONE) * (MAXSHORT - DEAD_ZONE));
+		float efact2 = pow(efact, acceleration_factor) * 0.00001f;
+
+		length = (length - DEAD_ZONE * DEAD_ZONE) * efact2 + DEAD_ZONE * DEAD_ZONE;
+	}
+
+	if (length > DEAD_ZONE * DEAD_ZONE)
+	{
 		float mult = speed * getMult(length, DEAD_ZONE);
 
 		dx = getDelta(tx) * mult;
@@ -347,12 +378,31 @@ void Gopher::setXboxClickState(DWORD STATE)
 	{
 		_xboxClickStateLastIteration[STATE] = true;
 		_xboxClickIsDown[STATE] = true;
+		_xboxClickDownLength[STATE] = 0;
+		_xboxClickIsDownLong[STATE] = false;
+	}
+
+	if (isDown && _xboxClickStateLastIteration[STATE])
+	{
+		// generate a repeating IsDownLong signal at 200ms
+		if (_xboxClickIsDownLong[STATE])
+		{
+			_xboxClickDownLength[STATE] = 0;
+			_xboxClickIsDownLong[STATE] = false;
+		}
+		else
+		{
+			_xboxClickDownLength[STATE] = _xboxClickDownLength[STATE] + 1;
+			if (_xboxClickDownLength[STATE] * SLEEP_AMOUNT > 200)
+				_xboxClickIsDownLong[STATE] = true;
+		}
 	}
 
 	if (!isDown && _xboxClickStateLastIteration[STATE])
 	{
 		_xboxClickStateLastIteration[STATE] = false;
 		_xboxClickIsUp[STATE] = true;
+		_xboxClickIsDownLong[STATE] = false;
 	}
 
 	_xboxClickStateLastIteration[STATE] = isDown;
@@ -395,4 +445,10 @@ void Gopher::mapMouseClick(DWORD STATE, DWORD keyDown, DWORD keyUp)
 	{
 		mouseEvent(keyUp);
 	}
+
+	/*if (_xboxClickIsDownLong[STATE])
+	{
+		mouseEvent(keyDown | keyUp);
+		mouseEvent(keyDown | keyUp);
+	}*/
 }
