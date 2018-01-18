@@ -93,7 +93,7 @@ public:
 
 	float getDelta(short tx);
 
-	float getMult(float length, float deadzone);
+	float getMult(float length, float deadzone, float accel);
 
 	void handleMouseMovement();
 
