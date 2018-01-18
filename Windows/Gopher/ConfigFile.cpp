@@ -95,6 +95,7 @@ void ConfigFile::ExtractKeys()
 		outfile << "CONFIG_DISABLE = 0x0030		# Disables the Gopher" << std::endl;
 		outfile << "CONFIG_DISABLE_VIBRATION = 0x0011 # Disables Gopher Vibrations" << std::endl;
 		outfile << "CONFIG_SPEED_CHANGE =  0x0300	# Change speed" << std::endl;
+		outfile << "#CONFIG_OSK = 0x0020   # Toggle on-screen keyboard" << std::endl;
 		outfile << "\n" << std::endl;
 		outfile << "#	KEYBOARD SHORTCUTS ON CONTROLLER BUTTONS" << std::endl;
 		outfile << "#	SET 0 FOR NO FUNCTION" << std::endl;

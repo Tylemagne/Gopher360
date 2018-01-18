@@ -50,6 +50,7 @@ void Gopher::loadConfigFile()
 	CONFIG_DISABLE = strtol(cfg.getValueOfKey<std::string>("CONFIG_DISABLE").c_str(), 0, 0);
 	CONFIG_DISABLE_VIBRATION = strtol(cfg.getValueOfKey<std::string>("CONFIG_DISABLE_VIBRATION").c_str(), 0, 0);
 	CONFIG_SPEED_CHANGE = strtol(cfg.getValueOfKey<std::string>("CONFIG_SPEED_CHANGE").c_str(), 0, 0);
+	CONFIG_OSK = strtol(cfg.getValueOfKey<std::string>("CONFIG_OSK").c_str(), 0, 0);
 
 	//Controller bindings
 	GAMEPAD_DPAD_UP = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_DPAD_UP").c_str(), 0, 0);
@@ -129,6 +130,29 @@ void Gopher::loop() {
 		if (_xboxClickIsDown[CONFIG_HIDE])
 		{
 			toggleWindowVisibility();
+		}
+	}
+
+	//Toggle the on-screen keyboard
+	if (CONFIG_OSK)
+	{
+		setXboxClickState(CONFIG_OSK);
+		if (_xboxClickIsDown[CONFIG_OSK])
+		{
+			// Get the otk window
+			HWND otk_win = getOskWindow();
+			if (otk_win == NULL)
+			{
+				printf("Please start the On-screen keyboard first\n");
+			}
+			else if(IsIconic(otk_win))
+			{
+				ShowWindow(otk_win, SW_RESTORE);
+			}
+			else
+			{
+				ShowWindow(otk_win, SW_MINIMIZE);
+			}
 		}
 	}
 
@@ -451,4 +475,23 @@ void Gopher::mapMouseClick(DWORD STATE, DWORD keyDown, DWORD keyUp)
 		mouseEvent(keyDown | keyUp);
 		mouseEvent(keyDown | keyUp);
 	}*/
+}
+
+static BOOL CALLBACK EnumWindowsProc(HWND curWnd, LPARAM lParam)
+{
+	TCHAR title[256];
+	if (GetWindowText(curWnd, title, 256) && !_tcscmp(title, _T("On-Screen Keyboard")))
+	{
+		*(HWND*)lParam = curWnd;
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+HWND Gopher::getOskWindow()
+{
+	HWND ret = NULL;
+	EnumWindows(EnumWindowsProc, (LPARAM)&ret);
+	return ret;
 }
