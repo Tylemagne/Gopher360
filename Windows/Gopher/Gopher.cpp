@@ -384,18 +384,9 @@ void Gopher::setXboxClickState(DWORD STATE)
 
 	if (isDown && _xboxClickStateLastIteration[STATE])
 	{
-		// generate a repeating IsDownLong signal at 200ms
-		if (_xboxClickIsDownLong[STATE])
-		{
-			_xboxClickDownLength[STATE] = 0;
-			_xboxClickIsDownLong[STATE] = false;
-		}
-		else
-		{
-			_xboxClickDownLength[STATE] = _xboxClickDownLength[STATE] + 1;
-			if (_xboxClickDownLength[STATE] * SLEEP_AMOUNT > 200)
-				_xboxClickIsDownLong[STATE] = true;
-		}
+		_xboxClickDownLength[STATE] = _xboxClickDownLength[STATE] + 1;
+		if (_xboxClickDownLength[STATE] * SLEEP_AMOUNT > 200)
+			_xboxClickIsDownLong[STATE] = true;
 	}
 
 	if (!isDown && _xboxClickStateLastIteration[STATE])
