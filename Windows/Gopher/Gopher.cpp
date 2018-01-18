@@ -261,12 +261,12 @@ float Gopher::getDelta(short t)
 	return t;
 }
 
-float Gopher::getMult(float lengthsq, float deadzone)
+float Gopher::getMult(float lengthsq, float deadzone, float accel)
 {
-	float mult = sqrt((lengthsq - (deadzone * deadzone)) / lengthsq) / FPS;
-	mult *= mult;
-	mult *= mult;
-	return mult * 8000000;
+	float mult = (sqrt(lengthsq) - deadzone) / (MAXSHORT - deadzone);
+	if (accel > 0.0001f)
+		mult = pow(mult, accel);
+	return mult / FPS;
 }
 
 void Gopher::handleMouseMovement()
@@ -283,18 +283,10 @@ void Gopher::handleMouseMovement()
 	float dx = 0;
 	float dy = 0;
 
-	float length = tx * tx + ty * ty;
-	if (acceleration_factor != 0.0f && length > DEAD_ZONE * DEAD_ZONE)
+	float lengthsq = tx * tx + ty * ty;
+	if (lengthsq > DEAD_ZONE * DEAD_ZONE)
 	{
-		float efact = (length - DEAD_ZONE * DEAD_ZONE) / ((MAXSHORT - DEAD_ZONE) * (MAXSHORT - DEAD_ZONE));
-		float efact2 = pow(efact, acceleration_factor) * 0.00001f;
-
-		length = (length - DEAD_ZONE * DEAD_ZONE) * efact2 + DEAD_ZONE * DEAD_ZONE;
-	}
-
-	if (length > DEAD_ZONE * DEAD_ZONE)
-	{
-		float mult = speed * getMult(length, DEAD_ZONE);
+		float mult = speed * getMult(lengthsq, DEAD_ZONE, acceleration_factor);
 
 		dx = getDelta(tx) * mult;
 		dy = getDelta(ty) * mult;
@@ -318,11 +310,11 @@ void Gopher::handleScrolling()
 	{
 		INPUT input;
 		input.type = INPUT_MOUSE;
-		input.mi.mouseData = getDelta(tx) * getMult(tx * tx, SCROLL_DEAD_ZONE) * SCROLL_SPEED;
+		input.mi.mouseData = getDelta(tx) * getMult(tx * tx, SCROLL_DEAD_ZONE, 0.0f) * SCROLL_SPEED;
 		input.mi.dwFlags = MOUSEEVENTF_HWHEEL;
 		input.mi.time = 0;
 		SendInput(1, &input, sizeof(INPUT));
-		input.mi.mouseData = getDelta(ty) * getMult(ty * ty, SCROLL_DEAD_ZONE) * SCROLL_SPEED;
+		input.mi.mouseData = getDelta(ty) * getMult(ty * ty, SCROLL_DEAD_ZONE, 0.0f) * SCROLL_SPEED;
 		input.mi.dwFlags = MOUSEEVENTF_WHEEL;
 		SendInput(1, &input, sizeof(INPUT));
 	}
