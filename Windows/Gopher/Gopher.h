@@ -39,6 +39,10 @@ private:
 	bool _hidden = false; //press Y to hide, check this var
 	bool _lTriggerPrevious = false;
 	bool _rTriggerPrevious = false;
+	int _lTriggerLongPressCount = 0;
+	int _rTriggerLongPressCount = 0;
+	int _lTriggerLongPressMax = 500;		// number of milliseconds until next pulsing of the key - automatically decreased with each press
+	int _rTriggerLongPressMax = 500;
 
 	std::vector<float> speeds;	// contains actual speeds to choose
 	std::vector<std::string> speed_names; // contains pretty names of speeds to display
@@ -73,11 +77,29 @@ private:
 	DWORD GAMEPAD_TRIGGER_LEFT = NULL;
 	DWORD GAMEPAD_TRIGGER_RIGHT = NULL;
 
+	// Key repeats (autofire)
+	int GAMEPAD_DPAD_UP_REPEAT = 0;
+	int GAMEPAD_DPAD_DOWN_REPEAT = 0;
+	int GAMEPAD_DPAD_LEFT_REPEAT = 0;
+	int GAMEPAD_DPAD_RIGHT_REPEAT = 0;
+	int GAMEPAD_START_REPEAT = 0;
+	int GAMEPAD_BACK_REPEAT = 0;
+	int GAMEPAD_LEFT_THUMB_REPEAT = 0;
+	int GAMEPAD_RIGHT_THUMB_REPEAT = 0;
+	int GAMEPAD_LEFT_SHOULDER_REPEAT = 0;
+	int GAMEPAD_RIGHT_SHOULDER_REPEAT = 0;
+	int GAMEPAD_A_REPEAT = 0;
+	int GAMEPAD_B_REPEAT = 0;
+	int GAMEPAD_X_REPEAT = 0;
+	int GAMEPAD_Y_REPEAT = 0;
+	int GAMEPAD_TRIGGER_LEFT_REPEAT = 0;
+	int GAMEPAD_TRIGGER_RIGHT_REPEAT = 0;
 
 	std::map<DWORD, bool> _xboxClickStateLastIteration;
 	std::map<DWORD, bool> _xboxClickIsDown;
 	std::map<DWORD, bool> _xboxClickIsDownLong;
 	std::map<DWORD, int> _xboxClickDownLength;
+	std::map<DWORD, int> _xboxClickDownLongMax;
 	std::map<DWORD, bool> _xboxClickIsUp;
 
 	CXBOXController* _controller;
@@ -112,7 +134,7 @@ public:
 
 	bool xboxClickStateExists(DWORD xinput);
 
-	void mapKeyboard(DWORD STATE, WORD key);
+	void mapKeyboard(DWORD STATE, WORD key, int repeat);
 
 	void mapMouseClick(DWORD STATE, DWORD keyDown, DWORD keyUp);
 

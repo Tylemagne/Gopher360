@@ -117,6 +117,12 @@ void ConfigFile::ExtractKeys()
 		outfile << "GAMEPAD_TRIGGER_LEFT = 0" << std::endl;
 		outfile << "GAMEPAD_TRIGGER_RIGHT = 0" << std::endl;
 		outfile << "\n" << std::endl;
+		outfile << "#  SET TO 1 FOR EACH CONTROLLER BUTTON (AS NAMED ABOVE) TO HAVE Gopher360 CONTINUALLY PULSE THE KEY WHILST IT IS HELD DOWN (I.E. AUTOFIRE)" << std::endl;
+		outfile << "GAMEPAD_DPAD_UP_REPEAT = 1" << std::endl;
+		outfile << "GAMEPAD_DPAD_DOWN_REPEAT = 1" << std::endl;
+		outfile << "GAMEPAD_DPAD_LEFT_REPEAT = 1" << std::endl;
+		outfile << "GAMEPAD_DPAD_RIGHT_REPEAT = 1" << std::endl;
+		outfile << "\n" << std::endl;
 		outfile << "#  ALLOWED CURSOR SPEEDS, FIRST WILL BE CHOSEN BY DEFAULT.  VALUES > 1.0 WILL BE IGNORED.  NO SPACES." << std::endl;
 		outfile << "CURSOR_SPEED = ULTRALOW=0.005,LOW=0.015,MED=0.025,HIGH=0.04" << std::endl;
 		outfile << "#  SET ACCELERATION FACTOR FOR NON-LINEAR CURSOR SPEED" << std::endl;

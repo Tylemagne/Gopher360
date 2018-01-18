@@ -69,6 +69,24 @@ void Gopher::loadConfigFile()
 	GAMEPAD_TRIGGER_LEFT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_TRIGGER_LEFT").c_str(), 0, 0);
 	GAMEPAD_TRIGGER_RIGHT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_TRIGGER_RIGHT").c_str(), 0, 0);
 
+	//Whether to enable the automatic repeat (autofire) functionality for each button
+	GAMEPAD_DPAD_UP_REPEAT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_DPAD_UP_REPEAT").c_str(), 0, 0);
+	GAMEPAD_DPAD_DOWN_REPEAT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_DPAD_DOWN_REPEAT").c_str(), 0, 0);
+	GAMEPAD_DPAD_LEFT_REPEAT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_DPAD_LEFT_REPEAT").c_str(), 0, 0);
+	GAMEPAD_DPAD_RIGHT_REPEAT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_DPAD_RIGHT_REPEAT").c_str(), 0, 0);
+	GAMEPAD_START_REPEAT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_START_REPEAT").c_str(), 0, 0);
+	GAMEPAD_BACK_REPEAT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_BACK_REPEAT").c_str(), 0, 0);
+	GAMEPAD_LEFT_THUMB_REPEAT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_LEFT_THUMB_REPEAT").c_str(), 0, 0);
+	GAMEPAD_RIGHT_THUMB_REPEAT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_RIGHT_THUMB_REPEAT").c_str(), 0, 0);
+	GAMEPAD_LEFT_SHOULDER_REPEAT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_LEFT_SHOULDER_REPEAT").c_str(), 0, 0);
+	GAMEPAD_RIGHT_SHOULDER_REPEAT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_RIGHT_SHOULDER_REPEAT").c_str(), 0, 0);
+	GAMEPAD_A_REPEAT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_A_REPEAT").c_str(), 0, 0);
+	GAMEPAD_B_REPEAT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_B_REPEAT").c_str(), 0, 0);
+	GAMEPAD_X_REPEAT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_X_REPEAT").c_str(), 0, 0);
+	GAMEPAD_Y_REPEAT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_Y_REPEAT").c_str(), 0, 0);
+	GAMEPAD_TRIGGER_LEFT_REPEAT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_TRIGGER_LEFT_REPEAT").c_str(), 0, 0);
+	GAMEPAD_TRIGGER_RIGHT_REPEAT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_TRIGGER_RIGHT_REPEAT").c_str(), 0, 0);
+
 	// Acceleration factor
 	acceleration_factor = strtof(cfg.getValueOfKey<std::string>("ACCELERATION_FACTOR").c_str(), 0);
 
@@ -175,33 +193,33 @@ void Gopher::loop() {
 	//Set all controller keys.
 	handleTriggers(GAMEPAD_TRIGGER_LEFT, GAMEPAD_TRIGGER_RIGHT);
 	if (GAMEPAD_DPAD_UP)
-		mapKeyboard(XINPUT_GAMEPAD_DPAD_UP, GAMEPAD_DPAD_UP);
+		mapKeyboard(XINPUT_GAMEPAD_DPAD_UP, GAMEPAD_DPAD_UP, GAMEPAD_DPAD_UP_REPEAT);
 	if (GAMEPAD_DPAD_DOWN)
-		mapKeyboard(XINPUT_GAMEPAD_DPAD_DOWN, GAMEPAD_DPAD_DOWN);
+		mapKeyboard(XINPUT_GAMEPAD_DPAD_DOWN, GAMEPAD_DPAD_DOWN, GAMEPAD_DPAD_DOWN_REPEAT);
 	if (GAMEPAD_DPAD_LEFT)
-		mapKeyboard(XINPUT_GAMEPAD_DPAD_LEFT, GAMEPAD_DPAD_LEFT);
+		mapKeyboard(XINPUT_GAMEPAD_DPAD_LEFT, GAMEPAD_DPAD_LEFT, GAMEPAD_DPAD_LEFT_REPEAT);
 	if (GAMEPAD_DPAD_RIGHT)
-		mapKeyboard(XINPUT_GAMEPAD_DPAD_RIGHT, GAMEPAD_DPAD_RIGHT);
+		mapKeyboard(XINPUT_GAMEPAD_DPAD_RIGHT, GAMEPAD_DPAD_RIGHT, GAMEPAD_DPAD_RIGHT_REPEAT);
 	if (GAMEPAD_START)
-		mapKeyboard(XINPUT_GAMEPAD_START, GAMEPAD_START);
+		mapKeyboard(XINPUT_GAMEPAD_START, GAMEPAD_START, GAMEPAD_START_REPEAT);
 	if (GAMEPAD_BACK)
-		mapKeyboard(XINPUT_GAMEPAD_BACK, GAMEPAD_BACK);
+		mapKeyboard(XINPUT_GAMEPAD_BACK, GAMEPAD_BACK, GAMEPAD_BACK_REPEAT);
 	if (GAMEPAD_LEFT_THUMB)
-		mapKeyboard(XINPUT_GAMEPAD_LEFT_THUMB, GAMEPAD_LEFT_THUMB);
+		mapKeyboard(XINPUT_GAMEPAD_LEFT_THUMB, GAMEPAD_LEFT_THUMB, GAMEPAD_LEFT_THUMB_REPEAT);
 	if (GAMEPAD_RIGHT_THUMB)
-		mapKeyboard(XINPUT_GAMEPAD_RIGHT_THUMB, GAMEPAD_RIGHT_THUMB);
+		mapKeyboard(XINPUT_GAMEPAD_RIGHT_THUMB, GAMEPAD_RIGHT_THUMB, GAMEPAD_RIGHT_THUMB_REPEAT);
 	if (GAMEPAD_LEFT_SHOULDER)
-		mapKeyboard(XINPUT_GAMEPAD_LEFT_SHOULDER, GAMEPAD_LEFT_SHOULDER);
+		mapKeyboard(XINPUT_GAMEPAD_LEFT_SHOULDER, GAMEPAD_LEFT_SHOULDER, GAMEPAD_LEFT_SHOULDER_REPEAT);
 	if (GAMEPAD_RIGHT_SHOULDER)
-		mapKeyboard(XINPUT_GAMEPAD_RIGHT_SHOULDER, GAMEPAD_RIGHT_SHOULDER);
+		mapKeyboard(XINPUT_GAMEPAD_RIGHT_SHOULDER, GAMEPAD_RIGHT_SHOULDER, GAMEPAD_RIGHT_SHOULDER_REPEAT);
 	if (GAMEPAD_A)
-		mapKeyboard(XINPUT_GAMEPAD_A, GAMEPAD_A);
+		mapKeyboard(XINPUT_GAMEPAD_A, GAMEPAD_A, GAMEPAD_A_REPEAT);
 	if (GAMEPAD_B)
-		mapKeyboard(XINPUT_GAMEPAD_B, GAMEPAD_B);
+		mapKeyboard(XINPUT_GAMEPAD_B, GAMEPAD_B, GAMEPAD_B_REPEAT);
 	if (GAMEPAD_X)
-		mapKeyboard(XINPUT_GAMEPAD_X, GAMEPAD_X);
+		mapKeyboard(XINPUT_GAMEPAD_X, GAMEPAD_X, GAMEPAD_X_REPEAT);
 	if (GAMEPAD_Y)
-		mapKeyboard(XINPUT_GAMEPAD_Y, GAMEPAD_Y);
+		mapKeyboard(XINPUT_GAMEPAD_Y, GAMEPAD_Y, GAMEPAD_Y_REPEAT);
 }
 
 void Gopher::pulseVibrate(const int duration, const int l, const int r) const
@@ -343,10 +361,27 @@ void Gopher::handleTriggers(WORD lKey, WORD rKey)
 		if (lTriggerIsDown)
 		{
 			inputKeyboardDown(lKey);
+			_lTriggerLongPressCount = 0;
 		}
 		else
 		{
 			inputKeyboardUp(lKey);
+			_lTriggerLongPressMax = 500;		// reset long press max trigger
+		}
+	}
+	else if (GAMEPAD_TRIGGER_LEFT_REPEAT && lTriggerIsDown)
+	{
+		_lTriggerLongPressCount++;
+		if (_lTriggerLongPressCount * SLEEP_AMOUNT > _lTriggerLongPressMax)
+		{
+			// pulse the key
+			inputKeyboardUp(lKey);
+			inputKeyboardDown(lKey);
+			_lTriggerLongPressCount = 0;
+			if (_lTriggerLongPressMax == 500)
+				_lTriggerLongPressMax = 200;
+			else
+				_lTriggerLongPressMax = 70;
 		}
 	}
 
@@ -360,6 +395,22 @@ void Gopher::handleTriggers(WORD lKey, WORD rKey)
 		else
 		{
 			inputKeyboardUp(rKey);
+			_rTriggerLongPressMax = 500;
+		}
+	}
+	else if (GAMEPAD_TRIGGER_RIGHT_REPEAT && rTriggerIsDown)
+	{
+		_rTriggerLongPressCount++;
+		if (_rTriggerLongPressCount * SLEEP_AMOUNT > _rTriggerLongPressMax)
+		{
+			// pulse the key
+			inputKeyboardUp(rKey);
+			inputKeyboardDown(rKey);
+			_rTriggerLongPressCount = 0;
+			if (_rTriggerLongPressMax == 500)
+				_rTriggerLongPressMax = 200;
+			else
+				_rTriggerLongPressMax = 70;
 		}
 	}
 }
@@ -368,6 +419,7 @@ void Gopher::setXboxClickState(DWORD STATE)
 {
 	_xboxClickIsDown[STATE] = false;
 	_xboxClickIsUp[STATE] = false;
+	_xboxClickIsDownLong[STATE] = false;
 
 	if (!this->xboxClickStateExists(STATE))
 	{
@@ -381,21 +433,28 @@ void Gopher::setXboxClickState(DWORD STATE)
 		_xboxClickStateLastIteration[STATE] = true;
 		_xboxClickIsDown[STATE] = true;
 		_xboxClickDownLength[STATE] = 0;
-		_xboxClickIsDownLong[STATE] = false;
+		_xboxClickDownLongMax[STATE] = 500;
 	}
 
 	if (isDown && _xboxClickStateLastIteration[STATE])
 	{
+		// _xboxClickDownLong toggles every 200 ms of button depression
 		_xboxClickDownLength[STATE] = _xboxClickDownLength[STATE] + 1;
-		if (_xboxClickDownLength[STATE] * SLEEP_AMOUNT > 200)
+		if (_xboxClickDownLength[STATE] * SLEEP_AMOUNT > _xboxClickDownLongMax[STATE])
+		{
 			_xboxClickIsDownLong[STATE] = true;
+			_xboxClickDownLength[STATE] = 0;
+			if (_xboxClickDownLongMax[STATE] == 500)
+				_xboxClickDownLongMax[STATE] = 200;
+			else
+				_xboxClickDownLongMax[STATE] = 70;
+		}
 	}
 
 	if (!isDown && _xboxClickStateLastIteration[STATE])
 	{
 		_xboxClickStateLastIteration[STATE] = false;
 		_xboxClickIsUp[STATE] = true;
-		_xboxClickIsDownLong[STATE] = false;
 	}
 
 	_xboxClickStateLastIteration[STATE] = isDown;
@@ -412,7 +471,7 @@ bool Gopher::xboxClickStateExists(DWORD xinput)
 	return true;
 }
 
-void Gopher::mapKeyboard(DWORD STATE, WORD key)
+void Gopher::mapKeyboard(DWORD STATE, WORD key, int repeat)
 {
 	setXboxClickState(STATE);
 	if (_xboxClickIsDown[STATE])
@@ -423,6 +482,13 @@ void Gopher::mapKeyboard(DWORD STATE, WORD key)
 	if (_xboxClickIsUp[STATE])
 	{
 		inputKeyboardUp(key);
+	}
+
+	if (repeat && _xboxClickIsDownLong[STATE])
+	{
+		// pulse key off and on
+		inputKeyboardUp(key);
+		inputKeyboardDown(key);
 	}
 }
 
