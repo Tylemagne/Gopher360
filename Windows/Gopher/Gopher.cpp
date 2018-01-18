@@ -69,11 +69,6 @@ void Gopher::loadConfigFile()
 	GAMEPAD_TRIGGER_LEFT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_TRIGGER_LEFT").c_str(), 0, 0);
 	GAMEPAD_TRIGGER_RIGHT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_TRIGGER_RIGHT").c_str(), 0, 0);
 
-	//Initial speed
-	speed = strtof(cfg.getValueOfKey<std::string>("INITIAL_SPEED").c_str(), 0);
-	if (speed < 0.00001f || speed > 0.1f)
-		speed = SPEED_MED;
-
 	// Acceleration factor
 	acceleration_factor = strtof(cfg.getValueOfKey<std::string>("ACCELERATION_FACTOR").c_str(), 0);
 
@@ -88,8 +83,43 @@ void Gopher::loadConfigFile()
 	if (SCROLL_SPEED < 0.00001f)
 		SCROLL_SPEED = 0.1f;
 
-
-
+	//Speeds
+	std::istringstream cursor_speed = std::istringstream(cfg.getValueOfKey<std::string>("CURSOR_SPEED"));
+	int cur_speed_idx = 1;
+	for (std::string cur_speed; std::getline(cursor_speed, cur_speed, ',');)
+	{
+		std::istringstream cursor_speed_entry = std::istringstream(cur_speed);
+		std::string cur_name, cur_speed_s;
+		if (cur_speed.find_first_of('=') != std::string::npos)
+		{
+			std::getline(cursor_speed_entry, cur_name, '=');
+		}
+		else
+		{
+			std::ostringstream tmp_name;
+			tmp_name << cur_speed_idx++;
+			cur_name = tmp_name.str();
+		}
+		std::getline(cursor_speed_entry, cur_speed_s);
+		float cur_speedf = strtof(cur_speed_s.c_str(), 0);
+		if (cur_speedf > 0.0001f && cur_speedf <= 1.0f)
+		{
+			speeds.push_back(cur_speedf);
+			speed_names.push_back(cur_name);
+		}
+	}
+	if (speeds.size() == 0)
+	{
+		speeds.push_back(0.005f);
+		speeds.push_back(0.015f);
+		speeds.push_back(0.025f);
+		speeds.push_back(0.004f);
+		speed_names.push_back("ULTRALOW");
+		speed_names.push_back("LOW");
+		speed_names.push_back("MED");
+		speed_names.push_back("HIGH");
+	}
+	speed = speeds[0];
 
 	//Set Initial States
 	setWindowVisibility(_hidden);
@@ -135,31 +165,11 @@ void Gopher::loop() {
 	//Will change between the current speed values
 	setXboxClickState(CONFIG_SPEED_CHANGE);
 	if (_xboxClickIsDown[CONFIG_SPEED_CHANGE]) {
-
-		if (speed == SPEED_ULTRALOW)
-		{
-			printf("Setting speed to LOW...\n");
-			speed = SPEED_LOW;
-			pulseVibrate(450, 65000, 65000);
-		}
-		else if (speed == SPEED_MED)
-		{
-			printf("Setting speed to HIGH...\n");
-			speed = SPEED_HIGH;
-			pulseVibrate(450, 65000, 65000);
-		}
-		else if (speed == SPEED_HIGH)
-		{
-			printf("Setting speed to ULTRALOW...\n");
-			speed = SPEED_ULTRALOW;
-			pulseVibrate(450, 65000, 65000);
-		}
-		else
-		{
-			printf("Setting speed to MEDIUM...\n");
-			speed = SPEED_MED;
-			pulseVibrate(450, 65000, 65000);
-		}
+		speed_idx++;
+		if (speed_idx >= speeds.size())
+			speed_idx = 0;
+		speed = speeds[speed_idx];
+		printf("Setting speed to %f (%s)...\n", speed, speed_names[speed_idx].c_str());
 	}
 
 	//Set all controller keys.
