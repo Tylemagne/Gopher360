@@ -170,6 +170,7 @@ void Gopher::loop() {
 			speed_idx = 0;
 		speed = speeds[speed_idx];
 		printf("Setting speed to %f (%s)...\n", speed, speed_names[speed_idx].c_str());
+		pulseVibrate(450, 65000, 65000);
 	}
 
 	//Set all controller keys.
