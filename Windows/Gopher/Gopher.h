@@ -1,5 +1,6 @@
 #include <windows.h> //for Beep()
 #include <iostream>
+#include <vector>
 #include <xinput.h> //controller
 #include <stdio.h> //for printf
 #include <cmath> //for abs()
@@ -38,6 +39,10 @@ private:
 	bool _hidden = false; //press Y to hide, check this var
 	bool _lTriggerPrevious = false;
 	bool _rTriggerPrevious = false;
+
+	std::vector<float> speeds;	// contains actual speeds to choose
+	std::vector<std::string> speed_names; // contains pretty names of speeds to display
+	int speed_idx = 0;
 
 	//Mouse Clicks
 	DWORD CONFIG_MOUSE_LEFT = NULL;
@@ -93,7 +98,7 @@ public:
 
 	float getDelta(short tx);
 
-	float getMult(float length, float deadzone);
+	float getMult(float length, float deadzone, float accel);
 
 	void handleMouseMovement();
 
