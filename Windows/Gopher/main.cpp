@@ -20,25 +20,25 @@
 //changes 0.986 -> 0.989: Improved speeds and speed reporting, created automatic config generator!
 //TODO FOR FUTURE VERSIONS - offload speeds into config file
 
-#include <windows.h> //for Beep()
+#include <windows.h> // for Beep()
 #include <iostream>
 
 
 #pragma comment(lib, "XInput9_1_0.lib")
-#pragma comment(lib, "winmm") //for volume
+#pragma comment(lib, "winmm") // for volume
 
 #include "Gopher.h"
 
-bool ChangeVolume(double nVolume, bool bScalar); //not used yet
-BOOL isRunningAsAdministrator(); //check if administrator, makes on-screen keyboard clickable
+bool ChangeVolume(double nVolume, bool bScalar); // Not used yet
+BOOL isRunningAsAdministrator(); // Check if administrator, makes on-screen keyboard clickable
 
-/*To do:
-* Enable/disable button
-Key Codes:
-http://msdn.microsoft.com/en-us/library/windows/desktop/dd375731%28v=vs.85%29.aspx
-xinput
-http://msdn.microsoft.com/en-us/library/windows/desktop/microsoft.directx_sdk.reference.xinput_gamepad%28v=vs.85%29.aspx
-*/
+/* TODO:
+ * Enable/disable button
+ * Key Codes:
+ *   http://msdn.microsoft.com/en-us/library/windows/desktop/dd375731%28v=vs.85%29.aspx
+ * xinput:
+ *   http://msdn.microsoft.com/en-us/library/windows/desktop/microsoft.directx_sdk.reference.xinput_gamepad%28v=vs.85%29.aspx
+ */
 
 int main()
 {
@@ -48,9 +48,6 @@ int main()
 	SetConsoleTitle( TEXT( "Gopher360" ) );
 
 	system("Color 1D");
-
-	//MessageBox(NULL,L"You'll need to run Gopher as an administrator if you intend use the on-screen keyboard. Otherwise, Windows will ignore attempted keystrokes. If not, carry on!",L"Gopher", MB_OK | MB_ICONINFORMATION);
-	//Add admin rights checker. If none, display this?
 
 	printf("Welcome to Gopher360 - a VERY fast and lightweight controller-to-keyboard & mouse input tool.\n");
 	printf("All you need is an Xbox360/Xbone controller (wired or wireless adapter), or DualShock (with InputMapper 1.5+)\n");
@@ -63,22 +60,22 @@ int main()
 	SetConsoleTextAttribute(hConsole, 29);
 	printf("\n\n-------------------------\n\n");
 
-	SetConsoleTextAttribute(hConsole, 5); //set color to purple on black (windows only)
-	//29 default
+	SetConsoleTextAttribute(hConsole, 5); // set color to purple on black (windows only)
+	// 29 default
 
-	//dump important tips
-	printf("Tip - Press left and right bumpers simultaneously to toggle speeds!\n");
+	// dump important tips
+	printf("Tip - Press left and right bumpers simultaneously to toggle speeds! (Default is left and right bumpers, configurable in config.ini)\n");
 
 	if (!isRunningAsAdministrator())
 	{
 		printf("Tip - Not running as an admin! Windows on-screen keyboard and others won't work without admin rights.\n");
 	}
 
-	
-
 	gopher.loadConfigFile();
 
-	while (true) {
+  // Start the Gopher program loop
+	while (true)
+  {
 		gopher.loop();
 	}
 }
@@ -107,10 +104,9 @@ BOOL isRunningAsAdministrator()
 	return fRet;
 }
 
-//this works, but it's not enabled in the software since the best button for it is still undecided
+// This works, but it's not enabled in the software since the best button for it is still undecided
 bool ChangeVolume(double nVolume, bool bScalar) //o b
 {
-
 	HRESULT hr = NULL;
 	bool decibels = false;
 	bool scalar = false;
