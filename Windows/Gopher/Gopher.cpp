@@ -10,14 +10,14 @@
 //   flag   The KEYEVENT for the key
 void inputKeyboard(WORD cmd, DWORD flag)
 {
-	INPUT input;
-	input.type = INPUT_KEYBOARD;
-	input.ki.wScan = 0;
-	input.ki.time = 0;
-	input.ki.dwExtraInfo = 0;
-	input.ki.wVk = cmd;
-	input.ki.dwFlags = flag;
-	SendInput(1, &input, sizeof(INPUT));
+  INPUT input;
+  input.type = INPUT_KEYBOARD;
+  input.ki.wScan = 0;
+  input.ki.time = 0;
+  input.ki.dwExtraInfo = 0;
+  input.ki.wVk = cmd;
+  input.ki.dwFlags = flag;
+  SendInput(1, &input, sizeof(INPUT));
 }
 
 // Description:
@@ -27,7 +27,7 @@ void inputKeyboard(WORD cmd, DWORD flag)
 //   cmd    The value of the key to send
 void inputKeyboardDown(WORD cmd)
 {
-	inputKeyboard(cmd, 0);
+  inputKeyboard(cmd, 0);
 }
 
 // Description:
@@ -37,7 +37,7 @@ void inputKeyboardDown(WORD cmd)
 //   cmd    The value of the key to send
 void inputKeyboardUp(WORD cmd)
 {
-	inputKeyboard(cmd, KEYEVENTF_KEYUP);
+  inputKeyboard(cmd, KEYEVENTF_KEYUP);
 }
 
 // Description:
@@ -49,8 +49,8 @@ void inputKeyboardUp(WORD cmd)
 //   mouseData  Additional information needed for certain mouse events (Optional)
 void mouseEvent(DWORD dwFlags, DWORD mouseData = 0)
 {
-	INPUT input;
-	input.type = INPUT_MOUSE;
+  INPUT input;
+  input.type = INPUT_MOUSE;
 
   // Only set mouseData when using a supported dwFlags type
   if (dwFlags == MOUSEEVENTF_WHEEL ||
@@ -62,16 +62,16 @@ void mouseEvent(DWORD dwFlags, DWORD mouseData = 0)
   }
   else
   {
-	  input.mi.mouseData = 0;
+    input.mi.mouseData = 0;
   }
 
-	input.mi.dwFlags = dwFlags;
-	input.mi.time = 0;
-	SendInput(1, &input, sizeof(INPUT));
+  input.mi.dwFlags = dwFlags;
+  input.mi.time = 0;
+  SendInput(1, &input, sizeof(INPUT));
 }
 
 Gopher::Gopher(CXBOXController * controller)
-	: _controller(controller)
+  : _controller(controller)
 {
 }
 
@@ -80,112 +80,112 @@ Gopher::Gopher(CXBOXController * controller)
 //     configuration variables.
 void Gopher::loadConfigFile()
 {
-	ConfigFile cfg("config.ini");
-	
+  ConfigFile cfg("config.ini");
+  
   //--------------------------------
-	// Configuration bindings
+  // Configuration bindings
   //--------------------------------
-	CONFIG_MOUSE_LEFT = strtol(cfg.getValueOfKey<std::string>("CONFIG_MOUSE_LEFT").c_str(), 0, 0);
-	CONFIG_MOUSE_RIGHT = strtol(cfg.getValueOfKey<std::string>("CONFIG_MOUSE_RIGHT").c_str(), 0, 0);
-	CONFIG_MOUSE_MIDDLE = strtol(cfg.getValueOfKey<std::string>("CONFIG_MOUSE_MIDDLE").c_str(), 0, 0);
-	CONFIG_HIDE = strtol(cfg.getValueOfKey<std::string>("CONFIG_HIDE").c_str(), 0, 0);
-	CONFIG_DISABLE = strtol(cfg.getValueOfKey<std::string>("CONFIG_DISABLE").c_str(), 0, 0);
-	CONFIG_DISABLE_VIBRATION = strtol(cfg.getValueOfKey<std::string>("CONFIG_DISABLE_VIBRATION").c_str(), 0, 0);
-	CONFIG_SPEED_CHANGE = strtol(cfg.getValueOfKey<std::string>("CONFIG_SPEED_CHANGE").c_str(), 0, 0);
-	CONFIG_OSK = strtol(cfg.getValueOfKey<std::string>("CONFIG_OSK").c_str(), 0, 0);
+  CONFIG_MOUSE_LEFT = strtol(cfg.getValueOfKey<std::string>("CONFIG_MOUSE_LEFT").c_str(), 0, 0);
+  CONFIG_MOUSE_RIGHT = strtol(cfg.getValueOfKey<std::string>("CONFIG_MOUSE_RIGHT").c_str(), 0, 0);
+  CONFIG_MOUSE_MIDDLE = strtol(cfg.getValueOfKey<std::string>("CONFIG_MOUSE_MIDDLE").c_str(), 0, 0);
+  CONFIG_HIDE = strtol(cfg.getValueOfKey<std::string>("CONFIG_HIDE").c_str(), 0, 0);
+  CONFIG_DISABLE = strtol(cfg.getValueOfKey<std::string>("CONFIG_DISABLE").c_str(), 0, 0);
+  CONFIG_DISABLE_VIBRATION = strtol(cfg.getValueOfKey<std::string>("CONFIG_DISABLE_VIBRATION").c_str(), 0, 0);
+  CONFIG_SPEED_CHANGE = strtol(cfg.getValueOfKey<std::string>("CONFIG_SPEED_CHANGE").c_str(), 0, 0);
+  CONFIG_OSK = strtol(cfg.getValueOfKey<std::string>("CONFIG_OSK").c_str(), 0, 0);
 
   //--------------------------------
-	// Controller bindings
+  // Controller bindings
   //--------------------------------
-	GAMEPAD_DPAD_UP = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_DPAD_UP").c_str(), 0, 0);
-	GAMEPAD_DPAD_DOWN = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_DPAD_DOWN").c_str(), 0, 0);
-	GAMEPAD_DPAD_LEFT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_DPAD_LEFT").c_str(), 0, 0);
-	GAMEPAD_DPAD_RIGHT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_DPAD_RIGHT").c_str(), 0, 0);
-	GAMEPAD_START = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_START").c_str(), 0, 0);
-	GAMEPAD_BACK = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_BACK").c_str(), 0, 0);
-	GAMEPAD_LEFT_THUMB = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_LEFT_THUMB").c_str(), 0, 0);
-	GAMEPAD_RIGHT_THUMB = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_RIGHT_THUMB").c_str(), 0, 0);
-	GAMEPAD_LEFT_SHOULDER = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_LEFT_SHOULDER").c_str(), 0, 0);
-	GAMEPAD_RIGHT_SHOULDER = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_RIGHT_SHOULDER").c_str(), 0, 0);
-	GAMEPAD_A = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_A").c_str(), 0, 0);
-	GAMEPAD_B = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_B").c_str(), 0, 0);
-	GAMEPAD_X = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_X").c_str(), 0, 0);
-	GAMEPAD_Y = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_Y").c_str(), 0, 0);
-	GAMEPAD_TRIGGER_LEFT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_TRIGGER_LEFT").c_str(), 0, 0);
-	GAMEPAD_TRIGGER_RIGHT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_TRIGGER_RIGHT").c_str(), 0, 0);
+  GAMEPAD_DPAD_UP = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_DPAD_UP").c_str(), 0, 0);
+  GAMEPAD_DPAD_DOWN = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_DPAD_DOWN").c_str(), 0, 0);
+  GAMEPAD_DPAD_LEFT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_DPAD_LEFT").c_str(), 0, 0);
+  GAMEPAD_DPAD_RIGHT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_DPAD_RIGHT").c_str(), 0, 0);
+  GAMEPAD_START = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_START").c_str(), 0, 0);
+  GAMEPAD_BACK = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_BACK").c_str(), 0, 0);
+  GAMEPAD_LEFT_THUMB = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_LEFT_THUMB").c_str(), 0, 0);
+  GAMEPAD_RIGHT_THUMB = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_RIGHT_THUMB").c_str(), 0, 0);
+  GAMEPAD_LEFT_SHOULDER = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_LEFT_SHOULDER").c_str(), 0, 0);
+  GAMEPAD_RIGHT_SHOULDER = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_RIGHT_SHOULDER").c_str(), 0, 0);
+  GAMEPAD_A = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_A").c_str(), 0, 0);
+  GAMEPAD_B = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_B").c_str(), 0, 0);
+  GAMEPAD_X = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_X").c_str(), 0, 0);
+  GAMEPAD_Y = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_Y").c_str(), 0, 0);
+  GAMEPAD_TRIGGER_LEFT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_TRIGGER_LEFT").c_str(), 0, 0);
+  GAMEPAD_TRIGGER_RIGHT = strtol(cfg.getValueOfKey<std::string>("GAMEPAD_TRIGGER_RIGHT").c_str(), 0, 0);
 
   //--------------------------------
   // Advanced settings
   //--------------------------------
 
-	// Acceleration factor
-	acceleration_factor = strtof(cfg.getValueOfKey<std::string>("ACCELERATION_FACTOR").c_str(), 0);
+  // Acceleration factor
+  acceleration_factor = strtof(cfg.getValueOfKey<std::string>("ACCELERATION_FACTOR").c_str(), 0);
 
-	// Dead zones
-	DEAD_ZONE = strtol(cfg.getValueOfKey<std::string>("DEAD_ZONE").c_str(), 0, 0);
-	if (DEAD_ZONE == 0)
+  // Dead zones
+  DEAD_ZONE = strtol(cfg.getValueOfKey<std::string>("DEAD_ZONE").c_str(), 0, 0);
+  if (DEAD_ZONE == 0)
   {
-		DEAD_ZONE = 6000;
+    DEAD_ZONE = 6000;
   }
 
-	SCROLL_DEAD_ZONE = strtol(cfg.getValueOfKey<std::string>("SCROLL_DEAD_ZONE").c_str(), 0, 0);
-	if (SCROLL_DEAD_ZONE == 0)
+  SCROLL_DEAD_ZONE = strtol(cfg.getValueOfKey<std::string>("SCROLL_DEAD_ZONE").c_str(), 0, 0);
+  if (SCROLL_DEAD_ZONE == 0)
   {
-		SCROLL_DEAD_ZONE = 5000;
+    SCROLL_DEAD_ZONE = 5000;
   }
 
-	SCROLL_SPEED = strtof(cfg.getValueOfKey<std::string>("SCROLL_SPEED").c_str(), 0);
-	if (SCROLL_SPEED < 0.00001f)
+  SCROLL_SPEED = strtof(cfg.getValueOfKey<std::string>("SCROLL_SPEED").c_str(), 0);
+  if (SCROLL_SPEED < 0.00001f)
   {
-		SCROLL_SPEED = 0.1f;
+    SCROLL_SPEED = 0.1f;
   }
 
-	// Variable cursor speeds
-	std::istringstream cursor_speed = std::istringstream(cfg.getValueOfKey<std::string>("CURSOR_SPEED"));
-	int cur_speed_idx = 1;
+  // Variable cursor speeds
+  std::istringstream cursor_speed = std::istringstream(cfg.getValueOfKey<std::string>("CURSOR_SPEED"));
+  int cur_speed_idx = 1;
   const float CUR_SPEED_MIN = 0.0001f;
   const float CUR_SPEED_MAX = 1.0f;
-	for (std::string cur_speed; std::getline(cursor_speed, cur_speed, ',');)
-	{
-		std::istringstream cursor_speed_entry = std::istringstream(cur_speed);
-		std::string cur_name, cur_speed_s;
+  for (std::string cur_speed; std::getline(cursor_speed, cur_speed, ',');)
+  {
+    std::istringstream cursor_speed_entry = std::istringstream(cur_speed);
+    std::string cur_name, cur_speed_s;
     // Check to see if we are at the string that includes the equals sign.
-		if (cur_speed.find_first_of('=') != std::string::npos)
-		{
-			std::getline(cursor_speed_entry, cur_name, '=');
-		}
-		else
-		{
-			std::ostringstream tmp_name;
-			tmp_name << cur_speed_idx++;
-			cur_name = tmp_name.str();
-		}
-		std::getline(cursor_speed_entry, cur_speed_s);
-		float cur_speedf = strtof(cur_speed_s.c_str(), 0);
+    if (cur_speed.find_first_of('=') != std::string::npos)
+    {
+      std::getline(cursor_speed_entry, cur_name, '=');
+    }
+    else
+    {
+      std::ostringstream tmp_name;
+      tmp_name << cur_speed_idx++;
+      cur_name = tmp_name.str();
+    }
+    std::getline(cursor_speed_entry, cur_speed_s);
+    float cur_speedf = strtof(cur_speed_s.c_str(), 0);
     // Ignore speeds that are not within the allowed range.
-		if (cur_speedf > CUR_SPEED_MIN && cur_speedf <= CUR_SPEED_MAX)
-		{
-			speeds.push_back(cur_speedf);
-			speed_names.push_back(cur_name);
-		}
-	}
+    if (cur_speedf > CUR_SPEED_MIN && cur_speedf <= CUR_SPEED_MAX)
+    {
+      speeds.push_back(cur_speedf);
+      speed_names.push_back(cur_name);
+    }
+  }
 
   // If no cursor speeds were defined, add a set of default speeds.
-	if (speeds.size() == 0)
-	{
-		speeds.push_back(0.005f);
-		speeds.push_back(0.015f);
-		speeds.push_back(0.025f);
-		speeds.push_back(0.004f);
-		speed_names.push_back("ULTRALOW");
-		speed_names.push_back("LOW");
-		speed_names.push_back("MED");
-		speed_names.push_back("HIGH");
-	}
-	speed = speeds[0];  // Initialize the speed to the first speed stored. TODO: Set the speed to a saved speed that was last used when the application was closed last.
+  if (speeds.size() == 0)
+  {
+    speeds.push_back(0.005f);
+    speeds.push_back(0.015f);
+    speeds.push_back(0.025f);
+    speeds.push_back(0.004f);
+    speed_names.push_back("ULTRALOW");
+    speed_names.push_back("LOW");
+    speed_names.push_back("MED");
+    speed_names.push_back("HIGH");
+  }
+  speed = speeds[0];  // Initialize the speed to the first speed stored. TODO: Set the speed to a saved speed that was last used when the application was closed last.
 
-	// Set the initial window visibility
-	setWindowVisibility(_hidden);
+  // Set the initial window visibility
+  setWindowVisibility(_hidden);
 }
 
 // Description:
@@ -194,144 +194,144 @@ void Gopher::loadConfigFile()
 //     file.
 void Gopher::loop()
 {
-	Sleep(SLEEP_AMOUNT);
+  Sleep(SLEEP_AMOUNT);
 
-	_currentState = _controller->GetState();
+  _currentState = _controller->GetState();
 
   // Disable Gopher
-	handleDisableButton();
-	if (_disabled)
-	{
-		return;
-	}
-
-	// Vibration
-	handleVibrationButton();
-
-	// Mouse functions
-	handleMouseMovement();
-	handleScrolling();
-
-	if (CONFIG_MOUSE_LEFT)
+  handleDisableButton();
+  if (_disabled)
   {
-		mapMouseClick(CONFIG_MOUSE_LEFT, MOUSEEVENTF_LEFTDOWN, MOUSEEVENTF_LEFTUP);
-  }
-	if (CONFIG_MOUSE_RIGHT)
-  {
-		mapMouseClick(CONFIG_MOUSE_RIGHT, MOUSEEVENTF_RIGHTDOWN, MOUSEEVENTF_RIGHTUP);
-  }
-	if (CONFIG_MOUSE_MIDDLE)
-  {
-		mapMouseClick(CONFIG_MOUSE_MIDDLE, MOUSEEVENTF_MIDDLEDOWN, MOUSEEVENTF_MIDDLEUP);
+    return;
   }
 
-	// Hides the console
-	if (CONFIG_HIDE)
-	{
-		setXboxClickState(CONFIG_HIDE);
-		if (_xboxClickIsDown[CONFIG_HIDE])
-		{
-			toggleWindowVisibility();
-		}
-	}
+  // Vibration
+  handleVibrationButton();
 
-	// Toggle the on-screen keyboard
-	if (CONFIG_OSK)
-	{
-		setXboxClickState(CONFIG_OSK);
-		if (_xboxClickIsDown[CONFIG_OSK])
-		{
-			// Get the otk window
-			HWND otk_win = getOskWindow();
-			if (otk_win == NULL)
-			{
-				printf("Please start the On-screen keyboard first\n");
-			}
-			else if(IsIconic(otk_win))
-			{
-				ShowWindow(otk_win, SW_RESTORE);
-			}
-			else
-			{
-				ShowWindow(otk_win, SW_MINIMIZE);
-			}
-		}
-	}
+  // Mouse functions
+  handleMouseMovement();
+  handleScrolling();
 
-	// Will change between the current speed values
-	setXboxClickState(CONFIG_SPEED_CHANGE);
-	if (_xboxClickIsDown[CONFIG_SPEED_CHANGE])
+  if (CONFIG_MOUSE_LEFT)
+  {
+    mapMouseClick(CONFIG_MOUSE_LEFT, MOUSEEVENTF_LEFTDOWN, MOUSEEVENTF_LEFTUP);
+  }
+  if (CONFIG_MOUSE_RIGHT)
+  {
+    mapMouseClick(CONFIG_MOUSE_RIGHT, MOUSEEVENTF_RIGHTDOWN, MOUSEEVENTF_RIGHTUP);
+  }
+  if (CONFIG_MOUSE_MIDDLE)
+  {
+    mapMouseClick(CONFIG_MOUSE_MIDDLE, MOUSEEVENTF_MIDDLEDOWN, MOUSEEVENTF_MIDDLEUP);
+  }
+
+  // Hides the console
+  if (CONFIG_HIDE)
+  {
+    setXboxClickState(CONFIG_HIDE);
+    if (_xboxClickIsDown[CONFIG_HIDE])
+    {
+      toggleWindowVisibility();
+    }
+  }
+
+  // Toggle the on-screen keyboard
+  if (CONFIG_OSK)
+  {
+    setXboxClickState(CONFIG_OSK);
+    if (_xboxClickIsDown[CONFIG_OSK])
+    {
+      // Get the otk window
+      HWND otk_win = getOskWindow();
+      if (otk_win == NULL)
+      {
+        printf("Please start the On-screen keyboard first\n");
+      }
+      else if(IsIconic(otk_win))
+      {
+        ShowWindow(otk_win, SW_RESTORE);
+      }
+      else
+      {
+        ShowWindow(otk_win, SW_MINIMIZE);
+      }
+    }
+  }
+
+  // Will change between the current speed values
+  setXboxClickState(CONFIG_SPEED_CHANGE);
+  if (_xboxClickIsDown[CONFIG_SPEED_CHANGE])
   {
     const int CHANGE_SPEED_VIBRATION_INTENSITY = 65000;   // Speed of the vibration motors when changing cursor speed.
     const int CHANGE_SPEED_VIBRATION_DURATION = 450;      // Duration of the cursor speed change vibration in milliseconds.
 
-		speed_idx++;
-		if (speed_idx >= speeds.size())
+    speed_idx++;
+    if (speed_idx >= speeds.size())
     {
-			speed_idx = 0;
+      speed_idx = 0;
     }
-		speed = speeds[speed_idx];
-		printf("Setting speed to %f (%s)...\n", speed, speed_names[speed_idx].c_str());
-		pulseVibrate(CHANGE_SPEED_VIBRATION_DURATION, CHANGE_SPEED_VIBRATION_INTENSITY, CHANGE_SPEED_VIBRATION_INTENSITY);
-	}
+    speed = speeds[speed_idx];
+    printf("Setting speed to %f (%s)...\n", speed, speed_names[speed_idx].c_str());
+    pulseVibrate(CHANGE_SPEED_VIBRATION_DURATION, CHANGE_SPEED_VIBRATION_INTENSITY, CHANGE_SPEED_VIBRATION_INTENSITY);
+  }
 
-	// Update all controller keys.
-	handleTriggers(GAMEPAD_TRIGGER_LEFT, GAMEPAD_TRIGGER_RIGHT);
-	if (GAMEPAD_DPAD_UP)
+  // Update all controller keys.
+  handleTriggers(GAMEPAD_TRIGGER_LEFT, GAMEPAD_TRIGGER_RIGHT);
+  if (GAMEPAD_DPAD_UP)
   {
     mapKeyboard(XINPUT_GAMEPAD_DPAD_UP, GAMEPAD_DPAD_UP);
   }
-	if (GAMEPAD_DPAD_DOWN)
+  if (GAMEPAD_DPAD_DOWN)
   {
-		mapKeyboard(XINPUT_GAMEPAD_DPAD_DOWN, GAMEPAD_DPAD_DOWN);
+    mapKeyboard(XINPUT_GAMEPAD_DPAD_DOWN, GAMEPAD_DPAD_DOWN);
   }
-	if (GAMEPAD_DPAD_LEFT)
+  if (GAMEPAD_DPAD_LEFT)
   {
-		mapKeyboard(XINPUT_GAMEPAD_DPAD_LEFT, GAMEPAD_DPAD_LEFT);
+    mapKeyboard(XINPUT_GAMEPAD_DPAD_LEFT, GAMEPAD_DPAD_LEFT);
   }
-	if (GAMEPAD_DPAD_RIGHT)
+  if (GAMEPAD_DPAD_RIGHT)
   {
-		mapKeyboard(XINPUT_GAMEPAD_DPAD_RIGHT, GAMEPAD_DPAD_RIGHT);
+    mapKeyboard(XINPUT_GAMEPAD_DPAD_RIGHT, GAMEPAD_DPAD_RIGHT);
   }
-	if (GAMEPAD_START)
+  if (GAMEPAD_START)
   {
-		mapKeyboard(XINPUT_GAMEPAD_START, GAMEPAD_START);
+    mapKeyboard(XINPUT_GAMEPAD_START, GAMEPAD_START);
   }
-	if (GAMEPAD_BACK)
+  if (GAMEPAD_BACK)
   {
-		mapKeyboard(XINPUT_GAMEPAD_BACK, GAMEPAD_BACK);
+    mapKeyboard(XINPUT_GAMEPAD_BACK, GAMEPAD_BACK);
   }
-	if (GAMEPAD_LEFT_THUMB)
+  if (GAMEPAD_LEFT_THUMB)
   {
-		mapKeyboard(XINPUT_GAMEPAD_LEFT_THUMB, GAMEPAD_LEFT_THUMB);
+    mapKeyboard(XINPUT_GAMEPAD_LEFT_THUMB, GAMEPAD_LEFT_THUMB);
   }
-	if (GAMEPAD_RIGHT_THUMB)
+  if (GAMEPAD_RIGHT_THUMB)
   {
-		mapKeyboard(XINPUT_GAMEPAD_RIGHT_THUMB, GAMEPAD_RIGHT_THUMB);
+    mapKeyboard(XINPUT_GAMEPAD_RIGHT_THUMB, GAMEPAD_RIGHT_THUMB);
   }
-	if (GAMEPAD_LEFT_SHOULDER)
+  if (GAMEPAD_LEFT_SHOULDER)
   {
-		mapKeyboard(XINPUT_GAMEPAD_LEFT_SHOULDER, GAMEPAD_LEFT_SHOULDER);
+    mapKeyboard(XINPUT_GAMEPAD_LEFT_SHOULDER, GAMEPAD_LEFT_SHOULDER);
   }
-	if (GAMEPAD_RIGHT_SHOULDER)
+  if (GAMEPAD_RIGHT_SHOULDER)
   {
-		mapKeyboard(XINPUT_GAMEPAD_RIGHT_SHOULDER, GAMEPAD_RIGHT_SHOULDER);
+    mapKeyboard(XINPUT_GAMEPAD_RIGHT_SHOULDER, GAMEPAD_RIGHT_SHOULDER);
   }
-	if (GAMEPAD_A)
+  if (GAMEPAD_A)
   {
-		mapKeyboard(XINPUT_GAMEPAD_A, GAMEPAD_A);
+    mapKeyboard(XINPUT_GAMEPAD_A, GAMEPAD_A);
   }
-	if (GAMEPAD_B)
+  if (GAMEPAD_B)
   {
-		mapKeyboard(XINPUT_GAMEPAD_B, GAMEPAD_B);
+    mapKeyboard(XINPUT_GAMEPAD_B, GAMEPAD_B);
   }
-	if (GAMEPAD_X)
+  if (GAMEPAD_X)
   {
-		mapKeyboard(XINPUT_GAMEPAD_X, GAMEPAD_X);
+    mapKeyboard(XINPUT_GAMEPAD_X, GAMEPAD_X);
   }
-	if (GAMEPAD_Y)
+  if (GAMEPAD_Y)
   {
-		mapKeyboard(XINPUT_GAMEPAD_Y, GAMEPAD_Y);
+    mapKeyboard(XINPUT_GAMEPAD_Y, GAMEPAD_Y);
   }
 }
 
@@ -345,39 +345,39 @@ void Gopher::loop()
 //   r          The speed (intensity) of the right vibration motor
 void Gopher::pulseVibrate(const int duration, const int l, const int r) const
 {
-	if(!_vibrationDisabled)
-	{
-		_controller->Vibrate(l, r);
-		Sleep(duration);
-		_controller->Vibrate(0, 0);
-	}
+  if(!_vibrationDisabled)
+  {
+    _controller->Vibrate(l, r);
+    Sleep(duration);
+    _controller->Vibrate(0, 0);
+  }
 }
 
 // Description:
 //   Toggles the controller mapping after checking for the disable configuration command.
 void Gopher::handleDisableButton()
 {
-	setXboxClickState(CONFIG_DISABLE);
-	if (_xboxClickIsDown[CONFIG_DISABLE])
-	{
+  setXboxClickState(CONFIG_DISABLE);
+  if (_xboxClickIsDown[CONFIG_DISABLE])
+  {
     int duration = 0;   // milliseconds
     int intensity = 0;  // vibration intensity
 
-		_disabled = !_disabled;
+    _disabled = !_disabled;
 
-		if (_disabled)
+    if (_disabled)
     {
       duration = 400;
       intensity = 10000;
-		}
-		else
+    }
+    else
     {
       duration = 400;
       intensity = 65000;
-		}
+    }
 
     pulseVibrate(duration, intensity, intensity);
-	}
+  }
 }
 
 // Description:
@@ -385,22 +385,22 @@ void Gopher::handleDisableButton()
 //   This function will BLOCK to prevent rapidly toggling the vibration.
 void Gopher::handleVibrationButton()
 {
-	setXboxClickState(CONFIG_DISABLE_VIBRATION);
-	if (_xboxClickIsDown[CONFIG_DISABLE_VIBRATION])
-	{
-		_vibrationDisabled = !_vibrationDisabled;
-		printf("Vibration %s\n", _vibrationDisabled ? "Disabled" : "Enabled");
-		Sleep(1000);
-	}
+  setXboxClickState(CONFIG_DISABLE_VIBRATION);
+  if (_xboxClickIsDown[CONFIG_DISABLE_VIBRATION])
+  {
+    _vibrationDisabled = !_vibrationDisabled;
+    printf("Vibration %s\n", _vibrationDisabled ? "Disabled" : "Enabled");
+    Sleep(1000);
+  }
 }
 
 // Description:
 //   Toggles the visibility of the window.
 void Gopher::toggleWindowVisibility()
 {
-	_hidden = !_hidden;
-	printf("Window %s\n", _hidden ? "hidden" : "unhidden");
-	setWindowVisibility(_hidden);
+  _hidden = !_hidden;
+  printf("Window %s\n", _hidden ? "hidden" : "unhidden");
+  setWindowVisibility(_hidden);
 }
 
 // Description:
@@ -410,14 +410,14 @@ void Gopher::toggleWindowVisibility()
 //   hidden   Hides the window when true
 void Gopher::setWindowVisibility(const bool &hidden) const
 {
-	HWND hWnd = GetConsoleWindow();
-	ShowWindow(hWnd, _hidden ? SW_HIDE : SW_SHOW);
+  HWND hWnd = GetConsoleWindow();
+  ShowWindow(hWnd, _hidden ? SW_HIDE : SW_SHOW);
 }
 
 template <typename T>
 int sgn(T val)
 {
-	return (T(0) < val) - (val < T(0));
+  return (T(0) < val) - (val < T(0));
 }
 
 // Description:
@@ -431,11 +431,11 @@ int sgn(T val)
 //     invalid, 0 will be returned.
 float Gopher::getDelta(short t)
 {
-	//filter non-32768 and 32767, wireless ones can glitch sometimes and send it to the edge of the screen, it'll toss out some HUGE integer even when it's centered
-	if (t > 32767) t = 0;
-	if (t < -32768) t = 0;
+  //filter non-32768 and 32767, wireless ones can glitch sometimes and send it to the edge of the screen, it'll toss out some HUGE integer even when it's centered
+  if (t > 32767) t = 0;
+  if (t < -32768) t = 0;
 
-	return t;
+  return t;
 }
 
 // Description:
@@ -451,57 +451,57 @@ float Gopher::getDelta(short t)
 float Gopher::getMult(float lengthsq, float deadzone, float accel = 0.0f)
 {
   // Normalize the thumbstick value.
-	float mult = (sqrt(lengthsq) - deadzone) / (MAXSHORT - deadzone);
+  float mult = (sqrt(lengthsq) - deadzone) / (MAXSHORT - deadzone);
 
   // Apply a curve to the normalized thumbstick value.
-	if (accel > 0.0001f)
+  if (accel > 0.0001f)
   {
-		mult = pow(mult, accel);
+    mult = pow(mult, accel);
   }
-	return mult / FPS;
+  return mult / FPS;
 }
 
 // Description:
 //   Controls the mouse cursor movement by reading the left thumbstick.
 void Gopher::handleMouseMovement()
 {
-	POINT cursor;
-	GetCursorPos(&cursor);
+  POINT cursor;
+  GetCursorPos(&cursor);
 
-	short tx = _currentState.Gamepad.sThumbLX;
-	short ty = _currentState.Gamepad.sThumbLY;
+  short tx = _currentState.Gamepad.sThumbLX;
+  short ty = _currentState.Gamepad.sThumbLY;
 
-	float x = cursor.x + _xRest;
-	float y = cursor.y + _yRest;
+  float x = cursor.x + _xRest;
+  float y = cursor.y + _yRest;
 
-	float dx = 0;
-	float dy = 0;
+  float dx = 0;
+  float dy = 0;
 
   // Handle dead zone
-	float lengthsq = tx * tx + ty * ty;
-	if (lengthsq > DEAD_ZONE * DEAD_ZONE)
-	{
-		float mult = speed * getMult(lengthsq, DEAD_ZONE, acceleration_factor);
+  float lengthsq = tx * tx + ty * ty;
+  if (lengthsq > DEAD_ZONE * DEAD_ZONE)
+  {
+    float mult = speed * getMult(lengthsq, DEAD_ZONE, acceleration_factor);
 
-		dx = getDelta(tx) * mult;
-		dy = getDelta(ty) * mult;
-	}
+    dx = getDelta(tx) * mult;
+    dy = getDelta(ty) * mult;
+  }
 
-	x += dx;
-	_xRest = x - (float)((int)x);
+  x += dx;
+  _xRest = x - (float)((int)x);
 
-	y -= dy;
-	_yRest = y - (float)((int)y);
+  y -= dy;
+  _yRest = y - (float)((int)y);
 
-	SetCursorPos((int)x, (int)y); //after all click input processing
+  SetCursorPos((int)x, (int)y); //after all click input processing
 }
 
 // Description:
 //   Controls the scroll wheel movement by reading the right thumbstick.
 void Gopher::handleScrolling()
 {
-	float tx = getDelta(_currentState.Gamepad.sThumbRX);
-	float ty = getDelta(_currentState.Gamepad.sThumbRY);
+  float tx = getDelta(_currentState.Gamepad.sThumbRX);
+  float ty = getDelta(_currentState.Gamepad.sThumbRY);
   
   // Handle dead zone
   float magnitude = sqrt(tx * tx + ty * ty);
@@ -510,7 +510,7 @@ void Gopher::handleScrolling()
   {
     mouseEvent(MOUSEEVENTF_HWHEEL, tx * getMult(tx * tx, SCROLL_DEAD_ZONE) * SCROLL_SPEED);
     mouseEvent(MOUSEEVENTF_WHEEL, ty * getMult(ty * ty, SCROLL_DEAD_ZONE) * SCROLL_SPEED);
-	}
+  }
 }
 
 // Description:
@@ -522,36 +522,36 @@ void Gopher::handleScrolling()
 //   rKey   The mapped key for the right trigger
 void Gopher::handleTriggers(WORD lKey, WORD rKey)
 {
-	bool lTriggerIsDown = _currentState.Gamepad.bLeftTrigger > TRIGGER_DEAD_ZONE;
-	bool rTriggerIsDown = _currentState.Gamepad.bRightTrigger > TRIGGER_DEAD_ZONE;
+  bool lTriggerIsDown = _currentState.Gamepad.bLeftTrigger > TRIGGER_DEAD_ZONE;
+  bool rTriggerIsDown = _currentState.Gamepad.bRightTrigger > TRIGGER_DEAD_ZONE;
 
   // Handle left trigger
-	if (lTriggerIsDown != _lTriggerPrevious)
-	{
-		_lTriggerPrevious = lTriggerIsDown;
-		if (lTriggerIsDown)
-		{
-			inputKeyboardDown(lKey);
-		}
-		else
-		{
-			inputKeyboardUp(lKey);
-		}
-	}
+  if (lTriggerIsDown != _lTriggerPrevious)
+  {
+    _lTriggerPrevious = lTriggerIsDown;
+    if (lTriggerIsDown)
+    {
+      inputKeyboardDown(lKey);
+    }
+    else
+    {
+      inputKeyboardUp(lKey);
+    }
+  }
 
   // Handle right trigger
-	if (rTriggerIsDown != _rTriggerPrevious)
-	{
-		_rTriggerPrevious = rTriggerIsDown;
-		if (rTriggerIsDown)
-		{
-			inputKeyboardDown(rKey);
-		}
-		else
-		{
-			inputKeyboardUp(rKey);
-		}
-	}
+  if (rTriggerIsDown != _rTriggerPrevious)
+  {
+    _rTriggerPrevious = rTriggerIsDown;
+    if (rTriggerIsDown)
+    {
+      inputKeyboardDown(rKey);
+    }
+    else
+    {
+      inputKeyboardUp(rKey);
+    }
+  }
 }
 
 // Description:
@@ -561,46 +561,46 @@ void Gopher::handleTriggers(WORD lKey, WORD rKey)
 //   STATE  The Gopher state, or command, to update
 void Gopher::setXboxClickState(DWORD STATE)
 {
-	_xboxClickIsDown[STATE] = false;
-	_xboxClickIsUp[STATE] = false;
+  _xboxClickIsDown[STATE] = false;
+  _xboxClickIsUp[STATE] = false;
 
-	if (!this->xboxClickStateExists(STATE))
-	{
-		_xboxClickStateLastIteration[STATE] = false;
-	}
+  if (!this->xboxClickStateExists(STATE))
+  {
+    _xboxClickStateLastIteration[STATE] = false;
+  }
 
-	bool isDown = (_currentState.Gamepad.wButtons & STATE) == STATE;
+  bool isDown = (_currentState.Gamepad.wButtons & STATE) == STATE;
 
   // Detect if the button has been pressed.
-	if (isDown && !_xboxClickStateLastIteration[STATE])
-	{
-		_xboxClickStateLastIteration[STATE] = true;
-		_xboxClickIsDown[STATE] = true;
-		_xboxClickDownLength[STATE] = 0;
-		_xboxClickIsDownLong[STATE] = false;
-	}
+  if (isDown && !_xboxClickStateLastIteration[STATE])
+  {
+    _xboxClickStateLastIteration[STATE] = true;
+    _xboxClickIsDown[STATE] = true;
+    _xboxClickDownLength[STATE] = 0;
+    _xboxClickIsDownLong[STATE] = false;
+  }
 
   // Detect if the button has been held as a long press.
-	if (isDown && _xboxClickStateLastIteration[STATE])
-	{
+  if (isDown && _xboxClickStateLastIteration[STATE])
+  {
     const int LONG_PRESS_TIME = 200;  // milliseconds
 
-		++_xboxClickDownLength[STATE];
-		if (_xboxClickDownLength[STATE] * SLEEP_AMOUNT > LONG_PRESS_TIME)
+    ++_xboxClickDownLength[STATE];
+    if (_xboxClickDownLength[STATE] * SLEEP_AMOUNT > LONG_PRESS_TIME)
     {
-			_xboxClickIsDownLong[STATE] = true;
+      _xboxClickIsDownLong[STATE] = true;
     }
-	}
+  }
 
   // Detect if the button has been released.
-	if (!isDown && _xboxClickStateLastIteration[STATE])
-	{
-		_xboxClickStateLastIteration[STATE] = false;
-		_xboxClickIsUp[STATE] = true;
-		_xboxClickIsDownLong[STATE] = false;
-	}
+  if (!isDown && _xboxClickStateLastIteration[STATE])
+  {
+    _xboxClickStateLastIteration[STATE] = false;
+    _xboxClickIsUp[STATE] = true;
+    _xboxClickIsDownLong[STATE] = false;
+  }
 
-	_xboxClickStateLastIteration[STATE] = isDown;
+  _xboxClickStateLastIteration[STATE] = isDown;
 }
 
 // Description:
@@ -613,13 +613,13 @@ void Gopher::setXboxClickState(DWORD STATE)
 //   true if the state is present in the map.
 bool Gopher::xboxClickStateExists(DWORD STATE)
 {
-	auto it = _xboxClickStateLastIteration.find(STATE);
-	if (it == _xboxClickStateLastIteration.end())
-	{
-		return false;
-	}
+  auto it = _xboxClickStateLastIteration.find(STATE);
+  if (it == _xboxClickStateLastIteration.end())
+  {
+    return false;
+  }
 
-	return true;
+  return true;
 }
 
 // Description:
@@ -630,16 +630,16 @@ bool Gopher::xboxClickStateExists(DWORD STATE)
 //   key    The key value to input to the system
 void Gopher::mapKeyboard(DWORD STATE, WORD key)
 {
-	setXboxClickState(STATE);
-	if (_xboxClickIsDown[STATE])
-	{
-		inputKeyboardDown(key);
-	}
+  setXboxClickState(STATE);
+  if (_xboxClickIsDown[STATE])
+  {
+    inputKeyboardDown(key);
+  }
 
-	if (_xboxClickIsUp[STATE])
-	{
-		inputKeyboardUp(key);
-	}
+  if (_xboxClickIsUp[STATE])
+  {
+    inputKeyboardUp(key);
+  }
 }
 
 // Description:
@@ -651,22 +651,22 @@ void Gopher::mapKeyboard(DWORD STATE, WORD key)
 //   keyUp    The button up event for a mouse event
 void Gopher::mapMouseClick(DWORD STATE, DWORD keyDown, DWORD keyUp)
 {
-	setXboxClickState(STATE);
-	if (_xboxClickIsDown[STATE])
-	{
-		mouseEvent(keyDown);
-	}
+  setXboxClickState(STATE);
+  if (_xboxClickIsDown[STATE])
+  {
+    mouseEvent(keyDown);
+  }
 
-	if (_xboxClickIsUp[STATE])
-	{
-		mouseEvent(keyUp);
-	}
+  if (_xboxClickIsUp[STATE])
+  {
+    mouseEvent(keyUp);
+  }
 
-	/*if (_xboxClickIsDownLong[STATE])
-	{
-		mouseEvent(keyDown | keyUp);
-		mouseEvent(keyDown | keyUp);
-	}*/
+  /*if (_xboxClickIsDownLong[STATE])
+  {
+    mouseEvent(keyDown | keyUp);
+    mouseEvent(keyDown | keyUp);
+  }*/
 }
 
 // Description:
@@ -681,15 +681,15 @@ void Gopher::mapMouseClick(DWORD STATE, DWORD keyDown, DWORD keyUp)
 //   FALSE when the the desired window is found.
 static BOOL CALLBACK EnumWindowsProc(HWND curWnd, LPARAM lParam)
 {
-	TCHAR title[256];
+  TCHAR title[256];
   // Check to see if the window title matches what we are looking for.
-	if (GetWindowText(curWnd, title, 256) && !_tcscmp(title, _T("On-Screen Keyboard")))
-	{
-		*(HWND*)lParam = curWnd;
-		return FALSE;  // Correct window found, stop enumerating through windows.
-	}
+  if (GetWindowText(curWnd, title, 256) && !_tcscmp(title, _T("On-Screen Keyboard")))
+  {
+    *(HWND*)lParam = curWnd;
+    return FALSE;  // Correct window found, stop enumerating through windows.
+  }
 
-	return TRUE;
+  return TRUE;
 }
 
 // Description:
@@ -699,7 +699,7 @@ static BOOL CALLBACK EnumWindowsProc(HWND curWnd, LPARAM lParam)
 //   If found, the handle to the On-Screen Keyboard handle. Otherwise, returns NULL.
 HWND Gopher::getOskWindow()
 {
-	HWND ret = NULL;
-	EnumWindows(EnumWindowsProc, (LPARAM)&ret);
-	return ret;
+  HWND ret = NULL;
+  EnumWindows(EnumWindowsProc, (LPARAM)&ret);
+  return ret;
 }
