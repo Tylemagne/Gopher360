@@ -1,6 +1,7 @@
 #include <windows.h> // for Beep()
 #include <iostream>
 #include <vector>
+#include <list>
 #include <xinput.h> // controller
 #include <stdio.h> // for printf
 #include <cmath> // for abs()
@@ -20,7 +21,7 @@ private:
   int DEAD_ZONE = 6000;                 // Thumbstick dead zone to use for mouse movement. Absolute maximum shall be 65534.
   int SCROLL_DEAD_ZONE = 5000;          // Thumbstick dead zone to use for scroll wheel movement. Absolute maximum shall be 65534.
   int TRIGGER_DEAD_ZONE = 0;            // Dead zone for the left and right triggers to detect a trigger press. 0 means that any press to trigger will be read as a button press.
-  float SCROLL_SPEED = 0.1;             // Speed at which you scroll.
+  float SCROLL_SPEED = 0.1f;             // Speed at which you scroll.
   const int FPS = 150;                  // Update rate of the main Gopher loop. Interpreted as cycles-per-second.
   const int SLEEP_AMOUNT = 1000 / FPS;  // Number of milliseconds to sleep per iteration.
 
@@ -45,7 +46,7 @@ private:
 
   std::vector<float> speeds;	            // Contains actual speeds to choose
   std::vector<std::string> speed_names;   // Contains display names of speeds to display
-  int speed_idx = 0;
+  unsigned int speed_idx = 0;
 
   // Mouse Clicks
   DWORD CONFIG_MOUSE_LEFT = NULL;
@@ -83,6 +84,8 @@ private:
   std::map<DWORD, bool> _xboxClickIsDownLong;
   std::map<DWORD, int> _xboxClickDownLength;
   std::map<DWORD, bool> _xboxClickIsUp;
+
+  std::list<WORD> _pressedKeys;
 
   CXBOXController* _controller;
 
@@ -123,4 +126,8 @@ public:
   void setXboxClickState(DWORD state);
 
   HWND getOskWindow();
+
+private:
+
+  bool erasePressedKey(WORD key);
 };
