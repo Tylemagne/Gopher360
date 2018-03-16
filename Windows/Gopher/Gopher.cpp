@@ -769,6 +769,9 @@ HWND Gopher::getOskWindow()
 // Description:
 //   Removes an entry for a pressed key from the list.
 //
+// Params:
+//   key  The key value to remove from the pressed key list. 
+//
 // Returns:
 //   True if the given key was found and removed from the list.
 bool Gopher::erasePressedKey(WORD key)
