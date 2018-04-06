@@ -370,8 +370,36 @@ void Gopher::handleDisableButton()
 
     if (_disabled)
     {
+      // Transition to a disabled state.
       duration = 400;
       intensity = 10000;
+
+      // Release all keys currently pressed by the Gopher mapping.
+      while (_pressedKeys.size() != 0)
+      {
+        std::list<WORD>::iterator it = _pressedKeys.begin();
+
+        // Handle mouse buttons
+        if (*it == VK_LBUTTON)
+        {
+          mouseEvent(MOUSEEVENTF_LEFTUP);
+        }
+        else if (*it == VK_RBUTTON)
+        {
+          mouseEvent(MOUSEEVENTF_RIGHTUP);
+        }
+        else if (*it == VK_MBUTTON)
+        {
+          mouseEvent(MOUSEEVENTF_MIDDLEUP);
+        }
+        // Handle keys (TODO: support mouse X1 and X2 buttons)
+        else
+        {
+          inputKeyboardUp(*it);
+        }
+
+        _pressedKeys.erase(it);
+      }
     }
     else
     {
@@ -663,11 +691,17 @@ void Gopher::mapKeyboard(DWORD STATE, WORD key)
   if (_xboxClickIsDown[STATE])
   {
     inputKeyboardDown(key);
+
+    // Add key to the list of pressed keys.
+    _pressedKeys.push_back(key);
   }
 
   if (_xboxClickIsUp[STATE])
   {
     inputKeyboardUp(key);
+
+    // Remove key from the list of pressed keys.
+    erasePressedKey(key);
   }
 }
 
@@ -684,11 +718,39 @@ void Gopher::mapMouseClick(DWORD STATE, DWORD keyDown, DWORD keyUp)
   if (_xboxClickIsDown[STATE])
   {
     mouseEvent(keyDown);
+
+    // Add key to the list of pressed keys.
+    if (keyDown == MOUSEEVENTF_LEFTDOWN)
+    {
+      _pressedKeys.push_back(VK_LBUTTON);
+    }
+    else if (keyDown == MOUSEEVENTF_RIGHTDOWN)
+    {
+      _pressedKeys.push_back(VK_RBUTTON);
+    }
+    else if (keyDown == MOUSEEVENTF_MIDDLEDOWN)
+    {
+      _pressedKeys.push_back(VK_MBUTTON);
+    }
   }
 
   if (_xboxClickIsUp[STATE])
   {
     mouseEvent(keyUp);
+
+    // Remove key from the list of pressed keys.
+    if (keyUp == MOUSEEVENTF_LEFTUP)
+    {
+      erasePressedKey(VK_LBUTTON);
+    }
+    else if (keyUp == MOUSEEVENTF_RIGHTUP)
+    {
+      erasePressedKey(VK_RBUTTON);
+    }
+    else if (keyUp == MOUSEEVENTF_MIDDLEUP)
+    {
+      erasePressedKey(VK_MBUTTON);
+    }
   }
 
   /*if (_xboxClickIsDownLong[STATE])
@@ -731,4 +793,28 @@ HWND Gopher::getOskWindow()
   HWND ret = NULL;
   EnumWindows(EnumWindowsProc, (LPARAM)&ret);
   return ret;
+}
+
+// Description:
+//   Removes an entry for a pressed key from the list.
+//
+// Params:
+//   key  The key value to remove from the pressed key list. 
+//
+// Returns:
+//   True if the given key was found and removed from the list.
+bool Gopher::erasePressedKey(WORD key)
+{
+  for (std::list<WORD>::iterator it = _pressedKeys.begin();
+       it != _pressedKeys.end();
+       ++it)
+  {
+    if (*it == key)
+    {
+      _pressedKeys.erase(it);
+      return true;
+    }
+  }
+
+  return false;
 }
