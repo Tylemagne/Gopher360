@@ -184,6 +184,9 @@ void Gopher::loadConfigFile()
   }
   speed = speeds[0];  // Initialize the speed to the first speed stored. TODO: Set the speed to a saved speed that was last used when the application was closed last.
 
+  // Swap stick functions
+  SWAP_THUMBSTICKS = strtol(cfg.getValueOfKey<std::string>("SWAP_THUMBSTICKS").c_str(), 0, 0);
+
   // Set the initial window visibility
   setWindowVisibility(_hidden);
 }
@@ -468,8 +471,21 @@ void Gopher::handleMouseMovement()
   POINT cursor;
   GetCursorPos(&cursor);
 
-  short tx = _currentState.Gamepad.sThumbLX;
-  short ty = _currentState.Gamepad.sThumbLY;
+  short tx;
+  short ty;
+
+  if (SWAP_THUMBSTICKS == 0)
+  {
+    // Use left stick
+    tx = _currentState.Gamepad.sThumbLX;
+    ty = _currentState.Gamepad.sThumbLY;
+  }
+  else
+  {
+    // Use right stick
+    tx = _currentState.Gamepad.sThumbRX;
+    ty = _currentState.Gamepad.sThumbRY;
+  }
 
   float x = cursor.x + _xRest;
   float y = cursor.y + _yRest;
@@ -500,9 +516,22 @@ void Gopher::handleMouseMovement()
 //   Controls the scroll wheel movement by reading the right thumbstick.
 void Gopher::handleScrolling()
 {
-  float tx = getDelta(_currentState.Gamepad.sThumbRX);
-  float ty = getDelta(_currentState.Gamepad.sThumbRY);
+  float tx;
+  float ty;
   
+  if (SWAP_THUMBSTICKS == 0)
+  {
+    // Use right stick
+    tx = getDelta(_currentState.Gamepad.sThumbRX);
+    ty = getDelta(_currentState.Gamepad.sThumbRY);
+  }
+  else
+  {
+    // Use left stick
+    tx = getDelta(_currentState.Gamepad.sThumbLX);
+    ty = getDelta(_currentState.Gamepad.sThumbLY);
+  }
+
   // Handle dead zone
   float magnitude = sqrt(tx * tx + ty * ty);
 

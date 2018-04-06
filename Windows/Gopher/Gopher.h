@@ -23,6 +23,7 @@ private:
   float SCROLL_SPEED = 0.1;             // Speed at which you scroll.
   const int FPS = 150;                  // Update rate of the main Gopher loop. Interpreted as cycles-per-second.
   const int SLEEP_AMOUNT = 1000 / FPS;  // Number of milliseconds to sleep per iteration.
+  int SWAP_THUMBSTICKS = 0;             // Swaps the function of the thumbsticks when not equal to 0.
 
   XINPUT_STATE _currentState;
 
