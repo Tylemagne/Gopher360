@@ -537,7 +537,10 @@ void Gopher::handleMouseMovement()
   y -= dy;
   _yRest = y - (float)((int)y);
 
-  SetCursorPos((int)x, (int)y); //after all click input processing
+  if ((int)x && (int)y) // Do not send input every 16ms when there is no mouse activatives
+  {
+    SetCursorPos((int)x, (int)y); //after all click input processing
+  }
 }
 
 // Description:
