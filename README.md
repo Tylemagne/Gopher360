@@ -144,6 +144,8 @@ https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731
 XInput Controller Buttons:
 https://msdn.microsoft.com/en-us/library/windows/desktop/microsoft.directx_sdk.reference.xinput_gamepad%28v=vs.85%29.aspx
 
+**CURSOR_SPEED**: Defined cursor speed (Optional)
+
 More instruction in the configuration file.
 
 
