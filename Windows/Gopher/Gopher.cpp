@@ -173,14 +173,16 @@ void Gopher::loadConfigFile()
   // If no cursor speeds were defined, add a set of default speeds.
   if (speeds.size() == 0)
   {
-    speeds.push_back(0.005f);
-    speeds.push_back(0.015f);
-    speeds.push_back(0.025f);
-    speeds.push_back(0.004f);
+    speeds.push_back(0.010f);
+    speeds.push_back(0.020f);
+    speeds.push_back(0.030f);
+    speeds.push_back(0.040f);
+    speeds.push_back(0.050f);
     speed_names.push_back("ULTRALOW");
     speed_names.push_back("LOW");
     speed_names.push_back("MED");
     speed_names.push_back("HIGH");
+    speed_names.push_back("ULTRAHIGH");
   }
   speed = speeds[0];  // Initialize the speed to the first speed stored. TODO: Set the speed to a saved speed that was last used when the application was closed last.
 
