@@ -137,7 +137,7 @@ void ConfigFile::ExtractKeys()
     outfile << "\n" << std::endl;
     outfile << "# ADVANCED CONFIGURATION SETTINGS" << std::endl;
     outfile << "#  ALLOWED CURSOR SPEEDS, FIRST WILL BE CHOSEN BY DEFAULT.  VALUES > 1.0 WILL BE IGNORED.  NO SPACES." << std::endl;
-    outfile << "CURSOR_SPEED = ULTRALOW=0.005,LOW=0.015,MED=0.025,HIGH=0.04" << std::endl;
+    outfile << "CURSOR_SPEED = ULTRALOW=0.010,LOW=0.020,MED=0.030,HIGH=0.040,ULTRAHIGH=0.050" << std::endl;
     outfile << "#  SET ACCELERATION FACTOR FOR NON-LINEAR CURSOR SPEED" << std::endl;
     outfile << "# ACCELERATION_FACTOR = 3" << std::endl;
     outfile << "#  Swaps the function of the thumbsticks. Set to 0 for default behavior or set to 1 to have the mouse movement on the right stick and scrolling on the left stick." << std::endl;
