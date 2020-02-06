@@ -47,6 +47,7 @@ private:
 
   std::vector<float> speeds;	            // Contains actual speeds to choose
   std::vector<std::string> speed_names;   // Contains display names of speeds to display
+  std::vector<int> speed_intensities;	  // Contains increasing intensities to indicate selected speed
   unsigned int speed_idx = 0;
 
   // Mouse Clicks
