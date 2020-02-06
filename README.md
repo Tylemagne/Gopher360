@@ -62,7 +62,7 @@ Gopher separates itself from the competition by being efficient, small, portable
 
 [![GitHub release](https://img.shields.io/github/release/Tylemagne/gopher360.svg)]()
 
-[![Github commits (since latest release)](https://img.shields.io/github/commits-since/Tylemagne/gopher360/latest.svg)]()
+[![Github commits (since latest release)](https://img.shields.io/github/commits-since/mike1084/GopherRenewed/latest.svg)]()
 
 Requirements
 ======
