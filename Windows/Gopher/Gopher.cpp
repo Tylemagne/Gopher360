@@ -167,6 +167,8 @@ void Gopher::loadConfigFile()
     {
       speeds.push_back(cur_speedf);
       speed_names.push_back(cur_name);
+	  // To make the vibration dependent on speed, multiply it to get in the same range.
+	  speed_intensities.push_back(cur_speedf * 500000);
     }
   }
 
@@ -181,6 +183,10 @@ void Gopher::loadConfigFile()
     speed_names.push_back("LOW");
     speed_names.push_back("MED");
     speed_names.push_back("HIGH");
+	speed_intensities.push_back(500);
+	speed_intensities.push_back(1000);
+	speed_intensities.push_back(1500);
+	speed_intensities.push_back(2000);
   }
   speed = speeds[0];  // Initialize the speed to the first speed stored. TODO: Set the speed to a saved speed that was last used when the application was closed last.
 
@@ -266,7 +272,7 @@ void Gopher::loop()
   if (_xboxClickIsDown[CONFIG_SPEED_CHANGE])
   {
     const int CHANGE_SPEED_VIBRATION_INTENSITY = 65000;   // Speed of the vibration motors when changing cursor speed.
-    const int CHANGE_SPEED_VIBRATION_DURATION = 450;      // Duration of the cursor speed change vibration in milliseconds.
+    const int CHANGE_SPEED_VIBRATION_DURATION = 420;      // Duration of the cursor speed change vibration in milliseconds.
 
     speed_idx++;
     if (speed_idx >= speeds.size())
@@ -275,7 +281,7 @@ void Gopher::loop()
     }
     speed = speeds[speed_idx];
     printf("Setting speed to %f (%s)...\n", speed, speed_names[speed_idx].c_str());
-    pulseVibrate(CHANGE_SPEED_VIBRATION_DURATION, CHANGE_SPEED_VIBRATION_INTENSITY, CHANGE_SPEED_VIBRATION_INTENSITY);
+    pulseVibrate(CHANGE_SPEED_VIBRATION_DURATION, speed_intensities[speed_idx], speed_intensities[speed_idx]);
   }
 
   // Update all controller keys.
@@ -537,6 +543,13 @@ void Gopher::handleMouseMovement()
   y -= dy;
   _yRest = y - (float)((int)y);
 
+  /* INPUT input;
+  input.type = INPUT_MOUSE;
+  input.mi.dx = dx;
+  input.mi.dy = dy * -1;
+  input.mi.dwFlags = MOUSEEVENTF_MOVE;
+  input.mi.time = 0;
+  SendInput(1, &input, sizeof(INPUT));*/
   SetCursorPos((int)x, (int)y); //after all click input processing
 }
 
