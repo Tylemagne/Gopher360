@@ -135,13 +135,29 @@ void ConfigFile::ExtractKeys()
     outfile << "GAMEPAD_TRIGGER_LEFT = 0" << std::endl;
     outfile << "GAMEPAD_TRIGGER_RIGHT = 0" << std::endl;
     outfile << "\n" << std::endl;
-    outfile << "# ADVANCED CONFIGURATION SETTINGS" << std::endl;
+	outfile << "# ADVANCED CONFIGURATION SETTINGS, REMOVE # ON SPECIFIC LINES TO ENABLE." << std::endl;
+	outfile << "\n" << std::endl;
     outfile << "#  ALLOWED CURSOR SPEEDS, FIRST WILL BE CHOSEN BY DEFAULT.  VALUES > 1.0 WILL BE IGNORED.  NO SPACES." << std::endl;
     outfile << "CURSOR_SPEED = ULTRALOW=0.005,LOW=0.015,MED=0.025,HIGH=0.04" << std::endl;
+	outfile << "# CURSOR DEADZONE, DEFAULT = 6000" << std::endl;
+	outfile << "#DEAD_ZONE = 6000" << std::endl;
+	outfile << "\n" << std::endl;
+
+	outfile << "# PARAMETERS FOR SETTING SCROLLING SPEED AND DEADZONE." << std::endl;
+	outfile << "# SET SCROLLING SPEED." << std::endl;
+	outfile << "# SCROLL_SPEED = 0.1" << std::endl;
+	outfile << "# SET SCROLL DEADZONE, DEFAULT = 5000" << std::endl;
+	outfile << "# SCROLL_DEAD_ZONE = 5000" << std::endl;
+	outfile << "\n" << std::endl;
+
     outfile << "#  SET ACCELERATION FACTOR FOR NON-LINEAR CURSOR SPEED" << std::endl;
     outfile << "# ACCELERATION_FACTOR = 3" << std::endl;
+	outfile << "\n" << std::endl;
     outfile << "#  Swaps the function of the thumbsticks. Set to 0 for default behavior or set to 1 to have the mouse movement on the right stick and scrolling on the left stick." << std::endl;
     outfile << "SWAP_THUMBSTICKS = 0" << std::endl;
+	outfile << "\n" << std::endl;
+	outfile << "# HIGHLY EXPERIMENTAL FPS MODE, SET TO 1 TO ENABLE" << std::endl;
+	outfile << "FPS_MODE = 0" << std::endl;
     // End config dump
 
     outfile.close();
