@@ -156,7 +156,7 @@ void ConfigFile::ExtractKeys()
     outfile << "#  Swaps the function of the thumbsticks. Set to 0 for default behavior or set to 1 to have the mouse movement on the right stick and scrolling on the left stick." << std::endl;
     outfile << "SWAP_THUMBSTICKS = 0" << std::endl;
 	outfile << "\n" << std::endl;
-	outfile << "#HIGHLY EXPERIMENTAL FPS MODE, SET TO 1 TO ENABLE" << std::endl;
+	outfile << "# HIGHLY EXPERIMENTAL FPS MODE, SET TO 1 TO ENABLE" << std::endl;
 	outfile << "FPS_MODE = 0" << std::endl;
     // End config dump
 
