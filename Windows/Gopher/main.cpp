@@ -27,6 +27,8 @@
 
 	TODO FOR FUTURE VERSIONS:	
 								- fix input lag when changing speed
+								- put all buttons into single input device and merely change flags
+										perhaps with a map to map controller buttons and read them?
 
 ---------------------------------------------------------------------------------- */
 

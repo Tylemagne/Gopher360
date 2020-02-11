@@ -21,6 +21,32 @@ void inputKeyboard(WORD cmd, DWORD flag)
 }
 
 // Description:
+//   Send a keyboard input to the system based on the key value
+//     and its event type.
+//
+// Params:
+//   cmd    The value of the key to send(see http://msdn.microsoft.com/en-us/library/windows/desktop/dd375731%28v=vs.85%29.aspx)
+//   flag   The KEYEVENT for the key
+void inputKeyboardScan(WORD cmd, WORD flag)
+{
+	INPUT input;
+	input.type = INPUT_KEYBOARD;
+	input.ki.wScan = cmd;
+	input.ki.time = 0;
+	input.ki.dwExtraInfo = 0;
+	input.ki.wVk = 0;
+	input.ki.dwFlags = flag;
+	SendInput(1, &input, sizeof(INPUT));
+}
+
+void inputKeyboardRaw(USHORT cmd, USHORT flag = 0)
+{
+	RAWINPUT input;
+	input.data.keyboard.Flags = flag;
+	input.data.keyboard.VKey = cmd;
+}
+
+// Description:
 //   Send a keyboard input based on the key value with the "pressed down" event.
 //
 // Params:
@@ -117,6 +143,10 @@ void Gopher::loadConfigFile()
   //--------------------------------
   // Advanced settings
   //--------------------------------
+	
+  // (EXPERIMENTAL) FPS mode toggle
+  FPS_MODE = strtol(cfg.getValueOfKey<std::string>("FPS_MODE").c_str(), 0, 0);
+
 
   // Acceleration factor
   acceleration_factor = strtof(cfg.getValueOfKey<std::string>("ACCELERATION_FACTOR").c_str(), 0);
@@ -219,7 +249,14 @@ void Gopher::loop()
 
   // Mouse functions
   handleMouseMovement();
-  handleScrolling();
+  if (FPS_MODE)
+  {
+	  handleStickMovement();
+  }
+  else
+  {
+	  handleScrolling();
+  }
 
   if (CONFIG_MOUSE_LEFT)
   {
@@ -508,7 +545,7 @@ void Gopher::handleMouseMovement()
   short tx;
   short ty;
 
-  if (SWAP_THUMBSTICKS == 0)
+  if ((SWAP_THUMBSTICKS == 0 && FPS_MODE == 0) || (SWAP_THUMBSTICKS == 1 && FPS_MODE == 1))
   {
     // Use left stick
     tx = _currentState.Gamepad.sThumbLX;
@@ -543,14 +580,82 @@ void Gopher::handleMouseMovement()
   y -= dy;
   _yRest = y - (float)((int)y);
 
-  /* INPUT input;
+  INPUT input;
   input.type = INPUT_MOUSE;
   input.mi.dx = dx;
   input.mi.dy = dy * -1;
   input.mi.dwFlags = MOUSEEVENTF_MOVE;
   input.mi.time = 0;
-  SendInput(1, &input, sizeof(INPUT));*/
-  SetCursorPos((int)x, (int)y); //after all click input processing
+  SendInput(1, &input, sizeof(INPUT));
+}
+
+
+void Gopher::handleKeyboardPress(int keyToPress) {
+	DWORD keyFlag = KEYEVENTF_UNICODE;
+
+	// If there previously has been a key press, check it!
+	if (key_pressed) {
+		if (key_pressed != keyToPress) {
+			printf("We got a mismatch!");
+			inputKeyboardUp(key_pressed);
+			
+			//inputKeyboardScan(keyToPress, keyFlag);
+			inputKeyboardDown(keyToPress);
+		}
+		else {
+			//inputKeyboardScan(keyToPress, keyFlag);
+			
+		}
+	}
+	// Otherwise, we can just send the key.
+	else {
+		inputKeyboardDown(keyToPress);
+		//inputKeyboardScan(keyToPress, keyFlag);
+	}
+	printf("%d", key_pressed);
+	key_pressed = keyToPress;
+}
+
+
+void Gopher::handleStickMovement() {
+
+	short tx = _currentState.Gamepad.sThumbLX;
+	short ty = _currentState.Gamepad.sThumbLY;
+	//int aKey = 0x1E, wKey = 0x11, dKey = 0x20, sKey = 0x1F;
+	int aKey = 37, wKey = 38, dKey = 39, sKey = 40;
+	//int dKey = 68, aKey = 65, wKey = 87, sKey = 83;
+	float lengthsq = tx * tx + ty * ty;
+	if (lengthsq > DEAD_ZONE * DEAD_ZONE) {
+
+		// If the x-distance is greater than the y-distance...
+		if (tx * tx > ty * ty) {
+			// d-key (right movement!)
+			if (tx > 0) {
+				handleKeyboardPress(dKey);
+			}
+			else {
+				handleKeyboardPress(aKey);
+			}
+		}
+
+		else {
+			// w-key (up movement!)
+			if (ty > 0) {
+				handleKeyboardPress(wKey);
+			}
+			// s-key (down movement!)
+			else {
+				handleKeyboardPress(sKey);
+			}
+		}
+	}
+
+	else {
+		inputKeyboardUp(key_pressed);
+		key_pressed = NULL;
+	}
+
+
 }
 
 // Description:
@@ -622,6 +727,68 @@ void Gopher::handleTriggers(WORD lKey, WORD rKey)
       inputKeyboardUp(rKey);
     }
   }
+}
+
+
+// This function only takes the left and right mouse as input.
+// It handles the triggers so as to click the mouse buttons accordingly.
+void Gopher::handleTriggersMouse(WORD lKey, WORD rKey)
+{
+	bool lTriggerIsDown = _currentState.Gamepad.bLeftTrigger > TRIGGER_DEAD_ZONE;
+	bool rTriggerIsDown = _currentState.Gamepad.bRightTrigger > TRIGGER_DEAD_ZONE;
+	DWORD lKeyDown = NULL, lKeyUp = NULL, rKeyDown = NULL, rKeyUp = NULL;
+	if (lKey == 0x01) {
+		if (rKey == 0x02) {
+			lKeyDown = MOUSEEVENTF_LEFTDOWN;
+			lKeyUp = MOUSEEVENTF_LEFTUP;
+			rKeyDown = MOUSEEVENTF_RIGHTDOWN;
+			rKeyUp = MOUSEEVENTF_RIGHTUP;
+		}
+		else {
+			return;
+		}
+	}
+	else if (lKey == 0x02) {
+		if (rKey == 0x01) {
+			lKeyDown = MOUSEEVENTF_RIGHTDOWN;
+			lKeyUp = MOUSEEVENTF_RIGHTUP;
+			rKeyDown = MOUSEEVENTF_LEFTDOWN;
+			rKeyUp = MOUSEEVENTF_LEFTUP;
+		}
+		else {
+			return;
+		}
+	}
+	else {
+		return;
+	}
+
+
+	if (lTriggerIsDown != _lTriggerPrevious)
+	{
+		_lTriggerPrevious = lTriggerIsDown;
+		if (lTriggerIsDown)
+		{
+			mouseEvent(lKeyDown);
+		}
+		else
+		{
+			mouseEvent(lKeyUp);
+		}
+	}
+
+	if (rTriggerIsDown != _rTriggerPrevious)
+	{
+		_rTriggerPrevious = rTriggerIsDown;
+		if (rTriggerIsDown)
+		{
+			mouseEvent(rKeyDown);
+		}
+		else
+		{
+			mouseEvent(rKeyUp);
+		}
+	}
 }
 
 // Description:
@@ -830,4 +997,12 @@ bool Gopher::erasePressedKey(WORD key)
   }
 
   return false;
+}
+
+
+
+void Gopher::toggleFPSMode()
+{
+	FPS_MODE = !FPS_MODE;
+	printf("FPS Mode: %d\n", FPS_MODE);
 }
