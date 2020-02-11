@@ -47,6 +47,7 @@ private:
 
   std::vector<float> speeds;	            // Contains actual speeds to choose
   std::vector<std::string> speed_names;   // Contains display names of speeds to display
+  std::vector<int> speed_intensities;	  // Contains increasing intensities to indicate selected speed
   unsigned int speed_idx = 0;
 
   // Mouse Clicks
@@ -78,6 +79,12 @@ private:
   DWORD GAMEPAD_Y = NULL;
   DWORD GAMEPAD_TRIGGER_LEFT = NULL;
   DWORD GAMEPAD_TRIGGER_RIGHT = NULL;
+
+  //Experimental FPS mode
+  DWORD CONFIG_TOGGLE_FPS = NULL;
+  int FPS_MODE = NULL;
+  //Maintain track of which (WASD) key was pressed, if any.
+  int key_pressed = 0;
 
   // Button press state logic variables
   std::map<DWORD, bool> _xboxClickStateLastIteration;
@@ -114,9 +121,15 @@ public:
 
   void handleVibrationButton();
 
+  void handleKeyboardPress(int keyToPress);
+
+  void handleStickMovement();
+
   void handleScrolling();
 
   void handleTriggers(WORD lKey, WORD rKey);
+
+  void handleTriggersMouse(WORD lKey, WORD rKey);
 
   bool xboxClickStateExists(DWORD xinput);
 
@@ -125,6 +138,8 @@ public:
   void mapMouseClick(DWORD STATE, DWORD keyDown, DWORD keyUp);
 
   void setXboxClickState(DWORD state);
+
+  void toggleFPSMode();
 
   HWND getOskWindow();
 
