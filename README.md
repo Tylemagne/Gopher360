@@ -1,7 +1,7 @@
 Download
 ======
 
-[![Github All Releases](https://img.shields.io/github/downloads/Tylemagne/Gopher360/total.svg?style=flat&label=Download%20Gopher360%20Standalone&logo=appveyor&colorA=00cc0a&colorB=000000)](https://github.com/Tylemagne/Gopher360/releases/download/v0.989/Gopher.exe)
+[![Github All Releases](https://img.shields.io/github/downloads/Tylemagne/Gopher360/total.svg?style=flat&label=Download%20GopherRenewed%20Standalone&logo=appveyor&colorA=00cc0a&colorB=000000)](https://github.com/mike1084/GopherRenewed/releases/download/v0.991/GopherRenewed.exe)
 
 Donate
 ======
