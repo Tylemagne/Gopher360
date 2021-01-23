@@ -142,6 +142,10 @@ void ConfigFile::ExtractKeys()
     outfile << "# ACCELERATION_FACTOR = 3" << std::endl;
     outfile << "#  Swaps the function of the thumbsticks. Set to 0 for default behavior or set to 1 to have the mouse movement on the right stick and scrolling on the left stick." << std::endl;
     outfile << "SWAP_THUMBSTICKS = 0" << std::endl;
+    outfile << "DEAD_ZONE = 6000 # Thumbstick dead zone to use for mouse movement. Absolute maximum thumbstick value is 32768." << std::endl;
+    outfile << "SCROLL_DEAD_ZONE = 5000 # Thumbstick dead zone to use for scroll wheel movement. Absolute maximum thumbstick value is 32768." << std::endl;
+    outfile << "TRIGGER_DEAD_ZONE = 0 # Dead zone for the left and right triggers to detect a trigger press. Range from 0 (accept all input) to 255 (ignore all input)." << std::endl;
+    outfile << "SCROLL_SPEED = 0.1 # Speed at which you scroll (scalar)" << std::endl;
     // End config dump
 
     outfile.close();
