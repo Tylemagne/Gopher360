@@ -473,16 +473,18 @@ float Gopher::getDelta(short t)
 //   Calculates a multiplier for an analog thumbstick based on the update rate.
 //
 // Params:
-//   tValue     The thumbstick value
+//   magnitude  The thumbstick magnitude in XY-plane, which is sqrt(deltaX*deltaX + deltaY*deltaY). Must be larger than deadzone.
 //   deadzone   The dead zone to use for this thumbstick
 //   accel      An exponent to use to create an input curve (Optional). 0 to use a linear input
 //   
 // Returns:
 //   Multiplier used to properly scale the given thumbstick value.
-float Gopher::getMult(float lengthsq, float deadzone, float accel = 0.0f)
+float Gopher::getMult(float magnitude, float deadzone, float accel = 0.0f)
 {
-  // Normalize the thumbstick value.
-  float mult = (sqrt(lengthsq) - deadzone) / (MAXSHORT - deadzone);
+  // Normalize the thumbstick value (result is in range 0 to 1).
+  // Note that the smallest accepted thumbstick distance is deadzone.
+  // Thus, 0% would be deadzone (and below) and 100% would be (MAXSHORT - deadzone)
+  float mult = (magnitude - deadzone) / (MAXSHORT - deadzone);
 
   // Apply a curve to the normalized thumbstick value.
   if (accel > 0.0001f)
@@ -505,14 +507,14 @@ void Gopher::handleMouseMovement()
   if (SWAP_THUMBSTICKS == 0)
   {
     // Use left stick
-    tx = _currentState.Gamepad.sThumbLX;
-    ty = _currentState.Gamepad.sThumbLY;
+    tx = getDelta(_currentState.Gamepad.sThumbLX);
+    ty = getDelta(_currentState.Gamepad.sThumbLY);
   }
   else
   {
     // Use right stick
-    tx = _currentState.Gamepad.sThumbRX;
-    ty = _currentState.Gamepad.sThumbRY;
+    tx = getDelta(_currentState.Gamepad.sThumbRX);
+    ty = getDelta(_currentState.Gamepad.sThumbRY);
   }
 
   float x = cursor.x + _xRest;
@@ -525,10 +527,10 @@ void Gopher::handleMouseMovement()
   float lengthsq = tx * tx + ty * ty;
   if (lengthsq > DEAD_ZONE * DEAD_ZONE)
   {
-    float mult = speed * getMult(lengthsq, DEAD_ZONE, acceleration_factor);
+    float mult = speed * getMult(sqrt(lengthsq), DEAD_ZONE, acceleration_factor);
 
-    dx = getDelta(tx) * mult;
-    dy = getDelta(ty) * mult;
+    dx = tx * mult;
+    dy = ty * mult;
   }
 
   x += dx;
@@ -561,12 +563,17 @@ void Gopher::handleScrolling()
   }
 
   // Handle dead zone
-  float magnitude = sqrt(tx * tx + ty * ty);
-
-  if (magnitude > SCROLL_DEAD_ZONE)
+  float magnitudeX = abs(tx);
+  float magnitudeY = abs(ty);
+  if (magnitudeX > SCROLL_DEAD_ZONE)
   {
-    mouseEvent(MOUSEEVENTF_HWHEEL, tx * getMult(tx * tx, SCROLL_DEAD_ZONE) * SCROLL_SPEED);
-    mouseEvent(MOUSEEVENTF_WHEEL, ty * getMult(ty * ty, SCROLL_DEAD_ZONE) * SCROLL_SPEED);
+    int scrollX = tx * getMult(magnitudeX, SCROLL_DEAD_ZONE) * SCROLL_SPEED;
+    mouseEvent(MOUSEEVENTF_HWHEEL, scrollX);
+  }
+  if (magnitudeY > SCROLL_DEAD_ZONE)
+  {
+    int scrollY = ty * getMult(magnitudeY, SCROLL_DEAD_ZONE) * SCROLL_SPEED;
+    mouseEvent(MOUSEEVENTF_WHEEL, scrollY);
   }
 }
 
