@@ -42,6 +42,8 @@ BOOL isRunningAsAdministrator(); // Check if administrator, makes on-screen keyb
 
 int main()
 {
+  char* buildDate = "2021-01-20";
+
   CXBOXController controller(1);
   Gopher gopher(&controller);
   HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -49,7 +51,7 @@ int main()
 
   system("Color 1D");
 
-  printf("Welcome to Gopher360 - a VERY fast and lightweight controller-to-keyboard & mouse input tool.\n");
+  printf("Welcome to Gopher360 (built %s) - a VERY fast and lightweight controller-to-keyboard & mouse input tool.\n", buildDate);
   printf("All you need is an Xbox360/Xbone controller (wired or wireless adapter), or DualShock (with InputMapper 1.5+)\n");
   printf("Gopher will autofind the xinput device and begin reading input - if nothing happens, verify connectivity.\n");
   printf("See the GitHub repository at bit.ly/1syAhMT for more info. Twitter contact: TylerAt60FPS\n\n-------------------------\n\n");
