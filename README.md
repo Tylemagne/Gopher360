@@ -1,12 +1,12 @@
 Download
 ======
 
-[![Github All Releases](https://img.shields.io/github/downloads/Tylemagne/Gopher360/total.svg?style=flat&label=Download%20Gopher360%20Standalone&logo=appveyor&colorA=00cc0a&colorB=000000)](https://github.com/Tylemagne/Gopher360/releases/download/v0.989/Gopher.exe)
+[![Github All Releases](https://img.shields.io/github/downloads/Tylemagne/Gopher360/total.svg?style=flat&label=Download%20GopherRenewed%20Standalone&logo=appveyor&colorA=00cc0a&colorB=000000)](https://github.com/mike1084/GopherRenewed/releases/download/v0.991/GopherRenewed.exe)
 
 Donate
 ======
 
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ETDWNUEJG2UY2)
+[![Become a patron](https://c5.patreon.com/external/logo/become_a_patron_button@2x.png)](https://www.patreon.com/bePatron?u=1002457)
 
 Compatible Controllers
 ======
@@ -25,7 +25,7 @@ Compatible Controllers
 DualShock controllers are great, but you NEED to emulate Xinput for Gopher to see and understand them. Fortunately, Xinput emulation is a very popular thing, as there are just as many people with DualShock controllers as there are Xbox controllers. Listings coming soon.
 
 ### Third party
-SOME third party controllers will most likely work as well. I haven't seen one not work, but I'd imagine some wouldn't. Research before buying, Gopher expects native Xinput devices, so the controller should as well. I won't be listing any for now until I know what ones will work. If I can find one that does the job and saves you from Microsoft's extreme profit margins, I'll list it.
+SOME third party controllers will most likely work as well. I haven't seen one not work, but I'd imagine some wouldn't. Research before buying, **Gopher expects native Xinput devices,** so the controller should as well. I won't be listing any for now until I know what ones will work. If I can find one that does the job and saves you from Microsoft's extreme profit margins, I'll list it.
 
 Feedback
 ======
@@ -62,7 +62,7 @@ Gopher separates itself from the competition by being efficient, small, portable
 
 [![GitHub release](https://img.shields.io/github/release/Tylemagne/gopher360.svg)]()
 
-[![Github commits (since latest release)](https://img.shields.io/github/commits-since/Tylemagne/gopher360/latest.svg)]()
+[![Github commits (since latest release)](https://img.shields.io/github/commits-since/mike1084/GopherRenewed/latest.svg)]()
 
 Requirements
 ======

@@ -13,12 +13,24 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ---------------------------------------------------------------------------------*/
 
-//changes 0.96 -> 0.97: speed variable is global, detects bumpers, all timed (no enter), lbumper speed toggler
-//changes 0.97 -> 0.98: performance improvements, operational volume function, shorter beeps, no XY text
-//changes 0.98 -> 0.985: 144Hz, Y to hide window(added float stillHoldingY), code cleanup, comments added
-//changes 0.985 -> 0.986: Adding configuration file, changing from beeps to vibration.
-//changes 0.986 -> 0.989: Improved speeds and speed reporting, created automatic config generator!
-//TODO FOR FUTURE VERSIONS - offload speeds into config file
+
+/* ---------------------------------- CHANGELOG ----------------------------------
+
+	changes 0.96 -> 0.97:	speed variable is global, detects bumpers, all timed (no enter), lbumper speed toggler
+	changes 0.97 -> 0.98:	performance improvements, operational volume function, shorter beeps, no XY text
+	changes 0.98 -> 0.985:	144Hz, Y to hide window(added float stillHoldingY), code cleanup, comments added
+	changes 0.985 -> 0.986: Adding configuration file, changing from beeps to vibration.
+	changes 0.986 -> 0.989: Improved speeds and speed reporting, created automatic config generator!
+	changes 0.989 -> 0.99:	Added speed vibration intensity to vary depending on speed. 
+							Implemented SendInput to facilitate (game) UI functionality.
+
+
+	TODO FOR FUTURE VERSIONS:	
+								- fix input lag when changing speed
+								- put all buttons into single input device and merely change flags
+										perhaps with a map to map controller buttons and read them?
+
+---------------------------------------------------------------------------------- */
 
 #include <windows.h> // for Beep()
 #include <iostream>
@@ -45,11 +57,11 @@ int main()
   CXBOXController controller(1);
   Gopher gopher(&controller);
   HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-  SetConsoleTitle( TEXT( "Gopher360" ) );
+  SetConsoleTitle( TEXT( "GopherRenewed" ) );
 
   system("Color 1D");
 
-  printf("Welcome to Gopher360 - a VERY fast and lightweight controller-to-keyboard & mouse input tool.\n");
+  printf("Welcome to GopherRenewed - a VERY fast and lightweight controller-to-keyboard & mouse input tool.\n");
   printf("All you need is an Xbox360/Xbone controller (wired or wireless adapter), or DualShock (with InputMapper 1.5+)\n");
   printf("Gopher will autofind the xinput device and begin reading input - if nothing happens, verify connectivity.\n");
   printf("See the GitHub repository at bit.ly/1syAhMT for more info. Twitter contact: TylerAt60FPS\n\n-------------------------\n\n");
