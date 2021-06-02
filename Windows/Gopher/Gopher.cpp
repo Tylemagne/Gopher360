@@ -522,7 +522,7 @@ void Gopher::handleMouseMovement()
   float dy = 0;
 
   // Handle dead zone
-  float lengthsq = tx * tx + ty * ty;
+  float lengthsq = unsigned int(tx * tx + ty * ty);
   if (lengthsq > DEAD_ZONE * DEAD_ZONE)
   {
     float mult = speed * getMult(lengthsq, DEAD_ZONE, acceleration_factor);
