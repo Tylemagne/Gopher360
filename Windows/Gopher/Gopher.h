@@ -62,22 +62,22 @@ private:
   DWORD CONFIG_OSK = NULL;
 
   // Gamepad bindings
-  DWORD GAMEPAD_DPAD_UP = NULL;
-  DWORD GAMEPAD_DPAD_DOWN = NULL;
-  DWORD GAMEPAD_DPAD_LEFT = NULL;
-  DWORD GAMEPAD_DPAD_RIGHT = NULL;
-  DWORD GAMEPAD_START = NULL;
-  DWORD GAMEPAD_BACK = NULL;
-  DWORD GAMEPAD_LEFT_THUMB = NULL;
-  DWORD GAMEPAD_RIGHT_THUMB = NULL;
-  DWORD GAMEPAD_LEFT_SHOULDER = NULL;
-  DWORD GAMEPAD_RIGHT_SHOULDER = NULL;
-  DWORD GAMEPAD_A = NULL;
-  DWORD GAMEPAD_B = NULL;
-  DWORD GAMEPAD_X = NULL;
-  DWORD GAMEPAD_Y = NULL;
-  DWORD GAMEPAD_TRIGGER_LEFT = NULL;
-  DWORD GAMEPAD_TRIGGER_RIGHT = NULL;
+  std::vector<DWORD> GAMEPAD_DPAD_UP = {};
+  std::vector<DWORD> GAMEPAD_DPAD_DOWN = {};
+  std::vector<DWORD> GAMEPAD_DPAD_LEFT = {};
+  std::vector<DWORD> GAMEPAD_DPAD_RIGHT = {};
+  std::vector<DWORD> GAMEPAD_START = {};
+  std::vector<DWORD> GAMEPAD_BACK = {};
+  std::vector<DWORD> GAMEPAD_LEFT_THUMB = {};
+  std::vector<DWORD> GAMEPAD_RIGHT_THUMB = {};
+  std::vector<DWORD> GAMEPAD_LEFT_SHOULDER = {};
+  std::vector<DWORD> GAMEPAD_RIGHT_SHOULDER = {};
+  std::vector<DWORD> GAMEPAD_A = {};
+  std::vector<DWORD> GAMEPAD_B = {};
+  std::vector<DWORD> GAMEPAD_X = {};
+  std::vector<DWORD> GAMEPAD_Y = {};
+  std::vector<DWORD> GAMEPAD_TRIGGER_LEFT = {};
+  std::vector<DWORD> GAMEPAD_TRIGGER_RIGHT = {};
 
   // Button press state logic variables
   std::map<DWORD, bool> _xboxClickStateLastIteration;
@@ -116,11 +116,11 @@ public:
 
   void handleScrolling();
 
-  void handleTriggers(WORD lKey, WORD rKey);
+  void handleTriggers(std::vector<DWORD> lKeys, std::vector<DWORD> rKeys);
 
   bool xboxClickStateExists(DWORD xinput);
 
-  void mapKeyboard(DWORD STATE, WORD key);
+  void mapKeyboard(DWORD STATE, std::vector<DWORD> key);
 
   void mapMouseClick(DWORD STATE, DWORD keyDown, DWORD keyUp);
 
@@ -128,7 +128,10 @@ public:
 
   HWND getOskWindow();
 
+  std::vector<WORD> mapDwordArrayToWrodArray(std::vector<DWORD> dwordArray);
+
 private:
 
   bool erasePressedKey(WORD key);
+  bool erasePressedKeys(std::vector<WORD> keys);
 };

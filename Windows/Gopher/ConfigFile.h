@@ -1,11 +1,14 @@
 #pragma once
 
+#include <windows.h>
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <map>
 #include <fstream>
 #include "Convert.h"
+#include <vector>
+
 
 class ConfigFile
 {
@@ -39,6 +42,23 @@ public:
       return defaultValue;
 
     return Convert::string_to_T<ValueType>(contents.find(key)->second);
+  };
+
+
+  std::vector<DWORD> getValueOfKeys(const std::string& key) const
+  {
+      if (!keyExists(key))
+          return std::vector<DWORD>{};
+
+      std::vector<DWORD> keyValues;
+      std::stringstream ss(contents.find(key)->second);
+      while (ss.good())
+      {
+          std::string substr;
+          getline(ss, substr, ',');
+          keyValues.push_back(strtol(substr.c_str(), 0, 0));
+      }
+      return keyValues;
   };
 
   void exitWithError(const std::string &error);
