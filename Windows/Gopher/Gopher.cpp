@@ -81,7 +81,13 @@ Gopher::Gopher(CXBOXController * controller)
 void Gopher::loadConfigFile()
 {
   ConfigFile cfg("config.ini");
-  
+
+  //--------------------------------
+  // Startup configuration
+  //--------------------------------
+    
+  _disabled = strtol(cfg.getValueOfKey<std::string>("INIT_DISABLED_ON_START").c_str(), 0, 0) != 0;
+
   //--------------------------------
   // Configuration bindings
   //--------------------------------
