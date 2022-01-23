@@ -104,7 +104,13 @@ void ConfigFile::ExtractKeys()
     outfile << "#	SET 0 FOR NO FUNCTION." << std::endl;
     outfile << "#	AVAILABLE VALUES AT https://msdn.microsoft.com/en-us/library/windows/desktop/microsoft.directx_sdk.reference.xinput_gamepad(v=vs.85).aspx" << std::endl;
     outfile << "#	TIP: Sum the hex value for double button shortcuts eg. 0x0010(START) 0x0020(BACK) so 0x0030(START+BACK) will trigger the event only when both are pressed." << std::endl;
-    outfile << "\n" << std::endl;
+    outfile << std::endl;
+    outfile << "#	Startup configuration (0 = false, 1 or any other value = true)" << std::endl;
+    outfile << std::endl;
+    outfile << "INIT_DISABLED_ON_START = 0x0 # Determines whether the gamepad controls mouse / keyboard input on starting Gopher" << std::endl;
+    outfile << std::endl;
+    outfile << "#	Map buttons to actions" << std::endl;
+    outfile << std::endl;
     outfile << "CONFIG_MOUSE_LEFT = 0x1000	# Left mouse button" << std::endl;
     outfile << "CONFIG_MOUSE_RIGHT = 0x4000	# Right mouse button" << std::endl;
     outfile << "CONFIG_MOUSE_MIDDLE = 0x0040	# Middle mouse button" << std::endl;
