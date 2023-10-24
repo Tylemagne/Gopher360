@@ -187,6 +187,9 @@ void Gopher::loadConfigFile()
   // Swap stick functions
   SWAP_THUMBSTICKS = strtol(cfg.getValueOfKey<std::string>("SWAP_THUMBSTICKS").c_str(), 0, 0);
 
+  // Flip-flop scroll direction
+  SCROLL_FLIPFLOP = strtol(cfg.getValueOfKey<std::string>("SCROLL_FLIPFLOP").c_str(), 0, 0);
+
   // Set the initial window visibility
   setWindowVisibility(_hidden);
 }
@@ -561,12 +564,21 @@ void Gopher::handleScrolling()
   }
 
   // Handle dead zone
-  float magnitude = sqrt(tx * tx + ty * ty);
+  float txSq = tx * tx;
+  float tySq = ty * ty;
+  float magnitude = sqrt(txSq + tySq);
 
   if (magnitude > SCROLL_DEAD_ZONE)
   {
-    mouseEvent(MOUSEEVENTF_HWHEEL, tx * getMult(tx * tx, SCROLL_DEAD_ZONE) * SCROLL_SPEED);
-    mouseEvent(MOUSEEVENTF_WHEEL, ty * getMult(ty * ty, SCROLL_DEAD_ZONE) * SCROLL_SPEED);
+    // scroll one direction at a time, either horizontally or vertically
+    if (tySq > txSq)
+    {
+        mouseEvent(MOUSEEVENTF_WHEEL, (SCROLL_FLIPFLOP ? -ty : ty) * getMult(tySq, SCROLL_DEAD_ZONE) * SCROLL_SPEED);
+    }
+    else
+    {
+        mouseEvent(MOUSEEVENTF_HWHEEL, (SCROLL_FLIPFLOP ? -tx : tx) * getMult(txSq, SCROLL_DEAD_ZONE) * SCROLL_SPEED);
+    }
   }
 }
 
